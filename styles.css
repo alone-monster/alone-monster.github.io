@@ -1,0 +1,14 @@
+.sidebar {
+  overflow-y: auto;
+  /* Make sure the sidebar can scroll independently */
+}
+
+body.sidebar-open {
+  overflow: hidden;
+  /* Prevent body scroll overflow when sidebar is open */
+}
+
+/* Optional: ensure no blur effect on the main content when sidebar is opened */
+.main-content {
+  filter: none;
+}
