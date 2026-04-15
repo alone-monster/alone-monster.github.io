@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Alone Monster Coding Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* ══════════════════════════════════════════
+       ROOT VARIABLES
+    ══════════════════════════════════════════ */
+    :root{
+      --bg:#050509; --bg2:#0c0c14; --bgc:#10101c; --bgs:#08080f;
+      --green:#00ff88; --cyan:#00d4ff;
+      --text:#e8e8f0; --muted:#6b6b8a;
+      --border:rgba(0,255,136,.15);
+      --sw:270px; --tb:60px;
+      --gg:0 0 20px rgba(0,255,136,.45);
+      --gc:0 0 20px rgba(0,212,255,.45);
+      --bh:40px; --bp:0 20px; --bfs:.84rem;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Rajdhani',sans-serif;
+      background:var(--bg); color:var(--text);
+      overflow-x:hidden; width:100%; max-width:100vw;
+    }
+    @media(hover:hover){body{cursor:none;}}
+
+    /* ══════════════════════════════════════════
+       WELCOME SPLASH
+    ══════════════════════════════════════════ */
+    #splash{
+      position:fixed;inset:0;z-index:9000;
+      background:var(--bg);
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:22px;
+      transition:opacity .7s,visibility .7s;
+    }
+    #splash.gone{opacity:0;visibility:hidden;pointer-events:none;}
+    .sp-ring{
+      width:150px;height:150px;border-radius:50%;
+      border:2px solid var(--green);
+      box-shadow:var(--gg),inset 0 0 20px rgba(0,255,136,.15);
+      display:flex;align-items:center;justify-content:center;
+      animation:rpulse 2s ease-in-out infinite;
+      position:relative;
+    }
+    .sp-ring::before{
+      content:'';position:absolute;inset:-14px;border-radius:50%;
+      border:1px solid rgba(0,255,136,.22);animation:rpulse 2s .4s ease-in-out infinite;
+    }
+    .sp-ring::after{
+      content:'';position:absolute;inset:-28px;border-radius:50%;
+      border:1px solid rgba(0,255,136,.1);animation:rpulse 2s .8s ease-in-out infinite;
+    }
+    @keyframes rpulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.06);opacity:.7;}}
+    .sp-ico{font-size:2.8rem;filter:drop-shadow(0 0 10px var(--green));}
+    .sp-title{
+      font-family:'Orbitron',monospace;
+      font-size:clamp(1rem,4vw,1.7rem);font-weight:900;
+      color:var(--green);text-shadow:var(--gg);
+      text-align:center;letter-spacing:1.5px;padding:0 20px;line-height:1.4;
+      animation:fup .7s .3s both;
+    }
+    .sp-sub{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:3px;animation:fup .7s .5s both;}
+    .sp-bar{width:190px;height:2px;background:var(--border);border-radius:2px;overflow:hidden;animation:fup .7s .6s both;}
+    .sp-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));width:0;animation:barfill 2s .6s ease-out forwards;}
+    @keyframes barfill{to{width:100%;}}
+    .sp-btn{
+      font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);
+      border:1px solid var(--border);background:transparent;
+      padding:8px 22px;border-radius:4px;cursor:pointer;
+      transition:all .2s;animation:fup .7s .85s both;letter-spacing:1px;
+    }
+    .sp-btn:hover{border-color:var(--green);color:var(--green);}
+
+    /* ══════════════════════════════════════════
+       CLICK RIPPLE — spawned on click, 1.5s, then removed
+    ══════════════════════════════════════════ */
+    .ripple{
+      position:fixed;width:60px;height:60px;border-radius:50%;
+      border:2px solid var(--green);pointer-events:none;z-index:8999;
+      transform:translate(-50%,-50%) scale(0);opacity:1;
+      animation:rout 1.5s ease-out forwards;
+    }
+    @keyframes rout{
+      0%  {transform:translate(-50%,-50%) scale(0);opacity:.85;}
+      100%{transform:translate(-50%,-50%) scale(4.8);opacity:0;}
+    }
+
+    /* ══════════════════════════════════════════
+       CUSTOM CURSOR
+    ══════════════════════════════════════════ */
+    #cursor{
+      position:fixed;width:10px;height:10px;background:var(--green);
+      border-radius:50%;pointer-events:none;z-index:8998;
+      transform:translate(-50%,-50%);transition:transform .08s;mix-blend-mode:screen;
+    }
+    #cursor.big{transform:translate(-50%,-50%) scale(2.6);}
+
+    /* ══════════════════════════════════════════
+       MATRIX CANVAS
+    ══════════════════════════════════════════ */
+    #mc{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.04;pointer-events:none;}
+
+    /* ══════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════ */
+    .layout{display:flex;min-height:100vh;position:relative;z-index:1;width:100%;}
+
+    /* ══════════════════════════════════════════
+       SIDEBAR  — no blur ever
+    ══════════════════════════════════════════ */
+    .sidebar{
+      width:var(--sw);min-width:var(--sw);
+      background:var(--bgs);border-right:1px solid var(--border);
+      position:fixed;top:0;left:0;height:100vh;
+      display:flex;flex-direction:column;
+      z-index:200;overflow-y:auto;overflow-x:hidden;
+      transition:transform .32s cubic-bezier(.4,0,.2,1);
+      filter:none;
+    }
+    .sidebar::-webkit-scrollbar{width:3px;}
+    .sidebar::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+    .sb-logo{padding:24px 22px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .sb-name{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;color:var(--green);text-shadow:var(--gg);letter-spacing:1px;line-height:1.35;}
+    .sb-sub{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:var(--muted);margin-top:5px;letter-spacing:1px;}
+    .odot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:5px;animation:pdot 2s infinite;}
+    @keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.5);}50%{box-shadow:0 0 0 4px rgba(0,255,136,0);}}
+    .sb-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;padding:15px 22px 7px;flex-shrink:0;}
+    .nav-item{
+      display:flex;align-items:center;gap:11px;padding:10px 22px;
+      color:var(--muted);text-decoration:none;font-size:.91rem;font-weight:500;
+      letter-spacing:.4px;transition:all .18s;border-left:2px solid transparent;
+      flex-shrink:0;white-space:nowrap;
+    }
+    .nav-item i{font-size:.8rem;width:15px;text-align:center;flex-shrink:0;}
+    .nav-item:hover,.nav-item.active{color:var(--green);background:rgba(0,255,136,.05);border-left-color:var(--green);}
+    .nbadge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.57rem;background:var(--green);color:#000;padding:2px 7px;border-radius:10px;font-weight:700;}
+    .sb-div{height:1px;background:var(--border);margin:10px 22px;flex-shrink:0;}
+    /* bot cards in sidebar */
+    .sb-bot{
+      margin:4px 14px;display:flex;align-items:center;gap:9px;
+      padding:9px 12px;background:rgba(0,255,136,.04);
+      border:1px solid rgba(0,255,136,.18);border-radius:7px;
+      text-decoration:none;color:var(--muted);font-size:.78rem;
+      font-family:'JetBrains Mono',monospace;transition:all .2s;flex-shrink:0;
+    }
+    .sb-bot:hover{color:var(--green);border-color:var(--green);background:rgba(0,255,136,.08);box-shadow:var(--gg);}
+    .sb-bot i{font-size:.92rem;flex-shrink:0;}
+    .sb-blbl{font-size:.58rem;color:var(--muted);display:block;}
+    .sb-bname{font-size:.74rem;color:var(--text);font-weight:500;}
+    /* social grid */
+    .sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:9px 14px 18px;flex-shrink:0;}
+    .soc{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      padding:8px 4px;border:1px solid var(--border);border-radius:6px;
+      color:var(--muted);text-decoration:none;font-size:.68rem;
+      font-family:'JetBrains Mono',monospace;transition:all .18s;background:rgba(255,255,255,.02);
+    }
+    .soc:hover{color:var(--green);border-color:var(--green);background:rgba(0,255,136,.06);box-shadow:var(--gg);}
+    .soc i{font-size:.8rem;}
+
+    /* ══════════════════════════════════════════
+       MAIN CONTENT — full width on mobile, no blur ever
+    ══════════════════════════════════════════ */
+    .main{margin-left:var(--sw);width:calc(100% - var(--sw));min-height:100vh;filter:none!important;}
+
+    /* ══════════════════════════════════════════
+       TOPBAR — no backdrop-filter blur (solid bg)
+    ══════════════════════════════════════════ */
+    .topbar{
+      position:sticky;top:0;z-index:150;
+      background:rgba(5,5,9,.97);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 28px;height:var(--tb);width:100%;
+    }
+    .tb-left{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0;}
+    .tb-left .hi{color:var(--green);}
+    .tb-btns{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+    .burger{display:none;background:none;border:none;color:var(--green);font-size:1.22rem;cursor:pointer;padding:6px;flex-shrink:0;}
+
+    /* ══════════════════════════════════════════
+       UNIFORM BUTTONS  — all same height/size per context
+    ══════════════════════════════════════════ */
+    .btn{
+      font-family:'Rajdhani',sans-serif;font-weight:700;
+      font-size:var(--bfs);letter-spacing:.8px;border:none;cursor:pointer;
+      border-radius:5px;height:var(--bh);padding:var(--bp);
+      transition:all .18s;text-decoration:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:6px;
+      white-space:nowrap;flex-shrink:0;
+    }
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+    .bp{background:var(--green);color:#000;}
+    .bp:hover{box-shadow:var(--gg);transform:translateY(-1px);}
+    .bc{background:transparent;border:1px solid var(--cyan);color:var(--cyan);}
+    .bc:hover{background:rgba(0,212,255,.1);box-shadow:var(--gc);}
+    .bd{background:transparent;border:1px solid rgba(88,101,242,.45);color:#7289da;}
+    .bd:hover{background:rgba(88,101,242,.12);border-color:#7289da;box-shadow:0 0 18px rgba(88,101,242,.3);}
+
+    /* ══════════════════════════════════════════
+       OVERLAY — dims only, no blur on main content
+    ══════════════════════════════════════════ */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:190;}
+    .overlay.on{display:block;}
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    #home{
+      min-height:calc(100vh - var(--tb));
+      display:flex;flex-direction:column;justify-content:center;
+      padding:60px 52px;position:relative;overflow:hidden;
+    }
+    .hgrid{
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(0,255,136,.034) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,136,.034) 1px,transparent 1px);
+      background-size:50px 50px;
+      animation:gmove 22s linear infinite;
+    }
+    @keyframes gmove{to{background-position:50px 50px;}}
+    .htag{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:17px;animation:fup .6s .2s both;}
+    .htitle{font-family:'Orbitron',monospace;font-size:clamp(2.2rem,5.5vw,4.8rem);font-weight:900;line-height:1.06;margin-bottom:17px;animation:fup .6s .38s both;}
+    .g{color:var(--green);text-shadow:var(--gg);} .c{color:var(--cyan);text-shadow:var(--gc);}
+    .hdesc{font-size:1.06rem;color:var(--muted);max-width:570px;line-height:1.75;margin-bottom:32px;animation:fup .6s .56s both;}
+    .hdesc b{color:var(--text);}
+    .hcta{display:flex;gap:12px;flex-wrap:wrap;animation:fup .6s .72s both;}
+    /* hero CTA slightly taller */
+    .hcta .btn{height:46px;font-size:.9rem;padding:0 26px;}
+    .hstats{display:flex;gap:36px;margin-top:54px;animation:fup .6s .9s both;flex-wrap:wrap;}
+    .sn{font-family:'Orbitron',monospace;font-size:1.7rem;font-weight:700;color:var(--green);text-shadow:var(--gg);}
+    .sl{font-size:.68rem;color:var(--muted);letter-spacing:1px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;margin-top:2px;}
+    @keyframes fup{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Terminal widget */
+    .term{
+      position:absolute;right:52px;top:50%;transform:translateY(-50%);
+      width:345px;background:rgba(8,8,15,.93);
+      border:1px solid var(--border);border-radius:10px;overflow:hidden;
+      box-shadow:0 0 40px rgba(0,255,136,.1),0 20px 60px rgba(0,0,0,.5);
+      animation:fup .8s .5s both;
+    }
+    .th{background:#0f0f1a;padding:9px 15px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
+    .td2{width:10px;height:10px;border-radius:50%;}
+    .td2.r{background:#ff5f57;}.td2.y{background:#febc2e;}.td2.gr{background:#28c840;}
+    .tt{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);margin-left:auto;}
+    .tb2{padding:18px;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.9;}
+    .tl2{display:flex;align-items:flex-start;gap:8px;}
+    .tp2{color:var(--green);flex-shrink:0;}.tc2{color:#ccc;}.to2{color:var(--cyan);padding-left:14px;}.tm2{color:#3a3a5a;padding-left:14px;}
+    .cb{display:inline-block;width:8px;height:13px;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle;}
+    @keyframes blink{50%{opacity:0;}}
+
+    /* ══════════════════════════════════════════
+       SECTIONS
+    ══════════════════════════════════════════ */
+    .sec{padding:74px 52px;border-top:1px solid var(--border);}
+    .stag{font-family:'JetBrains Mono',monospace;font-size:.61rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+    .stitle{font-family:'Orbitron',monospace;font-size:clamp(1.4rem,2.8vw,2.05rem);font-weight:700;color:var(--text);}
+    .stitle span{color:var(--green);}
+    .sdesc{color:var(--muted);margin-top:11px;font-size:.95rem;max-width:535px;line-height:1.65;}
+    .shdr{margin-bottom:42px;}
+
+    /* AI Bots feature cards */
+    .bots-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:700px;}
+    .bfc{
+      background:var(--bgc);border:1px solid var(--border);
+      border-radius:12px;padding:30px 26px;
+      text-decoration:none;color:var(--text);transition:all .22s;
+      position:relative;overflow:hidden;
+    }
+    .bfc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));transform:scaleX(0);transform-origin:left;transition:transform .28s;}
+    .bfc:hover{border-color:rgba(0,255,136,.4);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.4),var(--gg);}
+    .bfc:hover::before{transform:scaleX(1);}
+    .bfc.disc:hover{border-color:rgba(88,101,242,.4);box-shadow:0 14px 40px rgba(0,0,0,.4),0 0 20px rgba(88,101,242,.3);}
+    .bfc.disc::before{background:linear-gradient(90deg,#7289da,var(--cyan));}
+    .bbadge{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:4px 12px;border-radius:20px;margin-bottom:15px;background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.22);}
+    .bbadge.d{background:rgba(88,101,242,.1);color:#7289da;border-color:rgba(88,101,242,.25);}
+    .bico{font-size:2.1rem;margin-bottom:13px;display:block;}
+    .bname{font-family:'Orbitron',monospace;font-size:.88rem;font-weight:700;margin-bottom:7px;letter-spacing:.5px;}
+    .bdesc{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+    .blink{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green);letter-spacing:1px;}
+    .blink.d{color:#7289da;}
+
+    /* Topics */
+    .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:18px;}
+    .tcard{background:var(--bgc);border:1px solid var(--border);border-radius:10px;padding:25px 22px;transition:all .22s;position:relative;overflow:hidden;}
+    .tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));transform:scaleX(0);transform-origin:left;transition:transform .28s;}
+    .tcard:hover{border-color:rgba(0,255,136,.4);transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.4),var(--gg);}
+    .tcard:hover::before{transform:scaleX(1);}
+    .tico{font-size:1.65rem;margin-bottom:13px;display:block;}
+    .tname{font-family:'Orbitron',monospace;font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:.8px;}
+    .tdesc{font-size:.85rem;color:var(--muted);line-height:1.6;}
+    .ttag{display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.57rem;background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2);padding:3px 10px;border-radius:20px;}
+
+    /* Marquee */
+    .mwrap{overflow:hidden;position:relative;padding:26px 0;}
+    .mwrap::before,.mwrap::after{content:'';position:absolute;top:0;bottom:0;width:70px;z-index:2;}
+    .mwrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent);}
+    .mwrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent);}
+    .mtrack{display:flex;gap:13px;width:max-content;animation:mq 30s linear infinite;}
+    @keyframes mq{to{transform:translateX(-50%);}}
+    .lchip{display:flex;align-items:center;gap:7px;padding:8px 17px;background:var(--bgc);border:1px solid var(--border);border-radius:30px;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--muted);white-space:nowrap;}
+
+    /* YouTube */
+    .ytcard{background:var(--bgc);border:1px solid var(--border);border-radius:12px;padding:36px;display:flex;gap:34px;align-items:center;max-width:760px;position:relative;overflow:hidden;}
+    .ytcard::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(255,0,0,.05),transparent 60%);pointer-events:none;}
+    .yticon{font-size:3.6rem;color:#ff0000;text-shadow:0 0 28px rgba(255,0,0,.5);flex-shrink:0;}
+    .ytinfo h3{font-family:'Orbitron',monospace;font-size:1.12rem;font-weight:700;margin-bottom:7px;}
+    .ytinfo p{color:var(--muted);line-height:1.6;margin-bottom:17px;}
+    .ytmeta{display:flex;gap:18px;margin-bottom:18px;}
+    .ytmi{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);}
+    .ytmi span{color:var(--cyan);font-size:.86rem;display:block;font-weight:700;}
+    .ytbtns{display:flex;gap:10px;flex-wrap:wrap;}
+
+    /* Contact */
+    .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:670px;}
+    .ccard{display:flex;align-items:center;gap:13px;background:var(--bgc);border:1px solid var(--border);border-radius:8px;padding:17px;text-decoration:none;color:var(--muted);transition:all .18s;}
+    .ccard:hover{border-color:var(--green);color:var(--text);background:rgba(0,255,136,.04);transform:translateX(4px);}
+    .ccard i{font-size:1.2rem;width:20px;text-align:center;flex-shrink:0;}
+    .clbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+    .cval{font-size:.86rem;font-weight:600;margin-top:2px;}
+
+    /* About */
+    .alayout{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:start;}
+    .atext p{color:var(--muted);line-height:1.8;margin-bottom:14px;font-size:.95rem;}
+    .skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+    .sk{font-family:'JetBrains Mono',monospace;font-size:.67rem;padding:6px 13px;border:1px solid rgba(0,212,255,.25);color:var(--cyan);border-radius:4px;background:rgba(0,212,255,.05);}
+    .acard{background:var(--bgc);border:1px solid var(--border);border-radius:10px;padding:26px;}
+    .acard h4{font-family:'Orbitron',monospace;font-size:.8rem;color:var(--green);margin-bottom:18px;letter-spacing:1px;}
+    .tli{display:flex;gap:12px;margin-bottom:15px;}
+    .tlidot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;margin-top:5px;box-shadow:var(--gg);}
+    .tlih{font-weight:600;color:var(--text);font-size:.88rem;}
+    .tlip{color:var(--muted);font-size:.78rem;margin-top:2px;}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border);padding:24px 52px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);}
+    .ficons{display:flex;gap:13px;}
+    .ficons a{color:var(--muted);text-decoration:none;font-size:.88rem;transition:color .15s;}
+    .ficons a:hover{color:var(--green);}
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media(max-width:1100px){.term{display:none;}}
+
+    @media(max-width:768px){
+      /* Sidebar hidden by default on mobile */
+      .sidebar{transform:translateX(-100%);z-index:210;}
+      .sidebar.open{transform:translateX(0);}
+      /* Main = full screen width */
+      .main{margin-left:0!important;width:100%!important;}
+      .burger{display:block;}
+      /* Topbar */
+      .topbar{padding:0 14px;height:54px;}
+      .tb-left{display:none;}
+      .tb-btns{gap:6px;}
+      .tb-btns .hm{display:none;} /* hide Topics on mobile topbar */
+      .tb-btns .btn{height:36px;padding:0 11px;font-size:.76rem;}
+      /* Hero */
+      #home{padding:34px 18px;min-height:calc(100vh - 54px);}
+      .hcta .btn{height:42px;padding:0 16px;font-size:.84rem;}
+      .hstats{gap:18px;}
+      .sn{font-size:1.4rem;}
+      /* Sections */
+      .sec{padding:50px 18px;}
+      /* Grids */
+      .tgrid{grid-template-columns:1fr;}
+      .bots-grid{grid-template-columns:1fr;}
+      .cgrid{grid-template-columns:1fr;}
+      .alayout{grid-template-columns:1fr;}
+      /* YouTube */
+      .ytcard{flex-direction:column;padding:22px;gap:18px;}
+      /* Full-span cards reset on mobile */
+      .cspan{grid-column:span 1!important;}
+      /* Footer */
+      footer{flex-direction:column;gap:11px;text-align:center;padding:20px 18px;}
+    }
+    @media(max-width:400px){
+      .htitle{font-size:2rem;}
+      .tb-btns .btn{padding:0 8px;font-size:.73rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- WELCOME SPLASH -->
+<div id="splash">
+  <div class="sp-ring"><span class="sp-ico">⚡</span></div>
+  <div class="sp-title">Welcome to<br>Alone Monster Coding Hub</div>
+  <div class="sp-sub">// INITIALIZING TECH HUB...</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+  <button class="sp-btn" onclick="hideSplash()">[ ENTER SITE ]</button>
+</div>
+
+<!-- Custom cursor (desktop) -->
+<div id="cursor"></div>
+
+<!-- Matrix canvas -->
+<canvas id="mc"></canvas>
+
+<!-- Mobile overlay — dims main, does NOT blur it -->
+<div class="overlay" id="overlay" onclick="closeSB()"></div>
+
+<div class="layout">
+
+  <!-- ═══ SIDEBAR ═══════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-name">⚡ ALONE MONSTER<br>CODING HUB</div>
+      <div class="sb-sub"><span class="odot"></span>ONLINE · TECH EXPLORER</div>
+    </div>
+
+    <div class="sb-lbl">// NAVIGATE</div>
+    <a href="#home"      class="nav-item active"><i class="fas fa-terminal"></i>Home</a>
+    <a href="#ai-bots"   class="nav-item"><i class="fas fa-robot"></i>AI Bots <span class="nbadge">NEW</span></a>
+    <a href="#topics"    class="nav-item"><i class="fas fa-microchip"></i>Topics <span class="nbadge">10+</span></a>
+    <a href="#languages" class="nav-item"><i class="fas fa-code"></i>Languages</a>
+    <a href="#youtube"   class="nav-item"><i class="fab fa-youtube"></i>YouTube</a>
+    <a href="#about"     class="nav-item"><i class="fas fa-user-astronaut"></i>About</a>
+    <a href="#contact"   class="nav-item"><i class="fas fa-satellite-dish"></i>Contact</a>
+
+    <div class="sb-div"></div>
+    <div class="sb-lbl">// MY AI BOTS</div>
+    <a href="https://t.me/AloneMonster_Robot" target="_blank" class="sb-bot">
+      <i class="fab fa-telegram" style="color:#0088cc;"></i>
+      <div><span class="sb-blbl">Telegram Bot</span><span class="sb-bname">AloneMonster Robot</span></div>
+    </a>
+    <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="sb-bot" style="margin-top:6px;">
+      <i class="fab fa-discord" style="color:#7289da;"></i>
+      <div><span class="sb-blbl">Discord Bot</span><span class="sb-bname">Add to Discord Server</span></div>
+    </a>
+
+    <div class="sb-div"></div>
+    <div class="sb-lbl">// RESOURCES</div>
+    <a href="https://github.com/chiragalonemonster"    target="_blank" class="nav-item"><i class="fab fa-github"></i>GitHub Repos</a>
+    <a href="https://m.youtube.com/@UnspokenAesthetic"  target="_blank" class="nav-item"><i class="fas fa-play-circle"></i>Watch Videos</a>
+    <a href="https://t.me/alonemonster20"               target="_blank" class="nav-item"><i class="fab fa-telegram"></i>Telegram Channel</a>
+
+    <div class="sb-div"></div>
+    <div class="sb-lbl">// SOCIAL</div>
+    <div class="sg">
+      <a href="https://github.com/chiragalonemonster"    target="_blank" class="soc"><i class="fab fa-github"></i>GitHub</a>
+      <a href="https://m.youtube.com/@UnspokenAesthetic"  target="_blank" class="soc"><i class="fab fa-youtube"></i>YouTube</a>
+      <a href="https://instagram.com/anxiety4410"         target="_blank" class="soc"><i class="fab fa-instagram"></i>Insta</a>
+      <a href="https://facebook.com/chirag.alonemonster"  target="_blank" class="soc"><i class="fab fa-facebook"></i>Facebook</a>
+      <a href="https://t.me/alonemonster20"               target="_blank" class="soc"><i class="fab fa-telegram"></i>Telegram</a>
+      <a href="https://x.com/naskar_chi26012"             target="_blank" class="soc"><i class="fab fa-x-twitter"></i>X</a>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ══════════════════════════════════════ -->
+  <div class="main" id="main">
+
+    <!-- TOPBAR -->
+    <nav class="topbar">
+      <div style="display:flex;align-items:center;gap:11px;min-width:0;flex-shrink:1;">
+        <button class="burger" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+        <div class="tb-left"><span class="hi">~/alone-monster</span> $ — tech·ai·code</div>
+      </div>
+      <div class="tb-btns">
+        <a href="#topics"   class="btn bo hm"><i class="fas fa-th"></i> Topics</a>
+        <a href="#ai-bots"  class="btn bo"><i class="fas fa-robot"></i> AI Bots</a>
+        <a href="https://github.com/chiragalonemonster" target="_blank" class="btn bc"><i class="fab fa-github"></i> GitHub</a>
+        <a href="#contact"  class="btn bp"><i class="fas fa-paper-plane"></i> Contact</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="home">
+      <div class="hgrid"></div>
+      <div class="htag">⚡ Welcome — Alone Monster Coding Hub</div>
+      <h1 class="htitle"><span class="g">Code.</span><br><span class="c">Learn.</span><br>Evolve.</h1>
+      <p class="hdesc">Exploring <b>AI</b>, <b>programming</b>, <b>Android rooting</b>, and cutting-edge technology. From beginner to advanced — your ultimate hub for all things <b>tech</b>.</p>
+      <div class="hcta">
+        <a href="#topics"  class="btn bp"><i class="fas fa-rocket"></i> Explore Topics</a>
+        <a href="#ai-bots" class="btn bc"><i class="fas fa-robot"></i> Try AI Bots</a>
+        <a href="#youtube" class="btn bo"><i class="fab fa-youtube"></i> Watch Videos</a>
+      </div>
+      <div class="hstats">
+        <div><div class="sn">10+</div><div class="sl">Tech Topics</div></div>
+        <div><div class="sn">20+</div><div class="sl">Languages</div></div>
+        <div><div class="sn">2</div><div class="sl">AI Bots</div></div>
+        <div><div class="sn">∞</div><div class="sl">Things to Learn</div></div>
+      </div>
+      <!-- Terminal -->
+      <div class="term">
+        <div class="th"><div class="td2 r"></div><div class="td2 y"></div><div class="td2 gr"></div><div class="tt">alone-monster@terminal</div></div>
+        <div class="tb2">
+          <div class="tl2"><span class="tp2">➜</span><span class="tc2">whoami</span></div>
+          <div class="tl2"><span class="to2">chirag — tech explorer &amp; coder</span></div>
+          <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="tc2">cat skills.txt</span></div>
+          <div class="tl2"><span class="to2">Python, JS, AI/ML, Android</span></div>
+          <div class="tl2"><span class="to2">Rooting, Web Dev, Linux</span></div>
+          <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="tc2">ls bots/</span></div>
+          <div class="tl2"><span class="to2">telegram_bot/  discord_bot/</span></div>
+          <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="tc2">./start.sh</span></div>
+          <div class="tl2"><span class="tm2"># Loading Alone Monster Hub...</span></div>
+          <div class="tl2"><span class="to2">Status: <span style="color:var(--green);">READY ✓</span></span></div>
+          <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="cb"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI BOTS -->
+    <section id="ai-bots" class="sec">
+      <div class="shdr">
+        <div class="stag">// 01 · MY AI BOTS</div>
+        <h2 class="stitle">Try My <span>AI Creations</span></h2>
+        <p class="sdesc">I built these AI-powered bots myself — chat, get code help, and experience AI first-hand.</p>
+      </div>
+      <div class="bots-grid">
+        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="bfc">
+          <div class="bbadge"><i class="fab fa-telegram"></i> TELEGRAM BOT</div>
+          <span class="bico">🤖</span>
+          <div class="bname">AloneMonster Robot</div>
+          <p class="bdesc">My AI Telegram bot — chat with it, ask questions, get code help and more, running 24/7.</p>
+          <div class="blink"><i class="fab fa-telegram"></i> Open on Telegram →</div>
+        </a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="bfc disc">
+          <div class="bbadge d"><i class="fab fa-discord"></i> DISCORD BOT</div>
+          <span class="bico">🛡️</span>
+          <div class="bname">Discord AI Bot</div>
+          <p class="bdesc">Add my AI Discord bot to your server for smart replies, coding help and tech assistance.</p>
+          <div class="blink d"><i class="fab fa-discord"></i> Add to Discord →</div>
+        </a>
+      </div>
+      <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="btn bc"><i class="fab fa-telegram"></i> Open Telegram Bot</a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="btn bd"><i class="fab fa-discord"></i> Add Discord Bot</a>
+      </div>
+    </section>
+
+    <!-- TOPICS -->
+    <section id="topics" class="sec">
+      <div class="shdr">
+        <div class="stag">// 02 · TOPICS</div>
+        <h2 class="stitle">What I <span>Cover</span></h2>
+        <p class="sdesc">Deep dives, tutorials, and guides across the full spectrum of technology.</p>
+      </div>
+      <div class="tgrid">
+        <div class="tcard"><span class="tico">🤖</span><div class="tname">Artificial Intelligence</div><p class="tdesc">LLMs, machine learning, AI tools, prompt engineering and the future of AI.</p><span class="ttag">AI · ML · LLM</span></div>
+        <div class="tcard"><span class="tico">💻</span><div class="tname">Programming</div><p class="tdesc">Coding concepts, projects, best practices, debugging and real-world problem solving.</p><span class="ttag">CODE · DEV</span></div>
+        <div class="tcard"><span class="tico">📱</span><div class="tname">Android Rooting</div><p class="tdesc">Root guides, custom ROMs, Magisk modules, bootloader unlocking and customization.</p><span class="ttag">ROOT · ANDROID</span></div>
+        <div class="tcard"><span class="tico">🌐</span><div class="tname">Web Development</div><p class="tdesc">HTML, CSS, JavaScript, frameworks, responsive design and full-stack applications.</p><span class="ttag">WEB · FRONTEND</span></div>
+        <div class="tcard"><span class="tico">🐧</span><div class="tname">Linux &amp; Terminal</div><p class="tdesc">Shell scripting, Linux administration, terminal tricks, bash and system customization.</p><span class="ttag">LINUX · BASH</span></div>
+        <div class="tcard"><span class="tico">📺</span><div class="tname">YouTube Growth</div><p class="tdesc">Channel settings, SEO, thumbnails, monetization, analytics and growing your YouTube.</p><span class="ttag">YT · GROWTH</span></div>
+        <div class="tcard"><span class="tico">🔐</span><div class="tname">Cybersecurity</div><p class="tdesc">Ethical hacking basics, VPNs, privacy tools, network security and digital protection.</p><span class="ttag">SECURITY · PRIVACY</span></div>
+        <div class="tcard"><span class="tico">☁️</span><div class="tname">Cloud &amp; DevOps</div><p class="tdesc">Deploying apps, Docker, Git workflows, CI/CD pipelines and cloud fundamentals.</p><span class="ttag">CLOUD · DEVOPS</span></div>
+        <div class="tcard"><span class="tico">🤖</span><div class="tname">Bots &amp; Automation</div><p class="tdesc">Telegram bots, Python scripts, task automation, APIs and building useful bots.</p><span class="ttag">BOT · PYTHON</span></div>
+        <div class="tcard"><span class="tico">📚</span><div class="tname">Learn to Code</div><p class="tdesc">Beginner-friendly guides to start your coding journey in any language, step by step.</p><span class="ttag">BEGINNER · LEARN</span></div>
+      </div>
+    </section>
+
+    <!-- LANGUAGES -->
+    <section id="languages" class="sec">
+      <div class="shdr">
+        <div class="stag">// 03 · LANGUAGES</div>
+        <h2 class="stitle">All <span>Programming</span> Languages</h2>
+        <p class="sdesc">Coverage across the entire programming landscape — beginner to advanced.</p>
+      </div>
+      <div class="mwrap"><div class="mtrack" id="mtrack"></div></div>
+      <div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px;" id="ltags"></div>
+    </section>
+
+    <!-- YOUTUBE -->
+    <section id="youtube" class="sec">
+      <div class="shdr">
+        <div class="stag">// 04 · YOUTUBE</div>
+        <h2 class="stitle">Watch &amp; <span>Subscribe</span></h2>
+        <p class="sdesc">Video tutorials, tips, and tech content on my YouTube channel.</p>
+      </div>
+      <div class="ytcard">
+        <i class="fab fa-youtube yticon"></i>
+        <div class="ytinfo">
+          <h3>UnspokenAesthetic</h3>
+          <p>Tech tutorials, Android guides, AI tools, programming tips, and YouTube growth hacks — all in one place.</p>
+          <div class="ytmeta">
+            <div class="ytmi"><span>Tech</span>Focus</div>
+            <div class="ytmi"><span>Regular</span>Uploads</div>
+            <div class="ytmi"><span>Free</span>Content</div>
+          </div>
+          <div class="ytbtns">
+            <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="btn bp" style="background:#ff0000;"><i class="fab fa-youtube"></i> Subscribe Now</a>
+            <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="btn bo"><i class="fas fa-play"></i> Watch Videos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="sec">
+      <div class="shdr">
+        <div class="stag">// 05 · ABOUT</div>
+        <h2 class="stitle">About <span>Me</span></h2>
+      </div>
+      <div class="alayout">
+        <div class="atext">
+          <p>Hey! I'm <strong>Chirag</strong> — a passionate tech enthusiast, coder, and content creator. I love exploring everything from AI to Android rooting and web development.</p>
+          <p>My mission is to make complex technical topics <strong>accessible to everyone</strong> — whether you're a complete beginner or an experienced developer.</p>
+          <p>I build AI bots, create content across YouTube and Telegram, and share scripts, tools, and tutorials that solve real problems.</p>
+          <div class="skills">
+            <span class="sk">Python</span><span class="sk">JavaScript</span><span class="sk">Android Dev</span>
+            <span class="sk">AI / ML</span><span class="sk">Linux</span><span class="sk">Web Dev</span>
+            <span class="sk">Telegram Bots</span><span class="sk">Discord Bots</span>
+            <span class="sk">API Integration</span><span class="sk">Git / GitHub</span><span class="sk">Bash Scripting</span>
+          </div>
+        </div>
+        <div class="acard">
+          <h4>// MY JOURNEY</h4>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">Started Coding</div><div class="tlip">Began with Python and web basics — fell in love with building things.</div></div></div>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">Android Exploration</div><div class="tlip">Dived deep into rooting, custom ROMs and Android customization.</div></div></div>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">YouTube Channel</div><div class="tlip">Launched UnspokenAesthetic to share tech knowledge.</div></div></div>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">Built AI Bots</div><div class="tlip">Created Telegram &amp; Discord AI bots — exploring LLM integrations.</div></div></div>
+          <div class="tli"><div class="tlidot" style="background:var(--cyan);box-shadow:var(--gc);"></div><div><div class="tlih">Now — Creating &amp; Growing</div><div class="tlip">Sharing content, building projects, learning every single day.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="sec">
+      <div class="shdr">
+        <div class="stag">// 06 · CONTACT</div>
+        <h2 class="stitle">Get In <span>Touch</span></h2>
+        <p class="sdesc">Reach out on any platform — always open to collaborations, questions and discussions.</p>
+      </div>
+      <div class="cgrid">
+        <a href="https://github.com/chiragalonemonster"    target="_blank" class="ccard"><i class="fab fa-github" style="color:#ccc;"></i><div><div class="clbl">GitHub</div><div class="cval">chiragalonemonster</div></div></a>
+        <a href="https://m.youtube.com/@UnspokenAesthetic"  target="_blank" class="ccard"><i class="fab fa-youtube" style="color:#ff0000;"></i><div><div class="clbl">YouTube</div><div class="cval">@UnspokenAesthetic</div></div></a>
+        <a href="https://instagram.com/anxiety4410"         target="_blank" class="ccard"><i class="fab fa-instagram" style="color:#e1306c;"></i><div><div class="clbl">Instagram</div><div class="cval">@anxiety4410</div></div></a>
+        <a href="https://facebook.com/chirag.alonemonster"  target="_blank" class="ccard"><i class="fab fa-facebook" style="color:#1877f2;"></i><div><div class="clbl">Facebook</div><div class="cval">chirag.alonemonster</div></div></a>
+        <a href="https://t.me/alonemonster20"               target="_blank" class="ccard"><i class="fab fa-telegram" style="color:#0088cc;"></i><div><div class="clbl">Telegram</div><div class="cval">@alonemonster20</div></div></a>
+        <a href="https://x.com/naskar_chi26012"             target="_blank" class="ccard"><i class="fab fa-x-twitter" style="color:#ccc;"></i><div><div class="clbl">X (Twitter)</div><div class="cval">@naskar_chi26012</div></div></a>
+        <a href="https://t.me/AloneMonster_Robot"           target="_blank" class="ccard"><i class="fab fa-telegram" style="color:#00d4ff;"></i><div><div class="clbl">Telegram AI Bot</div><div class="cval">@AloneMonster_Robot</div></div></a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="ccard"><i class="fab fa-discord" style="color:#7289da;"></i><div><div class="clbl">Discord AI Bot</div><div class="cval">Add to Your Server</div></div></a>
+        <a href="https://wa.me/919531677062" target="_blank" class="ccard cspan" style="grid-column:span 2;"><i class="fab fa-whatsapp" style="color:#25d366;"></i><div><div class="clbl">WhatsApp</div><div class="cval">+91 95316 77062 — Click to message</div></div></a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>© 2025 <span style="color:var(--green);">Alone Monster Coding Hub</span> · Built with ⚡</div>
+      <div class="ficons">
+        <a href="https://github.com/chiragalonemonster"   target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-youtube"></i></a>
+        <a href="https://t.me/alonemonster20"              target="_blank" onmouseover="this.style.color='#0088cc'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-telegram"></i></a>
+        <a href="https://x.com/naskar_chi26012"            target="_blank" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" onmouseover="this.style.color='#7289da'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-discord"></i></a>
+      </div>
+      <div><span style="color:var(--green);">alone-monster</span> $ ./run --mode=always</div>
+    </footer>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+/* ══ WELCOME SPLASH ══════════════════════════════════ */
+function hideSplash(){
+  document.getElementById('splash').classList.add('gone');
+}
+// Auto-dismiss after 2.8 seconds
+setTimeout(hideSplash, 2800);
+
+/* ══ CUSTOM CURSOR (desktop / hover capable only) ════ */
+const cur = document.getElementById('cursor');
+if(window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX+'px';
+    cur.style.top  = e.clientY+'px';
+  });
+  document.querySelectorAll('a,button,.btn,.tcard,.ccard,.bfc,.sb-bot').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+} else {
+  cur.style.display='none'; // hide dot on touch screens
+}
+
+/* ══ CLICK RIPPLE — spawned on each click, lives 1.5s then destroyed ══
+   NO permanent ring element — only appears when you actually tap/click  */
+document.addEventListener('click', function(e){
+  if(!document.getElementById('splash').classList.contains('gone')) return;
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.left = e.clientX+'px';
+  r.style.top  = e.clientY+'px';
+  document.body.appendChild(r);
+  // Auto-remove after animation (1.5s + tiny buffer)
+  setTimeout(()=>{ if(r.parentNode) r.parentNode.removeChild(r); }, 1600);
+});
+
+/* ══ MATRIX RAIN ═════════════════════════════════════ */
+const cv = document.getElementById('mc'), cx = cv.getContext('2d');
+function rsz(){ cv.width=window.innerWidth; cv.height=window.innerHeight; }
+rsz(); window.addEventListener('resize',rsz);
+const ch='01アイウエオカキクABCDEFG<>{}[];=+-*/';
+const fs=14; let dr=Array(Math.floor(window.innerWidth/fs)).fill(1);
+setInterval(()=>{
+  cx.fillStyle='rgba(5,5,9,.05)'; cx.fillRect(0,0,cv.width,cv.height);
+  cx.fillStyle='#00ff88'; cx.font=fs+'px monospace';
+  dr.forEach((y,i)=>{
+    cx.fillText(ch[Math.floor(Math.random()*ch.length)],i*fs,y*fs);
+    if(y*fs>cv.height&&Math.random()>.975) dr[i]=0; dr[i]++;
+  });
+},55);
+
+/* ══ SIDEBAR — NO blur applied to main content ever ═ */
+function toggleSB(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('on');
+  // main content: explicitly keep filter:none at all times
+  document.getElementById('main').style.filter='none';
+}
+function closeSB(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('on');
+  document.getElementById('main').style.filter='none';
+}
+document.querySelectorAll('.nav-item[href^="#"]').forEach(n=>
+  n.addEventListener('click',()=>{ if(window.innerWidth<=768) closeSB(); })
+);
+
+/* ══ ACTIVE NAV ON SCROLL ═══════════════════════════ */
+const secs = document.querySelectorAll('section[id]');
+const navs = document.querySelectorAll('.nav-item[href^="#"]');
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navs.forEach(n=>n.classList.remove('active'));
+      const a=document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if(a) a.classList.add('active');
+    }
+  });
+},{threshold:.3}).observe || secs.forEach(s=>
+  new IntersectionObserver(en=>{
+    en.forEach(e=>{
+      if(e.isIntersecting){
+        navs.forEach(n=>n.classList.remove('active'));
+        const a=document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+        if(a) a.classList.add('active');
+      }
+    });
+  },{threshold:.3}).observe(s)
+);
+// Correct approach:
+const scrollObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navs.forEach(n=>n.classList.remove('active'));
+      const a=document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if(a) a.classList.add('active');
+    }
+  });
+},{threshold:.3});
+secs.forEach(s=>scrollObs.observe(s));
+
+/* ══ LANGUAGES ═══════════════════════════════════════ */
+const langs=[
+  {n:'Python',i:'🐍'},{n:'JavaScript',i:'🌐'},{n:'Java',i:'☕'},
+  {n:'C',i:'🔵'},{n:'C++',i:'⚙️'},{n:'C#',i:'💜'},
+  {n:'Kotlin',i:'📱'},{n:'Swift',i:'🍎'},{n:'Go',i:'🐹'},
+  {n:'Rust',i:'🦀'},{n:'TypeScript',i:'🔷'},{n:'PHP',i:'🐘'},
+  {n:'Ruby',i:'💎'},{n:'Dart',i:'🎯'},{n:'R',i:'📊'},
+  {n:'Scala',i:'⚡'},{n:'Lua',i:'🌙'},{n:'Perl',i:'🐪'},
+  {n:'Bash',i:'🐚'},{n:'HTML/CSS',i:'🎨'},{n:'SQL',i:'🗃️'},
+  {n:'Assembly',i:'🔩'},{n:'Haskell',i:'λ'},{n:'Elixir',i:'💧'},
+];
+const mt=document.getElementById('mtrack');
+[...langs,...langs].forEach(l=>{
+  const d=document.createElement('div'); d.className='lchip';
+  d.textContent=l.i+' '+l.n; mt.appendChild(d);
+});
+const lt=document.getElementById('ltags');
+langs.forEach(l=>{
+  const t=document.createElement('span');
+  t.textContent=l.i+' '+l.n;
+  t.style.cssText='font-family:JetBrains Mono,monospace;font-size:.68rem;padding:5px 14px;border:1px solid rgba(0,212,255,.22);color:#8888aa;border-radius:4px;background:rgba(0,212,255,.03);display:inline-block;transition:all .2s;cursor:default;';
+  t.addEventListener('mouseenter',()=>{t.style.borderColor='var(--cyan)';t.style.color='var(--cyan)';t.style.background='rgba(0,212,255,.08)';});
+  t.addEventListener('mouseleave',()=>{t.style.borderColor='rgba(0,212,255,.22)';t.style.color='#8888aa';t.style.background='rgba(0,212,255,.03)';});
+  lt.appendChild(t);
+});
+
+/* ══ SCROLL REVEAL ═══════════════════════════════════ */
+const rv=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+},{threshold:.08});
+document.querySelectorAll('.tcard,.ccard,.ytcard,.tli,.acard,.bfc').forEach(el=>{
+  el.style.opacity='0'; el.style.transform='translateY(18px)';
+  el.style.transition='opacity .44s ease,transform .44s ease'; rv.observe(el);
+});
+</script>
+</body>
+</html>
