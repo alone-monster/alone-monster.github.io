@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Profile — Alone Monster Coding Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#050509;--bg2:#0c0c14;--bgc:#10101c;--bgs:#08080f;
+  --green:#00ff88;--cyan:#00d4ff;--red:#ff3d2e;--orange:#ff8a1e;
+  --pink:#ff2d87;--violet:#8b3cf7;--gold:#ffb800;
+  --text:#e8e8f0;--muted:#6b6b8a;
+  --border:rgba(0,255,136,.18);
+  --tb:60px;
+  --gg:0 0 20px rgba(0,255,136,.45);
+  --gp:0 0 20px rgba(255,61,46,.45);
+  --gv:0 0 20px rgba(139,60,247,.45);
+  --gc:0 0 20px rgba(0,212,255,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ===== Animated background ===== */
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.04) 1px,transparent 1px);background-size:55px 55px;animation:gmove 30s linear infinite;pointer-events:none;}
+@keyframes gmove{to{background-position:55px 55px;}}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);opacity:.22;z-index:0;pointer-events:none;animation:orbf 12s ease-in-out infinite;}
+.orb1{width:380px;height:380px;background:var(--green);top:-90px;left:-90px;}
+.orb2{width:340px;height:340px;background:var(--cyan);bottom:-80px;right:-80px;animation-delay:-4s;}
+.orb3{width:280px;height:280px;background:var(--pink);top:40%;right:30%;animation-delay:-7s;}
+@keyframes orbf{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.08);}}
+
+/* ===== Topbar ===== */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(5,5,9,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:var(--tb);}
+.tb-left{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-left .hi{color:var(--green);}
+.tb-btns{display:flex;gap:8px;}
+.btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:40px;padding:0 18px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+.bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+.bp{background:var(--green);color:#000;}
+.bp:hover{box-shadow:var(--gg);transform:translateY(-1px);}
+.bd{background:transparent;border:1px solid rgba(255,61,46,.45);color:var(--red);}
+.bd:hover{background:rgba(255,61,46,.1);box-shadow:var(--gp);}
+
+/* ===== Container ===== */
+.wrap{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:36px 28px 80px;}
+
+/* ===== Profile Hero ===== */
+.profile-hero{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;background:linear-gradient(135deg,rgba(0,255,136,.04),rgba(0,212,255,.04));border:1px solid var(--border);border-radius:22px;padding:32px 36px;margin-bottom:28px;position:relative;overflow:hidden;animation:fup .55s both;}
+.profile-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--cyan),var(--green),transparent);}
+@keyframes fup{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+.avatar-wrap{position:relative;width:140px;height:140px;flex-shrink:0;}
+.avatar{width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--cyan));border:3px solid var(--green);box-shadow:0 0 30px rgba(0,255,136,.45);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:900;font-size:3.2rem;color:#000;cursor:pointer;transition:transform .25s;}
+.avatar:hover{transform:scale(1.04);}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar-edit{position:absolute;bottom:6px;right:6px;width:38px;height:38px;border-radius:50%;background:var(--green);color:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid var(--bg);box-shadow:0 4px 14px rgba(0,255,136,.5);transition:all .2s;}
+.avatar-edit:hover{transform:scale(1.12);background:var(--cyan);}
+.avatar-status{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--green);border:3px solid var(--bg);box-shadow:0 0 8px var(--green);}
+
+.profile-info h1{font-family:'Orbitron',monospace;font-size:2rem;font-weight:800;margin-bottom:5px;background:linear-gradient(135deg,var(--text),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.profile-info .email{font-family:'JetBrains Mono',monospace;font-size:.86rem;color:var(--muted);margin-bottom:12px;}
+.profile-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.ptag{font-family:'JetBrains Mono',monospace;font-size:.66rem;padding:5px 12px;border-radius:50px;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.ptag.gold{background:rgba(255,184,0,.12);border:1px solid rgba(255,184,0,.4);color:var(--gold);}
+.ptag.green{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.35);color:var(--green);}
+.ptag.cyan{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.35);color:var(--cyan);}
+
+.profile-actions{display:flex;flex-direction:column;gap:9px;align-items:flex-end;}
+.streak-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:linear-gradient(135deg,rgba(255,138,30,.18),rgba(255,61,46,.18));border:1px solid rgba(255,138,30,.4);border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--orange);}
+.streak-pill i{color:var(--red);}
+
+/* ===== Tabs ===== */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:26px;overflow-x:auto;padding-bottom:1px;}
+.tab{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.92rem;padding:13px 20px;background:transparent;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.tab i{font-size:.95rem;}
+
+.tabpane{display:none;animation:fup .4s both;}
+.tabpane.active{display:block;}
+
+/* ===== Stats grid ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:26px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;transition:all .25s;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--green);}
+.stat-card.cyan::before{background:var(--cyan);}.stat-card.pink::before{background:var(--pink);}.stat-card.gold::before{background:var(--gold);}.stat-card.red::before{background:var(--red);}.stat-card.violet::before{background:var(--violet);}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,255,136,.12);border-color:rgba(0,255,136,.4);}
+.stat-card .ico{font-size:1.4rem;color:var(--green);margin-bottom:10px;}
+.stat-card.cyan .ico{color:var(--cyan);}.stat-card.pink .ico{color:var(--pink);}.stat-card.gold .ico{color:var(--gold);}.stat-card.red .ico{color:var(--red);}.stat-card.violet .ico{color:var(--violet);}
+.stat-card .num{font-family:'Orbitron',monospace;font-size:1.9rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-card .lbl{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);margin-top:6px;letter-spacing:1.2px;text-transform:uppercase;}
+
+/* ===== Section title ===== */
+.sec-title{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;color:var(--text);margin:30px 0 16px;display:flex;align-items:center;gap:10px;}
+.sec-title i{color:var(--green);}
+.sec-title .tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);font-weight:400;letter-spacing:2px;text-transform:uppercase;margin-left:auto;}
+
+/* ===== Course progress ===== */
+.course-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;}
+.course-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .25s;}
+.course-card:hover{transform:translateY(-3px);border-color:var(--green);box-shadow:0 12px 36px rgba(0,255,136,.12);}
+.cc-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.cc-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.cc-icon.html{background:linear-gradient(135deg,#e34f26,#ff8a1e);}
+.cc-icon.python{background:linear-gradient(135deg,#ff2d87,#8b3cf7);}
+.cc-icon.js{background:linear-gradient(135deg,#f7df1e,#ffb800);color:#000;}
+.cc-name{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;}
+.cc-sub{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-top:3px;}
+.cc-bar{width:100%;height:8px;background:rgba(255,255,255,.06);border-radius:50px;overflow:hidden;margin-bottom:10px;}
+.cc-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .8s ease;box-shadow:0 0 12px rgba(0,255,136,.5);}
+.cc-fill.html{background:linear-gradient(90deg,#e34f26,#ff8a1e);box-shadow:0 0 12px rgba(255,138,30,.5);}
+.cc-fill.python{background:linear-gradient(90deg,#ff2d87,#8b3cf7);box-shadow:0 0 12px rgba(255,45,135,.5);}
+.cc-meta{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--muted);margin-bottom:14px;}
+.cc-meta b{color:var(--text);}
+.cc-actions{display:flex;gap:8px;}
+.cc-btn{flex:1;padding:9px;border-radius:8px;text-align:center;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.82rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+.cc-btn:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+.cc-btn.primary{background:var(--green);color:#000;border-color:var(--green);}
+.cc-btn.primary:hover{box-shadow:var(--gg);}
+
+/* ===== Badges ===== */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+.badge{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;transition:all .25s;position:relative;overflow:hidden;}
+.badge.locked{opacity:.4;filter:grayscale(.8);}
+.badge:not(.locked):hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 12px 30px rgba(255,184,0,.2);}
+.badge .icon{font-size:2.4rem;margin-bottom:8px;display:block;filter:drop-shadow(0 0 8px rgba(255,184,0,.5));}
+.badge.locked .icon{filter:none;}
+.badge .name{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.badge .desc{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);line-height:1.4;}
+.badge.unlocked::after{content:'✓';position:absolute;top:6px;right:8px;width:20px;height:20px;background:var(--green);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;}
+
+/* ===== Saved Codes ===== */
+.code-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.code-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;transition:all .25s;}
+.code-card:hover{transform:translateY(-2px);border-color:var(--cyan);}
+.code-card .ttl{font-family:'Orbitron',monospace;font-size:.92rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.code-card .ttl i{color:var(--cyan);}
+.code-card .meta{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:12px;}
+.code-card pre{background:#0a0a13;border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#a8e6c7;overflow:auto;max-height:140px;margin-bottom:12px;line-height:1.5;}
+.code-card .acts{display:flex;gap:8px;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-state i{font-size:3rem;margin-bottom:14px;opacity:.4;display:block;}
+.empty-state p{font-size:.92rem;margin-bottom:14px;}
+
+/* ===== Activity ===== */
+.activity-list{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:8px;}
+.act-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:10px;transition:background .2s;}
+.act-item:hover{background:rgba(0,255,136,.04);}
+.act-item:not(:last-child){border-bottom:1px solid rgba(255,255,255,.04);}
+.act-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,255,136,.1);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.act-icon.cyan{background:rgba(0,212,255,.1);color:var(--cyan);}
+.act-icon.pink{background:rgba(255,45,135,.1);color:var(--pink);}
+.act-icon.gold{background:rgba(255,184,0,.1);color:var(--gold);}
+.act-body{flex:1;}
+.act-text{font-size:.92rem;color:var(--text);}
+.act-text b{color:var(--green);}
+.act-time{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-top:2px;}
+
+/* ===== Streak/Heatmap ===== */
+.heatmap{display:grid;grid-template-columns:repeat(15,1fr);gap:5px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
+.cell{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.04);transition:transform .15s;cursor:pointer;}
+.cell.l1{background:rgba(0,255,136,.18);}.cell.l2{background:rgba(0,255,136,.4);}.cell.l3{background:rgba(0,255,136,.7);}.cell.l4{background:var(--green);box-shadow:0 0 8px rgba(0,255,136,.6);}
+.cell:hover{transform:scale(1.3);}
+.heat-legend{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);justify-content:flex-end;}
+.heat-legend .lc{width:11px;height:11px;border-radius:3px;}
+
+/* ===== Settings forms ===== */
+.settings-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px;}
+.settings-card h3{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.settings-card h3 i{color:var(--green);}
+.settings-card .sub{font-size:.84rem;color:var(--muted);margin-bottom:18px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.94rem;outline:none;transition:all .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--green);background:rgba(0,255,136,.05);box-shadow:0 0 0 3px rgba(0,255,136,.1);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-row .l{flex:1;}
+.toggle-row .l b{display:block;font-size:.92rem;margin-bottom:2px;}
+.toggle-row .l small{font-size:.78rem;color:var(--muted);}
+.switch{position:relative;display:inline-block;width:48px;height:26px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#333;border-radius:50px;cursor:pointer;transition:.3s;}
+.slider::before{content:'';position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.switch input:checked + .slider{background:var(--green);}
+.switch input:checked + .slider::before{transform:translateX(22px);}
+
+/* ===== Toast ===== */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg2);border:1px solid var(--green);color:var(--text);padding:14px 24px;border-radius:50px;font-size:.88rem;z-index:9999;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 12px 40px rgba(0,255,136,.25);display:flex;align-items:center;gap:10px;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.error{border-color:var(--red);box-shadow:0 12px 40px rgba(255,61,46,.25);}
+#toast i{color:var(--green);}
+#toast.error i{color:var(--red);}
+
+/* ===== Modal ===== */
+.modal-bg{position:fixed;inset:0;background:rgba(2,2,6,.85);backdrop-filter:blur(8px);z-index:8000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:30px;max-width:520px;width:100%;max-height:85vh;overflow:auto;}
+.modal h2{font-family:'Orbitron',monospace;font-size:1.15rem;margin-bottom:8px;}
+.modal p{color:var(--muted);margin-bottom:20px;font-size:.92rem;}
+.modal-acts{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+/* ===== Loading screen ===== */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .4s,visibility .4s;}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none;}
+.spinner{width:60px;height:60px;border:3px solid rgba(0,255,136,.15);border-top-color:var(--green);border-radius:50%;animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loader p{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--muted);letter-spacing:3px;}
+
+/* ===== Mobile ===== */
+@media (max-width:780px){
+  .topbar{padding:0 14px;}
+  .tb-btns .btn span{display:none;}
+  .tb-btns .btn{padding:0 12px;}
+  .wrap{padding:20px 16px 70px;}
+  .profile-hero{grid-template-columns:1fr;text-align:center;padding:24px;}
+  .avatar-wrap{margin:0 auto;}
+  .profile-tags{justify-content:center;}
+  .profile-actions{align-items:center;}
+  .profile-info h1{font-size:1.5rem;}
+  .row2{grid-template-columns:1fr;}
+  .heatmap{grid-template-columns:repeat(10,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="spinner"></div><p>LOADING PROFILE...</p></div>
+
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<nav class="topbar">
+  <div class="tb-left"><span class="hi">ALONE MONSTER CODING HUB</span> $ <span>my_profile</span></div>
+  <div class="tb-btns">
+    <a href="index.html" class="btn bo"><i class="fas fa-home"></i> <span>Home</span></a>
+    <a href="HTML&CSS.html" class="btn bo"><i class="fab fa-html5"></i> <span>HTML/CSS</span></a>
+    <a href="python.html" class="btn bo"><i class="fab fa-python"></i> <span>Python</span></a>
+    <button class="btn bd" onclick="signOut()"><i class="fas fa-sign-out-alt"></i> <span>Sign Out</span></button>
+    <!-- Admin Logout button — auto-shown only in admin session by admin_logout.js -->
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- PROFILE HERO -->
+  <section class="profile-hero">
+    <div class="avatar-wrap">
+      <div class="avatar" id="bigAvatar" onclick="document.getElementById('photoInput').click()">
+        <span id="avatarInitial">A</span>
+      </div>
+      <div class="avatar-status" title="Online"></div>
+      <div class="avatar-edit" onclick="document.getElementById('photoInput').click()" title="Change photo">
+        <i class="fas fa-camera"></i>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" hidden onchange="uploadPhoto(event)"/>
+    </div>
+    <div class="profile-info">
+      <h1 id="userName">Welcome, Coder</h1>
+      <div class="email" id="userEmail"><i class="fas fa-envelope" style="margin-right:6px;"></i>loading...</div>
+      <div class="profile-tags">
+        <span class="ptag green"><i class="fas fa-circle" style="font-size:.5rem;margin-right:4px;"></i>Active Member</span>
+        <span class="ptag gold" id="rankTag">⭐ Beginner</span>
+        <span class="ptag cyan" id="memberSinceTag">📅 Member Since —</span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <div class="streak-pill"><i class="fas fa-fire"></i> <span id="streakDays">0</span> day streak</div>
+      <div class="streak-pill" style="background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(0,255,136,.18));border-color:rgba(0,212,255,.4);color:var(--cyan);">
+        <i class="fas fa-bolt"></i> <span id="xpTotal">0</span> XP
+      </div>
+    </div>
+  </section>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" data-tab="overview"><i class="fas fa-chart-line"></i> Overview</button>
+    <button class="tab" data-tab="courses"><i class="fas fa-graduation-cap"></i> Courses</button>
+    <button class="tab" data-tab="badges"><i class="fas fa-medal"></i> Badges</button>
+    <button class="tab" data-tab="codes"><i class="fas fa-code"></i> Saved Codes</button>
+    <button class="tab" data-tab="bookmarks"><i class="fas fa-bookmark"></i> Bookmarks</button>
+    <button class="tab" data-tab="activity"><i class="fas fa-history"></i> Activity</button>
+    <button class="tab" data-tab="settings"><i class="fas fa-cog"></i> Settings</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="tabpane active" id="pane-overview">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="ico"><i class="fas fa-graduation-cap"></i></div><div class="num" id="statLessons">0</div><div class="lbl">Lessons Done</div></div>
+      <div class="stat-card cyan"><div class="ico"><i class="fas fa-code-branch"></i></div><div class="num" id="statCodes">0</div><div class="lbl">Saved Snippets</div></div>
+      <div class="stat-card gold"><div class="ico"><i class="fas fa-medal"></i></div><div class="num" id="statBadges">0</div><div class="lbl">Badges Earned</div></div>
+      <div class="stat-card pink"><div class="ico"><i class="fas fa-fire"></i></div><div class="num" id="statStreak">0</div><div class="lbl">Day Streak</div></div>
+      <div class="stat-card violet"><div class="ico"><i class="fas fa-bolt"></i></div><div class="num" id="statXp">0</div><div class="lbl">Total XP</div></div>
+      <div class="stat-card red"><div class="ico"><i class="fas fa-clock"></i></div><div class="num" id="statHours">0h</div><div class="lbl">Time Coding</div></div>
+    </div>
+
+    <div class="sec-title"><i class="fas fa-calendar-alt"></i> Activity Heatmap <span class="tag">// LAST 90 DAYS</span></div>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="heat-legend">Less <span class="lc" style="background:rgba(255,255,255,.04);"></span><span class="lc" style="background:rgba(0,255,136,.18);"></span><span class="lc" style="background:rgba(0,255,136,.4);"></span><span class="lc" style="background:rgba(0,255,136,.7);"></span><span class="lc" style="background:var(--green);"></span> More</div>
+
+    <div class="sec-title"><i class="fas fa-graduation-cap"></i> My Courses <span class="tag">// IN PROGRESS</span></div>
+    <div class="course-list" id="overviewCourses"></div>
+  </div>
+
+  <!-- COURSES -->
+  <div class="tabpane" id="pane-courses">
+    <div class="sec-title"><i class="fas fa-graduation-cap"></i> All Courses</div>
+    <div class="course-list" id="allCourses"></div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="tabpane" id="pane-badges">
+    <div class="sec-title"><i class="fas fa-medal"></i> Achievement Badges <span class="tag" id="badgeCount">0 / 12 unlocked</span></div>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <!-- SAVED CODES -->
+  <div class="tabpane" id="pane-codes">
+    <div class="sec-title"><i class="fas fa-code"></i> Your Code Snippets <span class="tag">// AUTOSAVED FROM EDITOR</span></div>
+    <div id="codeList"></div>
+  </div>
+
+  <!-- BOOKMARKS -->
+  <div class="tabpane" id="pane-bookmarks">
+    <div class="sec-title"><i class="fas fa-bookmark"></i> Bookmarked Lessons</div>
+    <div id="bookmarkList"></div>
+  </div>
+
+  <!-- ACTIVITY -->
+  <div class="tabpane" id="pane-activity">
+    <div class="sec-title"><i class="fas fa-history"></i> Recent Activity</div>
+    <div class="activity-list" id="activityList"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="tabpane" id="pane-settings">
+
+    <div class="settings-card">
+      <h3><i class="fas fa-user-edit"></i> Profile Information</h3>
+      <p class="sub">Update your display name and bio. Email is managed by your account.</p>
+      <div class="row2">
+        <div class="fg"><label>Display Name</label><input type="text" id="setName" placeholder="Your name"/></div>
+        <div class="fg"><label>Username</label><input type="text" id="setUsername" placeholder="@username"/></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" id="setEmail" disabled/></div>
+      <div class="fg"><label>Bio</label><textarea id="setBio" rows="3" placeholder="Tell us about yourself..."></textarea></div>
+      <div class="row2">
+        <div class="fg"><label>Country</label><input type="text" id="setCountry" placeholder="India"/></div>
+        <div class="fg"><label>Skill Level</label>
+          <select id="setSkill">
+            <option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn bp" onclick="saveProfile()"><i class="fas fa-save"></i> <span>Save Changes</span></button>
+    </div>
+
+    <div class="settings-card">
+      <h3><i class="fas fa-cog"></i> Learning Preferences</h3>
+      <p class="sub">Customize your learning experience.</p>
+      <div class="toggle-row">
+        <div class="l"><b>Auto-run code in editor</b><small>Run code as you type in the editor</small></div>
+        <label class="switch"><input type="checkbox" id="prefAutoRun" checked/><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="l"><b>Sound effects</b><small>Play sounds on code run, lesson complete, etc.</small></div>
+        <label class="switch"><input type="checkbox" id="prefSound"/><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="l"><b>Daily reminders</b><small>Get a daily nudge to keep your streak going</small></div>
+        <label class="switch"><input type="checkbox" id="prefReminders" checked/><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="l"><b>Show line numbers</b><small>Display line numbers in the code editor</small></div>
+        <label class="switch"><input type="checkbox" id="prefLineNum" checked/><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="l"><b>Dark mode (always)</b><small>Keep the dark theme everywhere</small></div>
+        <label class="switch"><input type="checkbox" id="prefDark" checked/><span class="slider"></span></label>
+      </div>
+      <button class="btn bp" style="margin-top:14px;" onclick="savePrefs()"><i class="fas fa-save"></i> <span>Save Preferences</span></button>
+    </div>
+
+    <div class="settings-card">
+      <h3><i class="fas fa-lock"></i> Security</h3>
+      <p class="sub">Update password or sign out from all devices.</p>
+      <button class="btn bo" onclick="resetPassword()"><i class="fas fa-key"></i> <span>Send Password Reset Email</span></button>
+      <button class="btn bo" style="margin-left:8px;" onclick="signOut()"><i class="fas fa-sign-out-alt"></i> <span>Sign Out</span></button>
+    </div>
+
+    <div class="settings-card">
+      <h3><i class="fas fa-database"></i> Data Management</h3>
+      <p class="sub">Export your learning data or reset progress.</p>
+      <button class="btn bo" onclick="exportData()"><i class="fas fa-download"></i> <span>Export My Data (JSON)</span></button>
+      <button class="btn bo" style="margin-left:8px;" onclick="resetProgress()"><i class="fas fa-redo"></i> <span>Reset Progress</span></button>
+    </div>
+
+    <div class="settings-card" style="border-color:rgba(255,61,46,.4);">
+      <h3 style="color:var(--red);"><i class="fas fa-exclamation-triangle" style="color:var(--red);"></i> Danger Zone</h3>
+      <p class="sub">Permanently delete your account and all data. This cannot be undone.</p>
+      <button class="btn bd" onclick="confirmDelete()"><i class="fas fa-trash"></i> <span>Delete Account</span></button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Saved!</span></div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="delModal">
+  <div class="modal">
+    <h2 style="color:var(--red);">Delete Account?</h2>
+    <p>This will permanently delete your account, learning progress, badges, and saved codes. This action <b>cannot be undone</b>.</p>
+    <div class="fg"><label>Type DELETE to confirm</label><input type="text" id="delConfirm" placeholder="DELETE"/></div>
+    <div class="modal-acts">
+      <button class="btn bo" onclick="closeModal('delModal')">Cancel</button>
+      <button class="btn bd" onclick="doDelete()"><i class="fas fa-trash"></i> Delete Forever</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== FIREBASE ============== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<!-- Admin logout button auto-injector (only shows when admin session active) -->
+<script src="admin_logout.js"></script>
+
+<script>
+/* ===== Firebase Config (same as your auth.js) ===== */
+const firebaseConfig = {
+  apiKey:"AIzaSyBNeAqfrJ9fTjYUkWEpz-DZxOd9S1Rqp8c",
+  authDomain:"alone-monster-coding-hub.firebaseapp.com",
+  projectId:"alone-monster-coding-hub",
+  storageBucket:"alone-monster-coding-hub.firebasestorage.app",
+  messagingSenderId:"92310923147",
+  appId:"1:92310923147:web:26a09f2aed09d9aef3718e",
+  measurementId:"G-4YPW7T4WGN"
+};
+if(!firebase.apps||!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+
+let currentUser=null;
+
+/* ===== Helpers ===== */
+const $=id=>document.getElementById(id);
+const lsGet=(k,def)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}};
+const lsSet=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const toast=(msg,err)=>{const t=$('toast');$('toastMsg').textContent=msg;t.className=err?'show error':'show';t.querySelector('i').className=err?'fas fa-exclamation-circle':'fas fa-check-circle';setTimeout(()=>t.classList.remove('show'),2600);};
+const openModal=id=>$(id).classList.add('open');
+const closeModal=id=>$(id).classList.remove('open');
+
+/* ===== Auth Gate ===== */
+auth.onAuthStateChanged(user=>{
+  if(!user){window.location.href='login.html';return;}
+  currentUser=user;
+  initProfile(user);
+  setTimeout(()=>$('loader').classList.add('gone'),300);
+});
+
+/* ===== Tabs ===== */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $('pane-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+/* ===== Profile data sources ===== */
+function getDone(course){return lsGet(course+'_done',[]);}
+function getEditor(course){return lsGet(course+'_editor',null);}
+
+function getProgress(){
+  // Mirror counts from each course page
+  return {
+    htmlcss:{total:35,done:getDone('htmlcss').length},
+    python:{total:40,done:getDone('python').length},
+    js:{total:30,done:getDone('js').length}
+  };
+}
+
+/* ===== Streak tracking ===== */
+function updateStreak(){
+  const today=new Date().toDateString();
+  const data=lsGet('amch_streak',{last:null,count:0,visits:[]});
+  if(data.last===today)return data;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(data.last===yesterday)data.count=(data.count||0)+1;
+  else data.count=1;
+  data.last=today;
+  data.visits=data.visits||[];
+  if(!data.visits.includes(today))data.visits.push(today);
+  if(data.visits.length>180)data.visits=data.visits.slice(-180);
+  lsSet('amch_streak',data);
+  return data;
+}
+
+/* ===== Initialize ===== */
+function initProfile(user){
+  // Avatar
+  const localPhoto=localStorage.getItem('amch_profile_photo');
+  const photo=localPhoto||user.photoURL;
+  const big=$('bigAvatar');
+  if(photo){big.innerHTML=`<img src="${photo}" alt="">`;}
+  else{
+    const initial=(user.displayName||user.email||'A').charAt(0).toUpperCase();
+    big.innerHTML=`<span>${initial}</span>`;
+  }
+
+  // Name + email
+  const profileData=lsGet('amch_profile_data',{});
+  const displayName=profileData.name||user.displayName||(user.email?user.email.split('@')[0]:'Coder');
+  $('userName').textContent='Hi, '+displayName+' 👋';
+  $('userEmail').innerHTML=`<i class="fas fa-envelope" style="margin-right:6px;"></i>${user.email||'—'}`;
+
+  // Member since
+  if(user.metadata && user.metadata.creationTime){
+    const d=new Date(user.metadata.creationTime);
+    $('memberSinceTag').textContent='📅 Joined '+d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  }
+
+  // Streak + XP
+  const streak=updateStreak();
+  $('streakDays').textContent=streak.count;
+  $('statStreak').textContent=streak.count;
+
+  // Stats
+  const prog=getProgress();
+  const lessons=prog.htmlcss.done+prog.python.done+prog.js.done;
+  const totalLessons=prog.htmlcss.total+prog.python.total+prog.js.total;
+  const xp=lessons*50+streak.count*10;
+  const hours=Math.round(lessons*0.4+streak.count*0.5);
+
+  $('statLessons').textContent=lessons;
+  $('statXp').textContent=xp;
+  $('xpTotal').textContent=xp;
+  $('statHours').textContent=hours+'h';
+
+  // Rank
+  let rank='⭐ Beginner';
+  if(lessons>=10)rank='🚀 Learner';
+  if(lessons>=25)rank='💎 Coder';
+  if(lessons>=50)rank='🔥 Pro Coder';
+  if(lessons>=80)rank='👑 Master';
+  $('rankTag').textContent=rank;
+
+  // Saved codes count
+  let codeCount=0;
+  if(getEditor('htmlcss'))codeCount++;
+  if(getEditor('python'))codeCount++;
+  $('statCodes').textContent=codeCount;
+
+  // Render everything
+  renderHeatmap(streak.visits||[]);
+  renderCourses();
+  renderBadges(lessons,streak.count,codeCount);
+  renderCodes();
+  renderBookmarks();
+  renderActivity();
+  loadSettings(user,profileData);
+}
+
+/* ===== Heatmap ===== */
+function renderHeatmap(visits){
+  const hm=$('heatmap');hm.innerHTML='';
+  const visitSet=new Set(visits);
+  const today=new Date();
+  for(let i=89;i>=0;i--){
+    const d=new Date(today.getTime()-i*86400000);
+    const key=d.toDateString();
+    const cell=document.createElement('div');
+    cell.className='cell';
+    if(visitSet.has(key)){
+      // pseudo intensity
+      const lvl=((d.getDate()+i)%4)+1;
+      cell.classList.add('l'+lvl);
+    }
+    cell.title=d.toLocaleDateString();
+    hm.appendChild(cell);
+  }
+}
+
+/* ===== Courses ===== */
+function renderCourses(){
+  const prog=getProgress();
+  const list=[
+    {key:'htmlcss',name:'HTML & CSS',sub:'Web Design Foundations',icon:'<i class="fab fa-html5"></i>',cls:'html',url:'HTML&CSS.html'},
+    {key:'python',name:'Python',sub:'Programming Essentials',icon:'<i class="fab fa-python"></i>',cls:'python',url:'python.html'},
+    {key:'js',name:'JavaScript',sub:'Coming Soon',icon:'<i class="fab fa-js"></i>',cls:'js',url:'#'}
+  ];
+  const html=list.map(c=>{
+    const p=prog[c.key];
+    const pct=p.total?Math.round(p.done/p.total*100):0;
+    return `<div class="course-card">
+      <div class="cc-head">
+        <div class="cc-icon ${c.cls}">${c.icon}</div>
+        <div><div class="cc-name">${c.name}</div><div class="cc-sub">${c.sub}</div></div>
+      </div>
+      <div class="cc-bar"><div class="cc-fill ${c.cls}" style="width:${pct}%"></div></div>
+      <div class="cc-meta"><span><b>${p.done}</b> / ${p.total} lessons</span><span><b>${pct}%</b> complete</span></div>
+      <div class="cc-actions">
+        <a href="${c.url}" class="cc-btn primary"><i class="fas fa-play"></i> ${p.done?'Continue':'Start'}</a>
+        <a href="${c.url}" class="cc-btn"><i class="fas fa-info-circle"></i> Details</a>
+      </div>
+    </div>`;
+  }).join('');
+  $('overviewCourses').innerHTML=html;
+  $('allCourses').innerHTML=html;
+}
+
+/* ===== Badges ===== */
+function renderBadges(lessons,streak,codes){
+  const all=[
+    {ico:'🌱',name:'First Step',desc:'Complete your first lesson',cond:lessons>=1},
+    {ico:'📚',name:'Bookworm',desc:'Complete 5 lessons',cond:lessons>=5},
+    {ico:'🚀',name:'Taking Off',desc:'Complete 10 lessons',cond:lessons>=10},
+    {ico:'💎',name:'Diamond Mind',desc:'Complete 25 lessons',cond:lessons>=25},
+    {ico:'🏆',name:'Champion',desc:'Complete 50 lessons',cond:lessons>=50},
+    {ico:'👑',name:'Master',desc:'Complete 80 lessons',cond:lessons>=80},
+    {ico:'🔥',name:'On Fire',desc:'3-day streak',cond:streak>=3},
+    {ico:'⚡',name:'Lightning',desc:'7-day streak',cond:streak>=7},
+    {ico:'🌟',name:'Shining Star',desc:'30-day streak',cond:streak>=30},
+    {ico:'💻',name:'Code Saver',desc:'Save your first snippet',cond:codes>=1},
+    {ico:'🎨',name:'Web Designer',desc:'Complete HTML & CSS course',cond:getDone('htmlcss').length>=14},
+    {ico:'🐍',name:'Pythonista',desc:'Complete Python course',cond:getDone('python').length>=15}
+  ];
+  const unlocked=all.filter(b=>b.cond).length;
+  $('statBadges').textContent=unlocked;
+  $('badgeCount').textContent=`${unlocked} / ${all.length} unlocked`;
+  $('badgeGrid').innerHTML=all.map(b=>`
+    <div class="badge ${b.cond?'unlocked':'locked'}">
+      <span class="icon">${b.ico}</span>
+      <div class="name">${b.name}</div>
+      <div class="desc">${b.desc}</div>
+    </div>`).join('');
+}
+
+/* ===== Saved codes ===== */
+function renderCodes(){
+  const items=[];
+  const html=getEditor('htmlcss');
+  if(html){items.push({title:'HTML/CSS Editor',icon:'fab fa-html5',lang:'html',code:(html.h||'').slice(0,400),url:'HTML&CSS.html'});}
+  const py=getEditor('python');
+  if(py){items.push({title:'Python Editor',icon:'fab fa-python',lang:'python',code:(typeof py==='string'?py:(py.code||py.c||'')).slice(0,400),url:'python.html'});}
+
+  if(items.length===0){
+    $('codeList').innerHTML=`<div class="empty-state"><i class="fas fa-code"></i><p>No saved snippets yet. Open the code editor on any course page and your code will autosave here.</p><a href="HTML&CSS.html" class="btn bp" style="display:inline-flex;"><i class="fas fa-play"></i> <span>Try the Editor</span></a></div>`;
+    return;
+  }
+  $('codeList').innerHTML=`<div class="code-list">${items.map(it=>`
+    <div class="code-card">
+      <div class="ttl"><i class="${it.icon}"></i> ${it.title}</div>
+      <div class="meta">Auto-saved · ${it.lang}</div>
+      <pre>${(it.code||'(empty)').replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+      <div class="acts">
+        <a href="${it.url}" class="cc-btn primary"><i class="fas fa-edit"></i> Open in Editor</a>
+        <button class="cc-btn" onclick="navigator.clipboard.writeText(\`${it.code.replace(/`/g,'\\`')}\`);toast('Copied!')"><i class="fas fa-copy"></i> Copy</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+/* ===== Bookmarks ===== */
+function renderBookmarks(){
+  const bm=lsGet('amch_bookmarks',[]);
+  if(bm.length===0){
+    $('bookmarkList').innerHTML=`<div class="empty-state"><i class="fas fa-bookmark"></i><p>No bookmarked lessons yet. Bookmark lessons from any course page to find them quickly here.</p></div>`;
+    return;
+  }
+  $('bookmarkList').innerHTML=`<div class="course-list">${bm.map(b=>`
+    <div class="course-card">
+      <div class="cc-head">
+        <div class="cc-icon ${b.course||'html'}"><i class="fas fa-bookmark"></i></div>
+        <div><div class="cc-name">${b.title||'Lesson'}</div><div class="cc-sub">${b.course||'course'}</div></div>
+      </div>
+      <div class="cc-actions">
+        <a href="${b.url||'#'}" class="cc-btn primary"><i class="fas fa-arrow-right"></i> Open</a>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+/* ===== Activity ===== */
+function renderActivity(){
+  const acts=lsGet('amch_activity',[]);
+  const dn=getDone('htmlcss').length+getDone('python').length;
+  const synthetic=[];
+  if(dn>0)synthetic.push({i:'fa-graduation-cap',c:'green',t:`Completed <b>${dn}</b> lessons total`,time:'recently'});
+  const streak=lsGet('amch_streak',{count:0});
+  if(streak.count>0)synthetic.push({i:'fa-fire',c:'pink',t:`<b>${streak.count}-day</b> learning streak`,time:'today'});
+  if(getEditor('htmlcss'))synthetic.push({i:'fa-code',c:'cyan',t:'Saved code in <b>HTML/CSS Editor</b>',time:'recently'});
+  if(getEditor('python'))synthetic.push({i:'fa-code',c:'cyan',t:'Saved code in <b>Python Editor</b>',time:'recently'});
+  synthetic.push({i:'fa-user-plus',c:'gold',t:'Joined <b>Alone Monster Coding Hub</b>',time:'on signup'});
+
+  const all=[...acts,...synthetic];
+  if(all.length===0){
+    $('activityList').innerHTML=`<div class="empty-state"><i class="fas fa-clock"></i><p>No activity yet. Start learning to see your activity here!</p></div>`;
+    return;
+  }
+  $('activityList').innerHTML=all.map(a=>`
+    <div class="act-item">
+      <div class="act-icon ${a.c||''}"><i class="fas ${a.i}"></i></div>
+      <div class="act-body"><div class="act-text">${a.t}</div><div class="act-time">${a.time}</div></div>
+    </div>`).join('');
+}
+
+/* ===== Settings load/save ===== */
+function loadSettings(user,profileData){
+  $('setName').value=profileData.name||user.displayName||'';
+  $('setUsername').value=profileData.username||(user.email?'@'+user.email.split('@')[0]:'');
+  $('setEmail').value=user.email||'';
+  $('setBio').value=profileData.bio||'';
+  $('setCountry').value=profileData.country||'';
+  $('setSkill').value=profileData.skill||'Beginner';
+  const prefs=lsGet('amch_prefs',{autoRun:true,sound:false,reminders:true,lineNum:true,dark:true});
+  $('prefAutoRun').checked=prefs.autoRun;
+  $('prefSound').checked=prefs.sound;
+  $('prefReminders').checked=prefs.reminders;
+  $('prefLineNum').checked=prefs.lineNum;
+  $('prefDark').checked=prefs.dark;
+}
+
+function saveProfile(){
+  const data={
+    name:$('setName').value.trim(),
+    username:$('setUsername').value.trim(),
+    bio:$('setBio').value.trim(),
+    country:$('setCountry').value.trim(),
+    skill:$('setSkill').value
+  };
+  lsSet('amch_profile_data',data);
+  // Update Firebase displayName
+  if(currentUser && data.name){
+    currentUser.updateProfile({displayName:data.name}).catch(e=>{});
+  }
+  $('userName').textContent='Hi, '+(data.name||'Coder')+' 👋';
+  toast('Profile saved!');
+}
+
+function savePrefs(){
+  lsSet('amch_prefs',{
+    autoRun:$('prefAutoRun').checked,
+    sound:$('prefSound').checked,
+    reminders:$('prefReminders').checked,
+    lineNum:$('prefLineNum').checked,
+    dark:$('prefDark').checked
+  });
+  toast('Preferences saved!');
+}
+
+/* ===== Photo upload ===== */
+function uploadPhoto(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){toast('Image too big — keep it under 2MB',true);return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const dataUrl=ev.target.result;
+    localStorage.setItem('amch_profile_photo',dataUrl);
+    $('bigAvatar').innerHTML=`<img src="${dataUrl}" alt="">`;
+    if(currentUser){currentUser.updateProfile({photoURL:dataUrl}).catch(e=>{});}
+    toast('Profile picture updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ===== Auth actions ===== */
+function signOut(){auth.signOut().then(()=>window.location.href='login.html');}
+function resetPassword(){
+  if(!currentUser||!currentUser.email)return toast('No email on file',true);
+  auth.sendPasswordResetEmail(currentUser.email)
+    .then(()=>toast('Password reset email sent!'))
+    .catch(e=>toast(e.message,true));
+}
+function exportData(){
+  const data={
+    profile:lsGet('amch_profile_data',{}),
+    prefs:lsGet('amch_prefs',{}),
+    streak:lsGet('amch_streak',{}),
+    progress:{htmlcss:getDone('htmlcss'),python:getDone('python'),js:getDone('js')},
+    bookmarks:lsGet('amch_bookmarks',[]),
+    codes:{htmlcss:getEditor('htmlcss'),python:getEditor('python')},
+    exported:new Date().toISOString(),
+    user:currentUser?{email:currentUser.email,uid:currentUser.uid,name:currentUser.displayName}:null
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='alone-monster-profile-'+Date.now()+'.json';
+  a.click();
+  toast('Data exported!');
+}
+function resetProgress(){
+  if(!confirm('Reset ALL learning progress? This will clear your lessons-done, streak, badges, and saved codes (your account stays).'))return;
+  ['htmlcss_done','python_done','js_done','htmlcss_editor','python_editor','amch_streak','amch_bookmarks','amch_activity'].forEach(k=>localStorage.removeItem(k));
+  toast('Progress reset.');
+  setTimeout(()=>location.reload(),900);
+}
+function confirmDelete(){openModal('delModal');}
+function doDelete(){
+  if($('delConfirm').value!=='DELETE'){toast('Type DELETE to confirm',true);return;}
+  if(!currentUser)return;
+  currentUser.delete()
+    .then(()=>{localStorage.clear();toast('Account deleted.');setTimeout(()=>window.location.href='login.html',1200);})
+    .catch(e=>{
+      if(e.code==='auth/requires-recent-login'){toast('Please sign in again, then retry delete.',true);setTimeout(()=>auth.signOut().then(()=>window.location.href='login.html'),1500);}
+      else toast(e.message,true);
+    });
+}
+</script>
+
+</body>
+</html>
