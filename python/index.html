@@ -63,6 +63,15 @@
     .bv{background:transparent;border:1px solid rgba(139,60,247,.45);color:var(--violet2);}
     .bv:hover{background:rgba(139,60,247,.12);box-shadow:var(--gv);}
 
+    /* Profile Avatar Button (matches HTML&CSS.html) */
+    .profile-btn{width:42px;height:42px;border-radius:50%;border:2px solid #ff3d2e;background:linear-gradient(135deg,#ff3d2e,#ff8a1e);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;color:#fff;overflow:hidden;flex-shrink:0;transition:all .22s;position:relative;box-shadow:0 0 14px rgba(255,61,46,.35);}
+    .profile-btn:hover{transform:scale(1.06);box-shadow:0 0 22px rgba(255,61,46,.7);border-color:#ff8a1e;}
+    .profile-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;}
+    .profile-btn img.has-photo{display:block;}
+    .profile-btn img.has-photo + i{display:none;}
+    .profile-btn i{font-size:1rem;color:#fff;}
+    .profile-btn::after{content:'';position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;background:#00ff88;border:2px solid #050509;border-radius:50%;}
+
     /* PAGES */
     .page{display:none;width:100%;max-width:100%;}
     .page.active{display:block;}
@@ -515,6 +524,10 @@
         <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-arrow-left"></i> <span>Home</span></a>
         <a href="https://github.com/chiragalonemonster" target="_blank" class="btn bv"><i class="fab fa-github"></i> <span>GitHub</span></a>
         <a href="https://alone-monster.github.io/#contact" class="btn bp"><i class="fas fa-paper-plane"></i> <span>Contact</span></a>
+        <a href="https://alone-monster.github.io/profile.html" class="profile-btn" id="profileBtn" title="My Profile">
+          <img id="profileBtnAvatar" alt="" />
+          <i class="fas fa-user" id="profileBtnIcon"></i>
+        </a>
       </div>
     </nav>
 
@@ -3039,8 +3052,34 @@ async function aiSendMessage(){
 buildModelDropdown();
 document.body.appendChild(document.getElementById('modelList'));
 </script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="/auth.js"></script>
+
+<!-- Profile button avatar loader (Firebase user + localStorage photo) -->
+<script>
+(function(){
+  function setAvatar(){
+    var img=document.getElementById('profileBtnAvatar');
+    if(!img)return;
+    var localPhoto=null;
+    try{localPhoto=localStorage.getItem('amch_profile_photo');}catch(e){}
+    var firebasePhoto=null,name='';
+    try{
+      if(window.firebase && firebase.auth){
+        var u=firebase.auth().currentUser;
+        if(u){firebasePhoto=u.photoURL||null;name=u.displayName||u.email||'';}
+      }
+    }catch(e){}
+    var src=localPhoto||firebasePhoto;
+    if(src){img.src=src;img.classList.add('has-photo');img.alt=name||'Profile';}
+    else{img.classList.remove('has-photo');img.removeAttribute('src');}
+  }
+  document.addEventListener('DOMContentLoaded',setAvatar);
+  if(window.firebase && firebase.auth){
+    try{firebase.auth().onAuthStateChanged(function(){setAvatar();});}catch(e){}
+  }
+  window.addEventListener('storage',function(e){if(e.key==='amch_profile_photo')setAvatar();});
+})();
+</script>
+<!-- Admin logout button auto-injector (only shows when admin session active) -->
+<script src="admin_logout.js"></script>
 </body>
 </html>
