@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alone-monster.github.io/sitemap.xml
