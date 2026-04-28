@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="manifest" href="/manifest.json"/>
@@ -2437,6 +2437,23 @@ function runAndPreview(){
   }
   window.addEventListener('storage',function(e){if(e.key==='amch_profile_photo')setAvatar();});
 })();
+</script>
+
+    <!-- Back to Top Button -->
+<button id="backToTop" title="Back to top"
+  style="position:fixed;bottom:185px;right:22px;z-index:398;
+         width:44px;height:44px;border-radius:50%;border:none;
+         background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);
+         color:#00ff88;font-size:1.1rem;cursor:pointer;display:none;
+         align-items:center;justify-content:center;transition:.2s;
+         box-shadow:0 0 14px rgba(0,255,136,.2);">
+  <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backToTop');
+    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  });
 </script>
 </body>
 </html>
