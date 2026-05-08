@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Termux — Alone Monster Apps</title>
+<meta name="description" content="Termux — A powerful terminal emulator and Linux environment for Android. Download the latest APK, explore features, packages and guides."/>
+<meta property="og:title" content="Termux — Alone Monster Apps"/>
+<meta property="og:description" content="Run a full Linux environment on your Android device — no root needed. Download Termux APK."/>
+<meta property="og:url" content="https://alone-monster.github.io/apps/termux"/>
+<meta name="theme-color" content="#00ff88"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#050509;--bg2:#0c0c14;--bgc:#10101c;--bgs:#08080f;
+  --green:#00ff88;--cyan:#00d4ff;
+  --text:#e8e8f0;--muted:#6b6b8a;
+  --border:rgba(0,255,136,.15);
+  --gg:0 0 20px rgba(0,255,136,.45);
+  --gc:0 0 20px rgba(0,212,255,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;}
+@media(hover:hover){body{cursor:none;}}
+
+#cursor{position:fixed;width:10px;height:10px;background:var(--green);border-radius:50%;pointer-events:none;z-index:8998;transform:translate(-50%,-50%);transition:transform .08s;mix-blend-mode:screen;}
+#cursor.big{transform:translate(-50%,-50%) scale(2.6);}
+#mc{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.04;pointer-events:none;}
+.ripple{position:fixed;width:60px;height:60px;border-radius:50%;border:2px solid var(--green);pointer-events:none;z-index:8999;transform:translate(-50%,-50%) scale(0);opacity:1;animation:rout 1.5s ease-out forwards;}
+@keyframes rout{0%{transform:translate(-50%,-50%) scale(0);opacity:.85;}100%{transform:translate(-50%,-50%) scale(4.8);opacity:0;}}
+@keyframes fup{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes gmove{to{background-position:50px 50px;}}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:150;
+  background:rgba(5,5,9,.97);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:60px;width:100%;
+}
+.tb-logo{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;color:var(--green);text-shadow:var(--gg);letter-spacing:1px;text-decoration:none;}
+.tb-logo span{color:var(--cyan);}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.tb-link{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:5px;padding:7px 14px;display:flex;align-items:center;gap:7px;transition:all .18s;}
+.tb-link:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+.tb-link.cyan{border-color:rgba(0,212,255,.3);}
+.tb-link.cyan:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.06);}
+
+/* BREADCRUMB */
+.breadcrumb{
+  padding:13px 52px;
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  color:var(--muted);letter-spacing:1px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  position:relative;z-index:1;
+}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s;}
+.breadcrumb a:hover{color:var(--green);}
+.breadcrumb .sep{opacity:.4;}
+.breadcrumb .cur{color:var(--green);}
+
+/* HERO */
+.app-hero{
+  padding:60px 52px 52px;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:40px;
+  flex-wrap:wrap;
+}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,136,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.028) 1px,transparent 1px);background-size:50px 50px;animation:gmove 22s linear infinite;pointer-events:none;}
+
+.hero-logo-wrap{
+  width:110px;height:110px;border-radius:22px;
+  background:linear-gradient(135deg,#0a1a0a,#051205);
+  border:1px solid rgba(0,255,136,.35);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 30px rgba(0,255,136,.15),0 8px 30px rgba(0,0,0,.5);
+  flex-shrink:0;animation:fup .5s .1s both;
+}
+.hero-logo-wrap img{width:76px;height:76px;object-fit:contain;border-radius:12px;}
+
+.hero-info{flex:1;min-width:260px;animation:fup .5s .2s both;}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.hero-title{font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;line-height:1.05;margin-bottom:10px;}
+.hero-title .g{color:var(--green);text-shadow:var(--gg);}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:580px;}
+.hero-sub b{color:var(--text);}
+
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
+.hero-mi{font-family:'JetBrains Mono',monospace;}
+.hero-mi .lbl{font-size:.55rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.hero-mi .val{font-size:.82rem;color:var(--cyan);}
+
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-dl{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:14px 28px;border-radius:8px;
+  background:var(--green);color:#000;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.8px;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:all .2s;box-shadow:var(--gg);
+}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(0,255,136,.6);}
+.btn-dl i{font-size:1.1rem;}
+.btn-sec{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 22px;border-radius:8px;
+  background:transparent;border:1px solid rgba(0,212,255,.4);
+  color:var(--cyan);
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.7px;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.btn-sec:hover{background:rgba(0,212,255,.08);box-shadow:var(--gc);}
+
+/* CONTENT */
+.content{position:relative;z-index:1;}
+.sec{padding:52px 52px;border-bottom:1px solid var(--border);}
+.stag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.stitle{font-family:'Orbitron',monospace;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:700;color:var(--text);margin-bottom:16px;}
+.stitle span{color:var(--green);}
+.sbody{color:var(--muted);line-height:1.8;font-size:.97rem;max-width:720px;}
+.sbody b{color:var(--text);}
+.sbody p+p{margin-top:12px;}
+
+/* FEATURES GRID */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:28px;}
+.feat-card{
+  background:var(--bgc);border:1px solid var(--border);border-radius:10px;
+  padding:22px 20px;
+  position:relative;overflow:hidden;
+  transition:all .22s;
+}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));transform:scaleX(0);transform-origin:left;transition:transform .28s;}
+.feat-card:hover{border-color:rgba(0,255,136,.35);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4),var(--gg);}
+.feat-card:hover::before{transform:scaleX(1);}
+.feat-icon{font-size:1.6rem;margin-bottom:12px;display:block;}
+.feat-name{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:.5px;}
+.feat-desc{font-size:.83rem;color:var(--muted);line-height:1.6;}
+
+/* PACKAGES */
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:24px;}
+.pkg-item{
+  background:var(--bgc);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);
+  transition:all .18s;
+}
+.pkg-item:hover{border-color:rgba(0,255,136,.3);color:var(--green);}
+.pkg-item i{color:var(--cyan);font-size:.85rem;width:14px;text-align:center;}
+
+/* COMMANDS TABLE */
+.cmd-table{margin-top:24px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cmd-header{
+  background:var(--bgc);padding:12px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  color:var(--muted);letter-spacing:2px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr 1.4fr;gap:20px;
+}
+.cmd-row{
+  padding:13px 20px;border-bottom:1px solid rgba(0,255,136,.07);
+  display:grid;grid-template-columns:1fr 1.4fr;gap:20px;
+  align-items:center;transition:background .15s;
+}
+.cmd-row:last-child{border-bottom:none;}
+.cmd-row:hover{background:rgba(0,255,136,.04);}
+.cmd-code{
+  font-family:'JetBrains Mono',monospace;font-size:.74rem;
+  color:var(--green);background:rgba(0,255,136,.07);
+  padding:4px 10px;border-radius:5px;
+  border:1px solid rgba(0,255,136,.18);
+  display:inline-block;
+}
+.cmd-desc{font-size:.84rem;color:var(--muted);}
+
+/* INSTALL STEPS */
+.steps{margin-top:24px;display:flex;flex-direction:column;gap:0;}
+.step{
+  display:flex;gap:18px;padding:20px 0;
+  border-bottom:1px solid rgba(0,255,136,.08);
+}
+.step:last-child{border-bottom:none;}
+.step-num{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;
+  color:var(--green);flex-shrink:0;
+}
+.step-body{}
+.step-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:5px;}
+.step-desc{font-size:.86rem;color:var(--muted);line-height:1.6;}
+.step-code{
+  display:inline-block;margin-top:8px;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--cyan);background:rgba(0,212,255,.07);
+  padding:6px 14px;border-radius:5px;border:1px solid rgba(0,212,255,.2);
+}
+
+/* DOWNLOAD SECTION */
+.dl-section{
+  background:linear-gradient(135deg,rgba(0,255,136,.05),rgba(0,212,255,.05));
+  border:1px solid rgba(0,255,136,.2);border-radius:14px;
+  padding:36px;margin-top:0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;
+}
+.dl-info .dl-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;margin-bottom:7px;}
+.dl-info .dl-desc{font-size:.88rem;color:var(--muted);line-height:1.6;max-width:460px;}
+.dl-info .dl-meta{margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;}
+.dl-badge{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  padding:4px 11px;border-radius:20px;letter-spacing:1px;
+  background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.25);
+}
+.dl-badge.b{background:rgba(0,212,255,.1);color:var(--cyan);border-color:rgba(0,212,255,.25);}
+
+/* WARNING */
+.warn-box{
+  background:rgba(255,189,0,.05);border:1px solid rgba(255,189,0,.2);
+  border-radius:10px;padding:18px 20px;margin-top:20px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.warn-box i{color:#ffbd00;margin-top:2px;flex-shrink:0;}
+.warn-text{font-size:.85rem;color:var(--muted);line-height:1.6;}
+.warn-text b{color:#ffbd00;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px 52px;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);flex-wrap:wrap;gap:12px;position:relative;z-index:1;}
+footer span{color:var(--green);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .topbar{padding:0 16px;}
+  .breadcrumb,.sec{padding-left:20px;padding-right:20px;}
+  .app-hero{padding:36px 20px 36px;gap:24px;}
+  .hero-logo-wrap{width:80px;height:80px;}
+  .hero-logo-wrap img{width:54px;height:54px;}
+  footer{padding:18px 20px;}
+  .dl-section{padding:24px 20px;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .cmd-table{overflow-x:auto;}
+}
+@media(max-width:480px){
+  .feat-grid,.pkg-grid{grid-template-columns:1fr;}
+  .hero-btns{flex-direction:column;}
+  .btn-dl,.btn-sec{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="mc"></canvas>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a class="tb-logo" href="https://alone-monster.github.io/">ALONE<span>MONSTER</span></a>
+  <div class="tb-right">
+    <a class="tb-link" href="https://alone-monster.github.io/apps/"><i class="fas fa-th-large"></i> All Apps</a>
+    <a class="tb-link cyan" href="https://alone-monster.github.io/"><i class="fas fa-terminal"></i> Home</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="https://alone-monster.github.io/">alone-monster</a>
+  <span class="sep">/</span>
+  <a href="https://alone-monster.github.io/apps/">apps</a>
+  <span class="sep">/</span>
+  <span class="cur">termux</span>
+</div>
+
+<!-- HERO -->
+<div class="app-hero">
+  <div class="hgrid"></div>
+  <div class="hero-logo-wrap">
+    <img src="https://raw.githubusercontent.com/termux/termux-app/master/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+         onerror="this.parentElement.innerHTML='<span style=&quot;font-size:2.6rem;&quot;>⬛</span>'" alt="Termux Logo"/>
+  </div>
+  <div class="hero-info">
+    <div class="hero-tag">// alone-monster · apps · terminal</div>
+    <h1 class="hero-title"><span class="g">Termux</span></h1>
+    <p class="hero-sub">
+      A powerful <b>terminal emulator</b> and <b>Linux environment</b> for Android. Run real Linux commands, install hundreds of packages, write and execute code — all on your phone, <b>no root required</b>.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-mi"><div class="lbl">Platform</div><div class="val">Android</div></div>
+      <div class="hero-mi"><div class="lbl">Root</div><div class="val">Not Required</div></div>
+      <div class="hero-mi"><div class="lbl">License</div><div class="val">GPL-3.0</div></div>
+      <div class="hero-mi"><div class="lbl">Price</div><div class="val">Free &amp; Open Source</div></div>
+    </div>
+    <div class="hero-btns">
+      <a class="btn-dl" href="https://alone-monster.github.io/apps/termux/termux.apk/">
+        <i class="fas fa-download"></i> Download APK
+      </a>
+      <a class="btn-sec" href="https://github.com/termux/termux-app" target="_blank">
+        <i class="fab fa-github"></i> Source Code
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- WHAT IS TERMUX -->
+  <section class="sec">
+    <div class="stag">// 01 · Overview</div>
+    <h2 class="stitle">What is <span>Termux</span>?</h2>
+    <div class="sbody">
+      <p>
+        <b>Termux</b> is a free, open-source terminal emulator application for Android that provides a minimal Linux base system. Unlike most Android terminals, it does not require root access or any special setup — just install and start typing commands.
+      </p>
+      <p>
+        It ships with its own <b>APT-based package manager</b>, allowing you to install real Linux software like Python, Node.js, Ruby, Go, Rust, git, vim, neovim, tmux, SSH, curl, wget and hundreds more — directly on your Android device.
+      </p>
+      <p>
+        Termux is used by developers for <b>on-the-go coding</b>, security researchers for penetration testing tools, students learning Linux, and hobbyists building automation scripts — all from a phone or tablet.
+      </p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="sec">
+    <div class="stag">// 02 · Features</div>
+    <h2 class="stitle">Key <span>Features</span></h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="feat-icon">🐧</span>
+        <div class="feat-name">Real Linux Environment</div>
+        <p class="feat-desc">A genuine Linux base system with bash, zsh, fish shells, coreutils and all standard Linux tools you already know.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📦</span>
+        <div class="feat-name">APT Package Manager</div>
+        <p class="feat-desc">Install 1000+ packages with <code style="color:var(--green);font-family:monospace;">pkg install</code>. Python, Node.js, Ruby, Java, gcc, clang, ffmpeg and much more.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🔐</span>
+        <div class="feat-name">SSH Client &amp; Server</div>
+        <p class="feat-desc">Connect to remote servers via SSH, or turn your phone into an SSH server so you can code from your PC wirelessly.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🐍</span>
+        <div class="feat-name">Code in Any Language</div>
+        <p class="feat-desc">Python, JavaScript, TypeScript, Ruby, Go, Rust, C, C++, PHP, Lua — compile and run code directly on your device.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📂</span>
+        <div class="feat-name">Full File System Access</div>
+        <p class="feat-desc">Access your internal storage, SD card, and all your files from the terminal. Copy, edit, and manage files with Linux commands.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🌐</span>
+        <div class="feat-name">Network Tools</div>
+        <p class="feat-desc">curl, wget, nmap, netcat, whois, nslookup, OpenSSL — full suite of networking utilities ready to install.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🤖</span>
+        <div class="feat-name">Automation &amp; Scripting</div>
+        <p class="feat-desc">Write bash/python scripts, schedule tasks with cron, automate file operations, build bots — your phone becomes a mini server.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🪟</span>
+        <div class="feat-name">Multi-Session &amp; tmux</div>
+        <p class="feat-desc">Run multiple terminal sessions simultaneously with tmux. Split panes, detach sessions, and multitask like a pro.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- POPULAR PACKAGES -->
+  <section class="sec">
+    <div class="stag">// 03 · Packages</div>
+    <h2 class="stitle">Popular <span>Packages</span></h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:4px;">Install any of these with <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.8rem;">pkg install &lt;name&gt;</code></p>
+    <div class="pkg-grid">
+      <div class="pkg-item"><i class="fab fa-python"></i> python</div>
+      <div class="pkg-item"><i class="fab fa-node-js"></i> nodejs</div>
+      <div class="pkg-item"><i class="fab fa-git-alt"></i> git</div>
+      <div class="pkg-item"><i class="fas fa-code"></i> vim / neovim</div>
+      <div class="pkg-item"><i class="fas fa-terminal"></i> tmux</div>
+      <div class="pkg-item"><i class="fas fa-lock"></i> openssh</div>
+      <div class="pkg-item"><i class="fas fa-globe"></i> curl</div>
+      <div class="pkg-item"><i class="fas fa-download"></i> wget</div>
+      <div class="pkg-item"><i class="fas fa-network-wired"></i> nmap</div>
+      <div class="pkg-item"><i class="fas fa-database"></i> sqlite</div>
+      <div class="pkg-item"><i class="fab fa-rust"></i> rust</div>
+      <div class="pkg-item"><i class="fas fa-microchip"></i> gcc / clang</div>
+      <div class="pkg-item"><i class="fas fa-cogs"></i> make</div>
+      <div class="pkg-item"><i class="fab fa-php"></i> php</div>
+      <div class="pkg-item"><i class="fas fa-gem"></i> ruby</div>
+      <div class="pkg-item"><i class="fas fa-film"></i> ffmpeg</div>
+      <div class="pkg-item"><i class="fas fa-server"></i> nginx</div>
+      <div class="pkg-item"><i class="fas fa-key"></i> gnupg</div>
+    </div>
+  </section>
+
+  <!-- ESSENTIAL COMMANDS -->
+  <section class="sec">
+    <div class="stag">// 04 · Commands</div>
+    <h2 class="stitle">Essential <span>Commands</span></h2>
+    <div class="cmd-table">
+      <div class="cmd-header"><span>Command</span><span>Description</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg update</span><span class="cmd-desc">Update package lists to latest</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg upgrade</span><span class="cmd-desc">Upgrade all installed packages</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg install python</span><span class="cmd-desc">Install Python interpreter</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg install git</span><span class="cmd-desc">Install Git version control</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg search &lt;name&gt;</span><span class="cmd-desc">Search for a package by name</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg list-installed</span><span class="cmd-desc">List all installed packages</span></div>
+      <div class="cmd-row"><span class="cmd-code">pkg uninstall &lt;name&gt;</span><span class="cmd-desc">Remove an installed package</span></div>
+      <div class="cmd-row"><span class="cmd-code">termux-setup-storage</span><span class="cmd-desc">Grant access to phone storage</span></div>
+      <div class="cmd-row"><span class="cmd-code">ssh user@host</span><span class="cmd-desc">Connect to a remote SSH server</span></div>
+      <div class="cmd-row"><span class="cmd-code">python script.py</span><span class="cmd-desc">Run a Python script</span></div>
+      <div class="cmd-row"><span class="cmd-code">node app.js</span><span class="cmd-desc">Run a Node.js application</span></div>
+      <div class="cmd-row"><span class="cmd-code">tmux new -s main</span><span class="cmd-desc">Start a new named tmux session</span></div>
+    </div>
+  </section>
+
+  <!-- HOW TO INSTALL -->
+  <section class="sec">
+    <div class="stag">// 05 · Installation</div>
+    <h2 class="stitle">How to <span>Install</span></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Download the APK</div>
+          <p class="step-desc">Download the Termux APK directly from this page. Do NOT install from Google Play — the Play Store version is outdated and no longer maintained by the Termux team.</p>
+          <a class="step-code" href="https://alone-monster.github.io/apps/termux/termux.apk/"><i class="fas fa-download"></i> Download APK</a>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Allow Unknown Sources</div>
+          <p class="step-desc">Go to <b>Settings → Security → Install Unknown Apps</b> (or similar on your Android version) and allow your file manager or browser to install APKs.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Install the APK</div>
+          <p class="step-desc">Open the downloaded APK file from your file manager and tap <b>Install</b>. The installation takes only a few seconds.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">First Launch &amp; Setup</div>
+          <p class="step-desc">Open Termux. It will automatically set up its base environment. Once ready, update all packages with:</p>
+          <span class="step-code">pkg update && pkg upgrade</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <div class="step-title">Grant Storage Access</div>
+          <p class="step-desc">To access your phone's internal storage from Termux, run this command once and tap <b>Allow</b>:</p>
+          <span class="step-code">termux-setup-storage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warn-box" style="margin-top:28px;">
+      <i class="fas fa-triangle-exclamation"></i>
+      <div class="warn-text"><b>Important:</b> Always download Termux from F-Droid or a trusted source like this page. The Google Play Store version is outdated (2019) and no longer receives updates.</div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD CTA -->
+  <section class="sec" style="border-bottom:none;">
+    <div class="stag">// 06 · Download</div>
+    <h2 class="stitle" style="margin-bottom:28px;">Get <span>Termux</span> Now</h2>
+    <div class="dl-section">
+      <div class="dl-info">
+        <div class="dl-title">Termux — Terminal Emulator for Android</div>
+        <p class="dl-desc">Download the latest Termux APK for free. A full Linux environment in your pocket — no root, no restrictions.</p>
+        <div class="dl-meta">
+          <span class="dl-badge"><i class="fas fa-shield-halved"></i> SAFE &amp; OPEN SOURCE</span>
+          <span class="dl-badge b"><i class="fas fa-mobile-screen"></i> ANDROID 7+</span>
+          <span class="dl-badge"><i class="fas fa-certificate"></i> GPL-3.0 LICENSE</span>
+        </div>
+      </div>
+      <a class="btn-dl" href="https://alone-monster.github.io/apps/termux/termux.apk/" style="font-size:1.05rem;padding:16px 34px;">
+        <i class="fas fa-download"></i> Download APK
+      </a>
+    </div>
+  </section>
+
+</div><!-- /content -->
+
+<!-- FOOTER -->
+<footer>
+  <div><span>alone-monster</span> $ ./apps/termux --info</div>
+  <div>Built by <span>Chirag</span> · Alone Monster Coding Hub</div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('cursor');
+if(window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove', e => { cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px'; });
+  document.querySelectorAll('a,button,.feat-card,.pkg-item').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+} else { cur.style.display = 'none'; }
+
+/* CLICK RIPPLE */
+document.addEventListener('click', function(e){
+  const r = document.createElement('div'); r.className = 'ripple';
+  r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
+  document.body.appendChild(r); setTimeout(() => r.remove(), 1600);
+});
+
+/* MATRIX RAIN */
+const cv = document.getElementById('mc'), cx = cv.getContext('2d');
+function rsz(){ cv.width = window.innerWidth; cv.height = window.innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+const ch = '01アイウエオABCDEFG<>{}[]=+-*/';
+const fs = 14; let dr = Array(Math.floor(window.innerWidth/fs)).fill(1);
+setInterval(() => {
+  cx.fillStyle = 'rgba(5,5,9,.05)'; cx.fillRect(0,0,cv.width,cv.height);
+  cx.fillStyle = '#00ff88'; cx.font = fs+'px monospace';
+  dr.forEach((y,i) => { cx.fillText(ch[Math.floor(Math.random()*ch.length)], i*fs, y*fs); if(y*fs > cv.height && Math.random()>.975) dr[i]=0; dr[i]++; });
+}, 55);
+
+/* SCROLL REVEAL */
+const rv = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+}, {threshold:.06});
+document.querySelectorAll('.feat-card,.pkg-item,.cmd-row,.step').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
+  el.style.transition = 'opacity .4s ease,transform .4s ease';
+  rv.observe(el);
+});
+</script>
+</body>
+</html>
