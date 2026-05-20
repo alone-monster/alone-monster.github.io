@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Codes — Alone Monster Coding Hub</title>
+  <meta name="description" content="Code snippets, tutorials, and programming articles by Chirag — Python, JavaScript, HTML/CSS and more."/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
+      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;--orange:#ff8a1e;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;overflow-y:auto;min-height:100vh;}
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+    .orb1{width:500px;height:500px;background:rgba(139,60,247,.07);top:-200px;right:-100px;}
+    .orb2{width:400px;height:400px;background:rgba(0,255,136,.06);bottom:-100px;left:-100px;}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;margin-right:auto;}
+    .tb-brand span{color:var(--green);}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:36px;padding:0 14px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+
+    /* WRAP */
+    .wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:40px 28px 80px;}
+
+    /* HERO */
+    .hero{margin-bottom:40px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.22);border-radius:50px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+    .hero h1{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .hero p{color:var(--muted);font-size:.98rem;max-width:580px;line-height:1.6;}
+
+    /* FILTER BAR */
+    .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:32px;}
+    .search-wrap{position:relative;flex:1;min-width:220px;max-width:360px;}
+    .search-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.88rem;}
+    .search-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px 12px 10px 36px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.92rem;outline:none;transition:all .2s;}
+    .search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,255,136,.1);}
+    .filter-tags{display:flex;gap:7px;flex-wrap:wrap;}
+    .ftag{padding:8px 15px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .18s;}
+    .ftag:hover,.ftag.active{background:rgba(0,255,136,.1);border-color:var(--green);color:var(--green);}
+    .count-badge{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-left:auto;white-space:nowrap;}
+
+    /* ARTICLES GRID */
+    .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+
+    /* ARTICLE CARD */
+    .art-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .28s;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;}
+    .art-card:hover{transform:translateY(-5px);border-color:var(--card-color,var(--green));box-shadow:0 16px 48px rgba(0,0,0,.5);}
+    .art-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:var(--card-bg,linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,255,.1)));position:relative;overflow:hidden;}
+    .art-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(5,5,9,.8));}
+    .art-thumb .cat-badge{position:absolute;top:14px;left:14px;z-index:1;padding:5px 12px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+    .art-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
+    .art-title{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;color:var(--text);line-height:1.35;}
+    .art-desc{color:var(--muted);font-size:.86rem;line-height:1.55;flex:1;}
+    .art-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+    .art-date{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);}
+    .art-tags{display:flex;gap:5px;}
+    .art-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:3px 9px;border-radius:50px;border:1px solid rgba(255,255,255,.08);color:var(--muted);}
+    .art-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);}
+    .art-footer .read-time{display:flex;align-items:center;gap:5px;}
+    .art-footer .open-link{margin-left:auto;color:var(--card-color,var(--green));display:flex;align-items:center;gap:5px;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;}
+
+    /* EMPTY STATE */
+    .empty{text-align:center;padding:80px 20px;color:var(--muted);display:none;}
+    .empty i{font-size:3rem;opacity:.3;margin-bottom:16px;display:block;}
+    .empty p{font-size:.95rem;}
+
+    /* FEATURED BANNER */
+    .featured{background:linear-gradient(135deg,rgba(139,60,247,.12),rgba(0,212,255,.08));border:1px solid rgba(139,60,247,.3);border-radius:18px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;gap:24px;cursor:pointer;transition:all .25s;text-decoration:none;}
+    .featured:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,.4);}
+    .featured-icon{width:70px;height:70px;border-radius:18px;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+    .featured-badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--violet);letter-spacing:2px;text-transform:uppercase;background:rgba(139,60,247,.12);border:1px solid rgba(139,60,247,.3);border-radius:50px;padding:4px 12px;display:inline-block;margin-bottom:6px;}
+    .featured-title{font-family:'Orbitron',monospace;font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;}
+    .featured-desc{color:var(--muted);font-size:.9rem;line-height:1.55;}
+    .featured-arrow{margin-left:auto;color:var(--cyan);font-size:1.5rem;flex-shrink:0;}
+
+    /* SECTION TITLE */
+    .sec-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+    .sec-title i{color:var(--green);}
+
+    /* FOOTER */
+    .foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-top:60px;letter-spacing:1px;}
+
+    @media(max-width:720px){
+      .wrap{padding:28px 16px 60px;}
+      .hero h1{font-size:1.7rem;}
+      .featured{flex-direction:column;gap:16px;padding:22px 20px;}
+      .featured-arrow{display:none;}
+      .topbar{padding:0 16px;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
+  <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i> Home</a>
+  <a href="https://alone-monster.github.io/python/" class="btn bo"><i class="fab fa-python"></i> Python</a>
+  <a href="https://alone-monster.github.io/html-css/" class="btn bo"><i class="fab fa-html5"></i> HTML/CSS</a>
+  <a href="https://alone-monster.github.io/javascript/" class="btn bo"><i class="fab fa-js"></i> JS</a>
+  <a href="https://alone-monster.github.io/support/" class="btn bo"><i class="fas fa-headset"></i></a>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-code"></i> Code Library</div>
+    <h1>Codes &amp; Snippets</h1>
+    <p>Ready-to-use code snippets, tutorials, and mini-projects. Copy, learn, and build — all in one place.</p>
+  </div>
+
+  <!-- FEATURED -->
+  <a class="featured" href="codes/article-python-scraper.html">
+    <div class="featured-icon">🕷️</div>
+    <div>
+      <div class="featured-badge">⭐ Featured Article</div>
+      <div class="featured-title">Python Web Scraper — Full Tutorial</div>
+      <div class="featured-desc">Build a complete web scraper using Python + BeautifulSoup. Scrape any website, save data to CSV, and handle pagination — step by step.</div>
+    </div>
+    <i class="fas fa-arrow-right featured-arrow"></i>
+  </a>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search articles..." oninput="filterArticles()"/>
+    </div>
+    <div class="filter-tags">
+      <button class="ftag active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="ftag" data-filter="python" onclick="setFilter('python',this)">Python</button>
+      <button class="ftag" data-filter="javascript" onclick="setFilter('javascript',this)">JavaScript</button>
+      <button class="ftag" data-filter="html" onclick="setFilter('html',this)">HTML/CSS</button>
+      <button class="ftag" data-filter="tools" onclick="setFilter('tools',this)">Tools</button>
+      <button class="ftag" data-filter="beginner" onclick="setFilter('beginner',this)">Beginner</button>
+    </div>
+    <div class="count-badge" id="countBadge">Loading...</div>
+  </div>
+
+  <!-- ARTICLES -->
+  <div class="sec-title"><i class="fas fa-layer-group"></i> All Articles</div>
+  <div class="articles-grid" id="articlesGrid"></div>
+  <div class="empty" id="emptyState">
+    <i class="fas fa-magnifying-glass"></i>
+    <p>No articles match your search. Try different keywords or clear the filter.</p>
+  </div>
+
+  <footer class="foot">
+    <p>© 2025 Alone Monster Coding Hub · <a href="https://alone-monster.github.io/" style="color:var(--green);text-decoration:none;">alone-monster.github.io</a></p>
+  </footer>
+</main>
+
+<script>
+const ARTICLES = [
+  {
+    id:'py-hello-world', slug:'article-python-hello.html',
+    title:'Python Hello World & Basics', desc:'Everything you need to get started with Python — variables, data types, print, and your first program.',
+    cat:'Python', filter:'python', tags:['beginner','python'], icon:'🐍', date:'May 2025', readTime:'5 min',
+    bg:'linear-gradient(135deg,rgba(255,45,135,.12),rgba(139,60,247,.1))', color:'#ff2d87',
+    catStyle:'background:rgba(255,45,135,.15);border:1px solid rgba(255,45,135,.4);color:#ff2d87;'
+  },
+  {
+    id:'py-loops', slug:'article-python-loops.html',
+    title:'Python Loops — for, while & Patterns', desc:'Master for and while loops in Python. Includes number patterns, star patterns, and nested loop examples.',
+    cat:'Python', filter:'python', tags:['beginner','python'], icon:'🔁', date:'May 2025', readTime:'7 min',
+    bg:'linear-gradient(135deg,rgba(255,45,135,.1),rgba(255,138,30,.1))', color:'#ff8a1e',
+    catStyle:'background:rgba(255,138,30,.15);border:1px solid rgba(255,138,30,.4);color:#ff8a1e;'
+  },
+  {
+    id:'py-scraper', slug:'article-python-scraper.html',
+    title:'Python Web Scraper Full Tutorial', desc:'Scrape any website with Python + BeautifulSoup. Handle pagination, save to CSV, and extract images.',
+    cat:'Python', filter:'python', tags:['intermediate','python','scraping'], icon:'🕷️', date:'May 2025', readTime:'12 min',
+    bg:'linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,255,.1))', color:'#00ff88',
+    catStyle:'background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.4);color:#00ff88;'
+  },
+  {
+    id:'js-dom', slug:'article-js-dom.html',
+    title:'JavaScript DOM Manipulation Guide', desc:'Learn how to select, create, modify and delete HTML elements dynamically using vanilla JavaScript.',
+    cat:'JavaScript', filter:'javascript', tags:['beginner','javascript','dom'], icon:'🌐', date:'May 2025', readTime:'8 min',
+    bg:'linear-gradient(135deg,rgba(247,223,30,.1),rgba(255,184,0,.1))', color:'#ffb800',
+    catStyle:'background:rgba(255,184,0,.15);border:1px solid rgba(255,184,0,.4);color:#ffb800;'
+  },
+  {
+    id:'js-fetch', slug:'article-js-fetch.html',
+    title:'Fetch API & Async/Await Explained', desc:'Master API calls in JavaScript — fetch(), Promises, async/await, and error handling with real examples.',
+    cat:'JavaScript', filter:'javascript', tags:['intermediate','javascript','api'], icon:'⚡', date:'May 2025', readTime:'10 min',
+    bg:'linear-gradient(135deg,rgba(67,97,238,.12),rgba(0,212,255,.1))', color:'#4361ee',
+    catStyle:'background:rgba(67,97,238,.15);border:1px solid rgba(67,97,238,.4);color:#4361ee;'
+  },
+  {
+    id:'html-flexbox', slug:'article-html-flexbox.html',
+    title:'CSS Flexbox — Complete Cheat Sheet', desc:'Everything about Flexbox in one place. Containers, items, alignment, and 10 real-world layout examples.',
+    cat:'HTML/CSS', filter:'html', tags:['beginner','css','layout'], icon:'🎨', date:'May 2025', readTime:'9 min',
+    bg:'linear-gradient(135deg,rgba(255,61,46,.1),rgba(255,138,30,.1))', color:'#ff3d2e',
+    catStyle:'background:rgba(255,61,46,.15);border:1px solid rgba(255,61,46,.4);color:#ff3d2e;'
+  },
+  {
+    id:'html-grid', slug:'article-html-grid.html',
+    title:'CSS Grid Layout — Full Tutorial', desc:'Build complex layouts with CSS Grid. Rows, columns, areas, auto-fit, auto-fill — all covered with live demos.',
+    cat:'HTML/CSS', filter:'html', tags:['intermediate','css','layout'], icon:'▦', date:'May 2025', readTime:'11 min',
+    bg:'linear-gradient(135deg,rgba(209,58,189,.12),rgba(67,97,238,.1))', color:'#d13abd',
+    catStyle:'background:rgba(209,58,189,.15);border:1px solid rgba(209,58,189,.4);color:#d13abd;'
+  },
+  {
+    id:'tools-git', slug:'article-git-basics.html',
+    title:'Git & GitHub Basics for Beginners', desc:'Learn version control from scratch. git init, add, commit, push, pull, branching, and merging explained simply.',
+    cat:'Tools', filter:'tools', tags:['beginner','git','tools'], icon:'🐙', date:'May 2025', readTime:'8 min',
+    bg:'linear-gradient(135deg,rgba(255,138,30,.1),rgba(255,61,46,.1))', color:'#ff8a1e',
+    catStyle:'background:rgba(255,138,30,.15);border:1px solid rgba(255,138,30,.4);color:#ff8a1e;'
+  },
+];
+
+let activeFilter = 'all';
+let searchTerm = '';
+
+function renderArticles(){
+  const grid = document.getElementById('articlesGrid');
+  const empty = document.getElementById('emptyState');
+  const countBadge = document.getElementById('countBadge');
+  const filtered = ARTICLES.filter(a=>{
+    const matchFilter = activeFilter==='all' || a.filter===activeFilter || a.tags.includes(activeFilter);
+    const matchSearch = !searchTerm || a.title.toLowerCase().includes(searchTerm) || a.desc.toLowerCase().includes(searchTerm) || a.tags.some(t=>t.includes(searchTerm));
+    return matchFilter && matchSearch;
+  });
+
+  countBadge.textContent = filtered.length + ' article' + (filtered.length!==1?'s':'');
+
+  if(filtered.length===0){
+    grid.innerHTML=''; empty.style.display='block'; return;
+  }
+  empty.style.display='none';
+  grid.innerHTML = filtered.map(a=>`
+    <a class="art-card" href="${a.slug}" style="--card-color:${a.color};">
+      <div class="art-thumb" style="background:${a.bg};">
+        <span style="z-index:1;">${a.icon}</span>
+        <div class="cat-badge" style="${a.catStyle}">${a.cat}</div>
+      </div>
+      <div class="art-body">
+        <div class="art-title">${a.title}</div>
+        <div class="art-desc">${a.desc}</div>
+        <div class="art-meta">
+          <div class="art-date">${a.date}</div>
+          <div class="art-tags">${a.tags.slice(0,2).map(t=>`<span class="art-tag">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="art-footer">
+        <div class="read-time"><i class="fas fa-clock"></i> ${a.readTime} read</div>
+        <div class="open-link">Read Article <i class="fas fa-arrow-right"></i></div>
+      </div>
+    </a>
+  `).join('');
+}
+
+function setFilter(f, btn){
+  activeFilter = f;
+  document.querySelectorAll('.ftag').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderArticles();
+}
+
+function filterArticles(){
+  searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+  renderArticles();
+}
+
+renderArticles();
+</script>
+</body>
+</html>
