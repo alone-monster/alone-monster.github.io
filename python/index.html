@@ -833,7 +833,7 @@ Output will appear here!
       <button class="ai-size-btn" id="aiSizeBtn" onclick="aiToggleFullscreen()"><i class="fas fa-expand" id="aiSizeIcon"></i></button>
     </div>
   </div>
-  <div class="ai-model-bar">
+  <div class="ai-model-bar" style="display:none">
     <span class="ai-model-label">🤖 Model</span>
     <div class="ai-model-dropdown-wrap" id="modelDropdownWrap">
       <div class="ai-model-selected" id="modelSelected" onclick="toggleModelDropdown()">
@@ -2960,13 +2960,12 @@ function copyToEditor(idx){
 /* ═══════════════════════════════════════════
    AI CHATBOT — EXACT COPY FROM https://alone-monster.github.io/
 ═══════════════════════════════════════════ */
-const RENDER_PROXY='https://ai-proxy-vq3q.onrender.com/proxy';
-const AI_MODELS=[
-  {id:'alone-monster',name:'Alone Monster AI',desc:"Chirag's custom model",badge:'free',dot:'',useProxy:false,apiUrl:'https://api.xiaomimimo.com/v1/chat/completions',apiKey:'sk-si3fhtkugft1p7ho5jlngxc8f95nvk5xxzkxfibg738nsdxo',model:'mimo-v2-flash'},
-  {id:'groq-llama',name:'Llama 3.3 70B (Groq)',desc:'Meta via Groq — blazing fast',badge:'fast',dot:'cyan',useProxy:true,provider:'groq',model:'llama-3.3-70b-versatile'},
-  {id:'groq-llama-fast',name:'Llama 3.1 8B (Groq)',desc:'Meta via Groq — ultra fast',badge:'fast',dot:'cyan',useProxy:true,provider:'groq',model:'llama-3.1-8b-instant'},
-  {id:'cerebras-llama8b',name:'Llama 3.1 8B (Cerebras)',desc:'Cerebras — fastest free model',badge:'free',dot:'pink',useProxy:false,apiUrl:'https://api.cerebras.ai/v1/chat/completions',apiKey:'YOUR_CEREBRAS_API_KEY',model:'llama3.1-8b'},
-  {id:'openrouter-llama',name:'Llama 3.1 8B (OpenRouter)',desc:'OpenRouter — free open model',badge:'free',dot:'',useProxy:false,apiUrl:'https://openrouter.ai/api/v1/chat/completions',apiKey:'YOUR_OPENROUTER_API_KEY',model:'meta-llama/llama-3.1-8b-instruct:free'},
+/* Groq Direct API — replace key at console.groq.com */
+const GROQ_API_KEY = 'YOUR_GROQ_API_KEY';
+
+const AI_MODELS = [
+  { id:'groq-llama', name:'Llama 3.3 70B', desc:'Meta via Groq — blazing fast & free', badge:'fast', dot:'cyan',
+    useProxy:false, apiUrl:'https://api.groq.com/openai/v1/chat/completions', apiKey:GROQ_API_KEY, model:'llama-3.3-70b-versatile' },
 ];
 const SITE_CONTEXT=`=== ALONE MONSTER CODING HUB — PYTHON ASSISTANT ===
 You are Alone Monster AI — a Python programming specialist.
@@ -2987,7 +2986,7 @@ Be a friendly Python tutor. Respond in English.
 Help with code errors, explain concepts, suggest project ideas.
 Use emojis occasionally. Be concise.`;
 
-let activeModelId='alone-monster';
+let activeModelId='groq-llama';
 function getActiveModel(){return AI_MODELS.find(m=>m.id===activeModelId)||AI_MODELS[0];}
 function buildModelDropdown(){
   const list=document.getElementById('modelList');list.innerHTML='';
@@ -3066,15 +3065,9 @@ async function aiSendMessage(){
   const m=getActiveModel();
   try{
     let res,data,reply;
-    if(m.useProxy){
-      res=await fetch(RENDER_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:m.provider,model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory]})});
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'Proxy Error'}`);}
-      data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply received.';
-    }else{
-      res=await fetch(m.apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},body:JSON.stringify({model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory],temperature:0.8,max_tokens:1024})});
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
-      data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply received.';
-    }
+    res=await fetch(m.apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},body:JSON.stringify({model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory],temperature:0.8,max_tokens:1024})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
+    data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply received.';
     aiHistory.push({role:'assistant',content:reply});
     if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
     aiRemoveTyping();aiAddMessage(markdownToHtml(reply),false);
