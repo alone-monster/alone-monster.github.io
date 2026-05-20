@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Changelog — Alone Monster Coding Hub</title>
+  <meta name="description" content="All updates, releases, and improvements to Alone Monster Coding Hub — fetched live from GitHub."/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
+      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;--orange:#ff8c00;
+      --gg:0 0 24px rgba(0,255,136,.4);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;overflow-y:auto;min-height:100vh;}
+
+    /* BG */
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+    .orb1{width:600px;height:600px;background:rgba(0,255,136,.06);top:-200px;left:-200px;}
+    .orb2{width:500px;height:500px;background:rgba(139,60,247,.06);bottom:-150px;right:-150px;}
+    .orb3{width:300px;height:300px;background:rgba(0,212,255,.04);top:40%;left:50%;transform:translateX(-50%);}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:1px;}
+    .tb-brand span{color:var(--green);}
+    .tb-btns{display:flex;gap:8px;align-items:center;}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:38px;padding:0 16px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+    .bg-btn{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;font-weight:700;}
+    .bg-btn:hover{box-shadow:var(--gg);}
+
+    /* WRAP */
+    .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:52px 24px 100px;}
+
+    /* HERO */
+    .hero{text-align:center;margin-bottom:60px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:50px;padding:7px 20px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;}
+    .hero-badge .dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 1.4s infinite;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+    .hero h1{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px;line-height:1.2;}
+    .hero p{color:var(--muted);font-size:1.05rem;max-width:540px;margin:0 auto;line-height:1.7;}
+
+    /* STATS BAR */
+    .stats-bar{display:flex;gap:16px;justify-content:center;margin-bottom:48px;flex-wrap:wrap;}
+    .stat-pill{display:flex;align-items:center;gap:9px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;padding:10px 20px;font-family:'JetBrains Mono',monospace;font-size:.75rem;}
+    .stat-pill i{color:var(--green);}
+    .stat-pill .sv{color:var(--green);font-weight:700;margin-right:2px;}
+
+    /* TOOLBAR */
+    .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+    .toolbar-left{display:flex;align-items:center;gap:10px;}
+    .filter-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.8px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:50px;padding:7px 16px;cursor:pointer;transition:all .18s;}
+    .filter-chip:hover,.filter-chip.active{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.07);}
+    .filter-chip.active{font-weight:600;}
+    .refresh-btn{font-family:'JetBrains Mono',monospace;font-size:.72rem;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:8px;padding:7px 14px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px;}
+    .refresh-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+    .refresh-btn.spinning i{animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* TIMELINE */
+    .timeline{position:relative;padding-left:28px;}
+    .timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--green),rgba(0,255,136,.1) 80%,transparent);}
+
+    /* RELEASE CARD */
+    .release{position:relative;margin-bottom:36px;animation:fadeUp .4s ease both;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+    .release::before{content:'';position:absolute;left:-33px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 16px rgba(0,255,136,.6);border:2px solid var(--bg);transition:all .2s;}
+    .release.pre::before{background:var(--orange);box-shadow:0 0 14px rgba(255,140,0,.5);}
+    .release.draft::before{background:var(--muted);box-shadow:none;}
+    .release-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .25s,box-shadow .25s;}
+    .release-card:hover{border-color:rgba(0,255,136,.3);box-shadow:0 8px 40px rgba(0,0,0,.5);}
+    .release-card.pre{border-color:rgba(255,140,0,.15);}
+    .release-card.pre:hover{border-color:rgba(255,140,0,.35);}
+
+    /* CARD HEADER */
+    .rc-head{display:flex;align-items:flex-start;justify-content:space-between;padding:22px 24px 16px;gap:14px;flex-wrap:wrap;}
+    .rc-left{display:flex;flex-direction:column;gap:6px;}
+    .rc-badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+    .badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1.2px;text-transform:uppercase;padding:3px 10px;border-radius:50px;font-weight:700;}
+    .b-latest{background:rgba(0,255,136,.15);color:var(--green);border:1px solid rgba(0,255,136,.35);}
+    .b-pre{background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.3);}
+    .b-draft{background:rgba(106,106,138,.15);color:var(--muted);border:1px solid rgba(106,106,138,.25);}
+    .b-tag{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.25);}
+    .rc-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:800;color:var(--text);line-height:1.3;}
+    .rc-meta{display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);flex-wrap:wrap;}
+    .rc-meta i{color:rgba(0,255,136,.5);}
+    .rc-meta a{color:var(--muted);text-decoration:none;transition:color .15s;}
+    .rc-meta a:hover{color:var(--green);}
+    .rc-right{display:flex;gap:8px;align-items:flex-start;flex-shrink:0;}
+    .rc-gh-link{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:6px 12px;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all .18s;white-space:nowrap;}
+    .rc-gh-link:hover{color:var(--green);border-color:var(--green);background:rgba(0,255,136,.05);}
+
+    /* CARD BODY */
+    .rc-body{padding:4px 24px 20px;}
+    .rc-divider{height:1px;background:var(--border);margin:0 24px 20px;}
+
+    /* MARKDOWN BODY */
+    .md-body{font-family:'Rajdhani',sans-serif;font-size:1rem;line-height:1.75;color:#c8c8d8;}
+    .md-body h1,.md-body h2,.md-body h3{font-family:'Orbitron',monospace;color:var(--text);margin:18px 0 10px;font-size:.9rem;font-weight:800;letter-spacing:.5px;}
+    .md-body h2{font-size:.85rem;}
+    .md-body h3{font-size:.8rem;color:var(--muted);}
+    .md-body p{margin:8px 0;}
+    .md-body ul,.md-body ol{padding-left:20px;margin:8px 0;}
+    .md-body li{margin:4px 0;}
+    .md-body code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:1px 7px;color:var(--green);}
+    .md-body pre{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;padding:16px;margin:12px 0;overflow-x:auto;}
+    .md-body pre code{background:none;border:none;padding:0;color:#aeffd5;}
+    .md-body a{color:var(--cyan);text-decoration:none;}
+    .md-body a:hover{text-decoration:underline;}
+    .md-body strong,.md-body b{color:var(--text);font-weight:700;}
+    .md-body em{color:var(--muted);font-style:italic;}
+    .md-body hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
+    .md-body blockquote{border-left:3px solid var(--violet);padding-left:14px;color:var(--muted);margin:12px 0;}
+
+    /* ASSETS */
+    .rc-assets{padding:0 24px 20px;}
+    .assets-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .assets-label::before{content:'';flex:1;height:1px;background:var(--border);}
+    .assets-label::after{content:'';flex:1;height:1px;background:var(--border);}
+    .assets-list{display:flex;flex-wrap:wrap;gap:8px;}
+    .asset-chip{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);text-decoration:none;transition:all .18s;}
+    .asset-chip:hover{border-color:var(--cyan);color:var(--cyan);}
+    .asset-chip i{color:var(--cyan);}
+    .asset-chip .dl-count{margin-left:4px;color:rgba(0,255,136,.6);font-size:.62rem;}
+
+    /* EMPTY / LOADING */
+    .state-box{text-align:center;padding:80px 24px;color:var(--muted);}
+    .state-box i{font-size:3rem;margin-bottom:20px;display:block;opacity:.3;}
+    .state-box h3{font-family:'Orbitron',monospace;font-size:1rem;color:var(--muted);margin-bottom:10px;}
+    .state-box p{font-size:.9rem;line-height:1.6;}
+    .loader{display:flex;gap:6px;justify-content:center;margin-bottom:20px;}
+    .loader span{width:8px;height:8px;background:var(--green);border-radius:50%;animation:bounce .7s infinite alternate;}
+    .loader span:nth-child(2){animation-delay:.15s;}
+    .loader span:nth-child(3){animation-delay:.3s;}
+    @keyframes bounce{to{transform:translateY(-10px);opacity:.5;}}
+
+    /* FOOTER */
+    .footer{position:relative;z-index:1;text-align:center;border-top:1px solid var(--border);padding:32px 24px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;}
+    .footer a{color:var(--green);text-decoration:none;}
+    .footer a:hover{text-decoration:underline;}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0d0d18;border:1px solid var(--green);border-radius:10px;padding:12px 24px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    @media(max-width:600px){
+      .hero h1{font-size:1.8rem;}
+      .rc-head{padding:16px 16px 12px;}
+      .rc-body{padding:4px 16px 16px;}
+      .rc-divider{margin:0 16px 16px;}
+      .rc-assets{padding:0 16px 16px;}
+      .timeline{padding-left:18px;}
+      .timeline::before{left:0;}
+      .release::before{left:-23px;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a class="tb-brand" href="https://alone-monster.github.io/">ALONE<span>MONSTER</span></a>
+  <div class="tb-btns">
+    <a class="btn bo" href="https://alone-monster.github.io/"><i class="fas fa-arrow-left"></i> Home</a>
+    <a class="btn bo" href="https://github.com/chiragalonemonster/alone-monster.github.io/releases" target="_blank"><i class="fab fa-github"></i> GitHub Releases</a>
+  </div>
+</header>
+
+<!-- WRAP -->
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span>Live from GitHub</div>
+    <h1>// Changelog</h1>
+    <p>Every update, fix, and feature drop — fetched live from GitHub Releases.</p>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar" id="statsBar" style="display:none;">
+    <div class="stat-pill"><i class="fas fa-tag"></i><span><span class="sv" id="statTotal">0</span> total releases</span></div>
+    <div class="stat-pill"><i class="fas fa-rocket"></i><span>Latest: <span class="sv" id="statLatest">—</span></span></div>
+    <div class="stat-pill"><i class="fas fa-calendar-alt"></i><span>Last updated: <span class="sv" id="statDate">—</span></span></div>
+    <div class="stat-pill"><i class="fas fa-download"></i><span><span class="sv" id="statDownloads">0</span> total downloads</span></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="filter-chip active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-chip" data-filter="stable" onclick="setFilter('stable',this)">Stable</button>
+      <button class="filter-chip" data-filter="pre" onclick="setFilter('pre',this)">Pre-release</button>
+    </div>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadReleases(true)">
+      <i class="fas fa-sync-alt"></i> Refresh
+    </button>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline" id="timeline">
+    <!-- Loading State -->
+    <div class="state-box" id="loadingState">
+      <div class="loader"><span></span><span></span><span></span></div>
+      <h3>Fetching releases…</h3>
+      <p>Pulling latest data from GitHub API</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Data fetched live from <a href="https://github.com/chiragalonemonster/alone-monster.github.io" target="_blank">github.com/chiragalonemonster/alone-monster.github.io</a></p>
+  <p style="margin-top:8px;opacity:.5;">GitHub API · Unauthenticated rate limit: 60 req/hr · Cache: 5 min</p>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const REPO_OWNER = 'chiragalonemonster';
+const REPO_NAME  = 'alone-monster.github.io';
+const API_BASE   = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+const CACHE_KEY  = 'am_changelog_cache';
+const CACHE_TTL  = 5 * 60 * 1000;
+
+let allReleases = [];
+let activeFilter = 'all';
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', () => loadReleases(false));
+
+/* ── LOAD RELEASES ── */
+async function loadReleases(forceRefresh = false) {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  showLoading();
+
+  if (!forceRefresh) {
+    const cached = getCache();
+    if (cached) {
+      allReleases = cached;
+      renderAll();
+      btn.classList.remove('spinning');
+      return;
+    }
+  }
+
+  try {
+    const pages = await fetchAllPages();
+    allReleases = pages;
+    setCache(pages);
+    renderAll();
+    if (forceRefresh) toast('✓ Releases refreshed from GitHub');
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+/* ── FETCH ALL PAGES (up to 10 pages × 30) ── */
+async function fetchAllPages() {
+  let page = 1;
+  let all  = [];
+  while (page <= 10) {
+    const url = `${API_BASE}/releases?per_page=30&page=${page}`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 403) throw new Error('GitHub API rate limit reached. Please wait a minute and try again.');
+      if (res.status === 404) throw new Error('Repository not found or no releases published yet.');
+      throw new Error(`GitHub API error ${res.status}: ${data.message || 'Unknown error'}`);
+    }
+    const data = await res.json();
+    if (!data.length) break;
+    all = all.concat(data);
+    if (data.length < 30) break;
+    page++;
+  }
+  return all;
+}
+
+/* ── RENDER ALL ── */
+function renderAll() {
+  updateStats();
+  document.getElementById('statsBar').style.display = 'flex';
+  renderReleases();
+}
+
+/* ── STATS ── */
+function updateStats() {
+  const total = allReleases.length;
+  const latest = allReleases.find(r => !r.prerelease && !r.draft);
+  const totalDL = allReleases.reduce((s, r) => s + (r.assets || []).reduce((a, x) => a + x.download_count, 0), 0);
+  document.getElementById('statTotal').textContent   = total;
+  document.getElementById('statLatest').textContent  = latest ? latest.tag_name : (allReleases[0]?.tag_name || '—');
+  document.getElementById('statDate').textContent    = allReleases.length ? fmtDate(allReleases[0].published_at) : '—';
+  document.getElementById('statDownloads').textContent = totalDL.toLocaleString();
+}
+
+/* ── SET FILTER ── */
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderReleases();
+}
+
+/* ── RENDER RELEASES ── */
+function renderReleases() {
+  const timeline = document.getElementById('timeline');
+  const filtered = allReleases.filter(r => {
+    if (activeFilter === 'stable') return !r.prerelease && !r.draft;
+    if (activeFilter === 'pre')    return r.prerelease;
+    return true;
+  });
+
+  if (!filtered.length) {
+    timeline.innerHTML = `
+      <div class="state-box">
+        <i class="fas fa-inbox"></i>
+        <h3>No releases found</h3>
+        <p>${activeFilter === 'pre' ? 'No pre-releases published yet.' : activeFilter === 'stable' ? 'No stable releases published yet.' : 'No releases have been published on this repo yet.'}</p>
+      </div>`;
+    return;
+  }
+
+  const firstStable = filtered.find(r => !r.prerelease && !r.draft);
+  timeline.innerHTML = filtered.map((r, i) => buildCard(r, r === firstStable)).join('');
+
+  /* stagger animation delay */
+  timeline.querySelectorAll('.release').forEach((el, i) => {
+    el.style.animationDelay = `${i * 55}ms`;
+  });
+}
+
+/* ── BUILD CARD ── */
+function buildCard(r, isLatest) {
+  const typeClass = r.prerelease ? 'pre' : r.draft ? 'draft' : '';
+
+  /* badges */
+  let badges = '';
+  if (isLatest)     badges += `<span class="badge b-latest">★ Latest</span>`;
+  if (r.prerelease) badges += `<span class="badge b-pre">Pre-release</span>`;
+  if (r.draft)      badges += `<span class="badge b-draft">Draft</span>`;
+  badges += `<span class="badge b-tag">${escHtml(r.tag_name)}</span>`;
+
+  /* title */
+  const title = r.name ? escHtml(r.name) : escHtml(r.tag_name);
+
+  /* meta */
+  const pub   = r.published_at ? fmtDate(r.published_at) : 'Unknown date';
+  const author = r.author ? `<a href="${r.author.html_url}" target="_blank">@${escHtml(r.author.login)}</a>` : '';
+  const meta = [
+    `<i class="fas fa-calendar"></i> ${pub}`,
+    author ? `<i class="fas fa-user"></i> ${author}` : '',
+  ].filter(Boolean).join(' &nbsp;·&nbsp; ');
+
+  /* body */
+  const bodyMd = (r.body || '').trim();
+  const bodyHtml = bodyMd ? `<div class="rc-divider"></div><div class="rc-body"><div class="md-body">${parseMd(bodyMd)}</div></div>` : '';
+
+  /* assets */
+  let assetsHtml = '';
+  if (r.assets && r.assets.length) {
+    const chips = r.assets.map(a => `
+      <a href="${a.browser_download_url}" class="asset-chip" target="_blank">
+        <i class="fas fa-download"></i>
+        ${escHtml(a.name)}
+        <span class="dl-count">${a.download_count > 0 ? `↓${fmtNum(a.download_count)}` : ''}</span>
+      </a>`).join('');
+    assetsHtml = `<div class="rc-assets"><div class="assets-label">Assets</div><div class="assets-list">${chips}</div></div>`;
+  }
+
+  return `
+  <div class="release ${typeClass}">
+    <div class="release-card ${typeClass}">
+      <div class="rc-head">
+        <div class="rc-left">
+          <div class="rc-badges">${badges}</div>
+          <div class="rc-title">${title}</div>
+          <div class="rc-meta">${meta}</div>
+        </div>
+        <div class="rc-right">
+          <a class="rc-gh-link" href="${r.html_url}" target="_blank">
+            <i class="fab fa-github"></i> View on GitHub
+          </a>
+        </div>
+      </div>
+      ${bodyHtml}
+      ${assetsHtml}
+    </div>
+  </div>`;
+}
+
+/* ── LOADING / ERROR ── */
+function showLoading() {
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('timeline').innerHTML = `
+    <div class="state-box" id="loadingState">
+      <div class="loader"><span></span><span></span><span></span></div>
+      <h3>Fetching releases…</h3>
+      <p>Pulling latest data from GitHub API</p>
+    </div>`;
+}
+
+function showError(msg) {
+  document.getElementById('timeline').innerHTML = `
+    <div class="state-box">
+      <i class="fas fa-exclamation-triangle" style="color:var(--red);opacity:.7;"></i>
+      <h3>Could not load releases</h3>
+      <p>${escHtml(msg)}</p>
+      <br>
+      <button class="btn bo" onclick="loadReleases(true)" style="margin:0 auto;">
+        <i class="fas fa-sync-alt"></i> Try Again
+      </button>
+    </div>`;
+}
+
+/* ── CACHE ── */
+function setCache(data) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
+}
+function getCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const c = JSON.parse(raw);
+    if (Date.now() - c.ts > CACHE_TTL) return null;
+    return c.data;
+  } catch(e) { return null; }
+}
+
+/* ── TOAST ── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ── HELPERS ── */
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function fmtNum(n) {
+  if (n >= 1000) return (n/1000).toFixed(1)+'k';
+  return String(n);
+}
+
+/* ── BASIC MARKDOWN PARSER ── */
+function parseMd(md) {
+  let html = escHtml(md);
+
+  /* headings */
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm,  '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm,   '<h1>$1</h1>');
+
+  /* horizontal rule */
+  html = html.replace(/^---$/gm, '<hr>');
+
+  /* bold + italic */
+  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g,      '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g,           '<em>$1</em>');
+
+  /* inline code */
+  html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+  /* fenced code blocks */
+  html = html.replace(/```[\w]*\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+  /* blockquote */
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  /* unordered lists */
+  html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>[\s\S]+?<\/li>)(?!\n*<li>)/g, '<ul>$1</ul>');
+  html = html.replace(/(<\/li>\n<li>)/g, '</li><li>');
+
+  /* ordered lists */
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+  /* links */
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+  /* line breaks → paragraphs */
+  const blocks = html.split(/\n{2,}/);
+  html = blocks.map(b => {
+    b = b.trim();
+    if (!b) return '';
+    if (/^<(h[1-3]|ul|ol|pre|blockquote|hr)/.test(b)) return b;
+    return `<p>${b.replace(/\n/g,'<br>')}</p>`;
+  }).join('');
+
+  return html;
+}
+</script>
+</body>
+</html>
