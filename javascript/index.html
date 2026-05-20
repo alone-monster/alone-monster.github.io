@@ -858,7 +858,7 @@
       <button class="ai-size-btn" id="aiSizeBtn" onclick="aiToggleFullscreen()" title="Maximize"><i class="fas fa-expand" id="aiSizeIcon"></i></button>
     </div>
   </div>
-  <div class="ai-model-bar">
+  <div class="ai-model-bar" style="display:none">
     <span class="ai-model-label">MODEL</span>
     <div class="ai-model-dropdown-wrap" id="modelDropdownWrap">
       <div class="ai-model-selected" id="modelSelected" onclick="toggleModelDropdown()">
@@ -891,14 +891,15 @@
 <div class="ai-model-list" id="modelList"></div>
 
 <!-- EXAMPLES MODAL -->
-<div class="ex-modal" id="exModal" onclick="if(event.target===this)closeExModal()">
-  <div class="ex-modal-content">
-    <div class="ex-modal-head">
-      <span class="ico" id="exModalIcon">🎨</span>
-      <div class="info"><h3 id="exModalTitle">Title</h3><p id="exModalDesc">Desc</p></div>
+<div class="ex-modal" id="exModal">
+  <div class="ex-modal-bg" onclick="closeExModal()"></div>
+  <div class="ex-modal-box">
+    <div class="ex-modal-header">
+      <span class="ex-modal-title" id="exModalTitle"></span>
       <button class="ex-modal-close" onclick="closeExModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="ex-modal-body">
+      <p class="ex-modal-desc" id="exModalDesc"></p>
       <div class="ex-modal-tabs">
         <button class="ex-modal-tab active" onclick="exTab('html',this)">HTML</button>
         <button class="ex-modal-tab" onclick="exTab('css',this)">CSS</button>
@@ -909,9 +910,10 @@
         <pre><code id="exModalCode" class="language-html"></code></pre>
       </div>
     </div>
-    <div class="ex-modal-foot">
-      <button class="clear-btn" onclick="copyModalCode()"><i class="fas fa-copy"></i> Copy</button>
+    <div class="ex-modal-footer">
       <button class="run-btn" onclick="tryInEditor()"><i class="fas fa-play"></i> Try in Editor</button>
+      <button class="clear-btn" onclick="copyModalCode()"><i class="fas fa-copy"></i> Copy Code</button>
+      <button class="clear-btn" onclick="closeExModal()">Close</button>
     </div>
   </div>
 </div>
@@ -3607,10 +3609,12 @@ function openPreviewOverlay(){
   runHtmlCss();
   $('previewOverlay').classList.add('open');
   document.body.style.overflow='hidden';
+  var dn=$('dockNav');if(dn)dn.classList.add('dock-hidden');
 }
 function closePreviewOverlay(){
   $('previewOverlay').classList.remove('open');
   document.body.style.overflow='';
+  var dn=$('dockNav');if(dn)dn.classList.remove('dock-hidden');
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&$('previewOverlay')&&$('previewOverlay').classList.contains('open'))closePreviewOverlay();
@@ -4258,13 +4262,12 @@ function copyToEditor(idx){
 }
 
 /* ========== AI CHATBOT ========== */
-const RENDER_PROXY='https://ai-proxy-vq3q.onrender.com/proxy';
+/* Groq Direct API — replace key at console.groq.com */
+const GROQ_API_KEY = 'YOUR_GROQ_API_KEY';
+
 const AI_MODELS=[
-  {id:'alone-monster',name:'Alone Monster AI',desc:"Chirag's custom model",badge:'free',dot:'',useProxy:false,apiUrl:'https://api.xiaomimimo.com/v1/chat/completions',apiKey:'sk-si3fhtkugft1p7ho5jlngxc8f95nvk5xxzkxfibg738nsdxo',model:'mimo-v2-flash'},
-  {id:'groq-llama',name:'Llama 3.3 70B (Groq)',desc:'Meta via Groq — blazing fast',badge:'fast',dot:'cyan',useProxy:true,provider:'groq',model:'llama-3.3-70b-versatile'},
-  {id:'groq-llama-fast',name:'Llama 3.1 8B (Groq)',desc:'Meta via Groq — ultra fast',badge:'fast',dot:'cyan',useProxy:true,provider:'groq',model:'llama-3.1-8b-instant'},
-  {id:'cerebras-llama8b',name:'Llama 3.1 8B (Cerebras)',desc:'Cerebras — fastest free model',badge:'free',dot:'pink',useProxy:false,apiUrl:'https://api.cerebras.ai/v1/chat/completions',apiKey:'YOUR_CEREBRAS_API_KEY',model:'llama3.1-8b'},
-  {id:'openrouter-llama',name:'Llama 3.1 8B (OpenRouter)',desc:'OpenRouter — free open model',badge:'free',dot:'',useProxy:false,apiUrl:'https://openrouter.ai/api/v1/chat/completions',apiKey:'YOUR_OPENROUTER_API_KEY',model:'meta-llama/llama-3.1-8b-instruct:free'},
+  {id:'groq-llama',name:'Llama 3.3 70B',desc:'Meta via Groq — blazing fast & free',badge:'fast',dot:'cyan',
+   useProxy:false,apiUrl:'https://api.groq.com/openai/v1/chat/completions',apiKey:GROQ_API_KEY,model:'llama-3.3-70b-versatile'},
 ];
 const SITE_CONTEXT=`=== ALONE MONSTER CODING HUB — JAVASCRIPT ASSISTANT ===
 You are Alone Monster AI — a JavaScript specialist.
@@ -4288,7 +4291,7 @@ Be a friendly web design tutor. Respond in English.
 Help with JS syntax, ES6+ features, async patterns, DOM manipulation, and modern JS coding.
 Provide working code snippets when possible. Use emojis occasionally. Be concise.`;
 
-let activeModelId='alone-monster';
+let activeModelId='groq-llama';
 function getActiveModel(){return AI_MODELS.find(m=>m.id===activeModelId)||AI_MODELS[0];}
 function buildModelDropdown(){
   const list=$('modelList');list.innerHTML='';
@@ -4360,15 +4363,9 @@ async function aiSendMessage(){
   const m=getActiveModel();
   try{
     let res,data,reply;
-    if(m.useProxy){
-      res=await fetch(RENDER_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:m.provider,model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory]})});
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'Proxy Error'}`);}
-      data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply.';
-    }else{
-      res=await fetch(m.apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},body:JSON.stringify({model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory],temperature:0.8,max_tokens:1024})});
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
-      data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply.';
-    }
+    res=await fetch(m.apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},body:JSON.stringify({model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory],temperature:0.8,max_tokens:1024})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
+    data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply.';
     aiHistory.push({role:'assistant',content:reply});
     if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
     aiRemoveTyping();aiAddMessage(markdownToHtml(reply),false);
