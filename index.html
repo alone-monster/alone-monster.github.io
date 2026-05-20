@@ -1752,5 +1752,96 @@ function closeSidebar(){
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSidebar(); });
 
 </script>
+
+<!-- ═══ WHAT'S NEW TOAST ══════════════════════════════════════════ -->
+<style>
+  #wn-toast{
+    position:fixed;bottom:28px;right:24px;z-index:9990;
+    background:#0d0d18;border:1px solid rgba(0,255,136,.45);border-radius:14px;
+    padding:16px 18px;max-width:320px;
+    box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 0 1px rgba(0,255,136,.08);
+    display:flex;flex-direction:column;gap:8px;
+    transform:translateY(20px);opacity:0;pointer-events:none;
+    transition:all .35s cubic-bezier(.22,1,.36,1);
+    font-family:'Rajdhani',sans-serif;
+  }
+  #wn-toast.show{transform:translateY(0);opacity:1;pointer-events:all;}
+  #wn-toast .wn-row{display:flex;align-items:center;gap:9px;}
+  #wn-toast .wn-dot{width:8px;height:8px;border-radius:50%;background:#00ff88;flex-shrink:0;animation:wnpulse 1.6s ease-in-out infinite;}
+  @keyframes wnpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.5);}50%{box-shadow:0 0 0 6px rgba(0,255,136,0);}}
+  #wn-toast .wn-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:#00ff88;}
+  #wn-toast .wn-title{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:#e8e8f0;line-height:1.3;}
+  #wn-toast .wn-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(0,255,136,.7);}
+  #wn-toast .wn-body{font-size:.85rem;color:#8888aa;line-height:1.5;max-height:56px;overflow:hidden;}
+  #wn-toast .wn-actions{display:flex;gap:8px;margin-top:2px;}
+  #wn-toast .wn-btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;border-radius:7px;padding:6px 14px;cursor:pointer;border:none;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+  #wn-toast .wn-see{background:linear-gradient(135deg,#00ff88,#00d4ff);color:#000;font-weight:700;}
+  #wn-toast .wn-see:hover{box-shadow:0 0 16px rgba(0,255,136,.4);}
+  #wn-toast .wn-dismiss{background:transparent;border:1px solid rgba(255,255,255,.1);color:#6a6a8a;}
+  #wn-toast .wn-dismiss:hover{border-color:rgba(255,255,255,.25);color:#aaa;}
+  #wn-toast .wn-close{position:absolute;top:10px;right:12px;background:none;border:none;color:#6a6a8a;font-size:.8rem;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;}
+  #wn-toast .wn-close:hover{color:#ccc;}
+</style>
+
+<div id="wn-toast">
+  <button class="wn-close" onclick="wnDismiss()" title="Close">✕</button>
+  <div class="wn-row">
+    <span class="wn-dot"></span>
+    <span class="wn-label">What's New</span>
+  </div>
+  <div class="wn-title" id="wnTitle">New update available</div>
+  <div class="wn-tag" id="wnTag"></div>
+  <div class="wn-body" id="wnBody">Check the changelog for the latest improvements.</div>
+  <div class="wn-actions">
+    <a class="wn-btn wn-see" href="https://alone-monster.github.io/changelog.html" id="wnLink">
+      <i class="fas fa-history"></i> See Changelog
+    </a>
+    <button class="wn-btn wn-dismiss" onclick="wnDismiss()">Dismiss</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const REPO='chiragalonemonster/alone-monster.github.io';
+  const LS_KEY='am_seen_release';
+  const DELAY=3000;
+
+  async function checkLatestRelease(){
+    try{
+      const res=await fetch('https://api.github.com/repos/'+REPO+'/releases/latest',
+        {headers:{Accept:'application/vnd.github+json'}});
+      if(!res.ok)return;
+      const r=await res.json();
+      if(!r.tag_name)return;
+      const seen=localStorage.getItem(LS_KEY);
+      if(seen===r.tag_name)return; // user already saw this version
+      // Populate toast
+      document.getElementById('wnTitle').textContent=r.name||('Release '+r.tag_name);
+      document.getElementById('wnTag').textContent=r.tag_name+' · '+fmtDate(r.published_at);
+      const body=(r.body||'').trim().replace(/[#*`>\-_]/g,'').slice(0,120);
+      document.getElementById('wnBody').textContent=body||(r.name||'New update released.');
+      document.getElementById('wnLink').href=r.html_url||'https://alone-monster.github.io/changelog.html';
+      // Store tag (so toast shows once per release)
+      localStorage.setItem(LS_KEY,r.tag_name);
+      // Show after delay
+      setTimeout(function(){document.getElementById('wn-toast').classList.add('show');},DELAY);
+    }catch(e){}
+  }
+
+  function fmtDate(iso){
+    if(!iso)return'';
+    try{const d=new Date(iso);return d.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});}catch(e){return'';}
+  }
+
+  window.wnDismiss=function(){document.getElementById('wn-toast').classList.remove('show');};
+
+  // Start check after page is interactive
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',checkLatestRelease);
+  }else{
+    checkLatestRelease();
+  }
+})();
+</script>
 </body>
 </html>
