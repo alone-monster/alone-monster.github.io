@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Support — Alone Monster Coding Hub</title>
+  <meta name="description" content="Get support, report bugs, or contact Chirag — Alone Monster Coding Hub support center."/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
+      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;
+      --gg:0 0 24px rgba(0,255,136,.4);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;overflow-y:auto;min-height:100vh;}
+
+    /* BG */
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+    .orb1{width:500px;height:500px;background:rgba(0,255,136,.07);top:-150px;left:-150px;}
+    .orb2{width:400px;height:400px;background:rgba(139,60,247,.07);bottom:-100px;right:-100px;}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;}
+    .tb-brand span{color:var(--green);}
+    .tb-btns{display:flex;gap:8px;}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:38px;padding:0 16px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+    .bg{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;font-weight:700;}
+    .bg:hover{box-shadow:var(--gg);}
+
+    /* WRAP */
+    .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:48px 28px 80px;}
+
+    /* HERO */
+    .hero{text-align:center;margin-bottom:56px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:50px;padding:7px 18px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;}
+    .hero h1{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px;}
+    .hero p{color:var(--muted);font-size:1.05rem;max-width:560px;margin:0 auto;line-height:1.65;}
+
+    /* CONTACT GRID */
+    .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:52px;}
+    .contact-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 18px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;transition:all .25s;position:relative;overflow:hidden;}
+    .contact-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cc-color,var(--green));opacity:0;transition:opacity .25s;}
+    .contact-card:hover{transform:translateY(-4px);border-color:var(--cc-color,var(--green));box-shadow:0 12px 36px rgba(0,0,0,.4);}
+    .contact-card:hover::before{opacity:1;}
+    .contact-card .cc-icon{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .25s;}
+    .contact-card .cc-name{font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;color:var(--text);}
+    .contact-card .cc-handle{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);word-break:break-all;}
+    .contact-card .cc-action{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;display:inline-flex;align-items:center;gap:4px;}
+
+    /* SECTIONS */
+    .sec-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+    .sec-title i{color:var(--green);}
+    .sec-title span{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);font-weight:400;letter-spacing:2px;text-transform:uppercase;margin-left:auto;}
+
+    /* FAQ */
+    .faq-list{display:flex;flex-direction:column;gap:10px;margin-bottom:52px;}
+    .faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+    .faq-item.open{border-color:rgba(0,255,136,.3);}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-size:.98rem;font-weight:600;gap:14px;}
+    .faq-q i{color:var(--green);font-size:.8rem;transition:transform .3s;flex-shrink:0;}
+    .faq-item.open .faq-q i{transform:rotate(180deg);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;}
+    .faq-item.open .faq-a{max-height:300px;}
+    .faq-a p{padding:0 22px 18px;color:var(--muted);font-size:.92rem;line-height:1.65;}
+    .faq-a a{color:var(--green);text-decoration:none;}
+    .faq-a a:hover{text-decoration:underline;}
+
+    /* CONTACT FORM */
+    .form-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:32px;margin-bottom:52px;}
+    .fg{margin-bottom:18px;}
+    .fg label{display:block;font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+    .fg input,.fg select,.fg textarea{width:100%;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.95rem;outline:none;transition:all .2s;resize:vertical;}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--green);background:rgba(0,255,136,.04);box-shadow:0 0 0 3px rgba(0,255,136,.1);}
+    .fg textarea{min-height:120px;line-height:1.5;}
+    .fg select option{background:#0a0a13;color:var(--text);}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .submit-btn{width:100%;height:50px;background:linear-gradient(135deg,var(--green),var(--cyan));border:none;border-radius:10px;color:#000;font-family:'Orbitron',monospace;font-size:.88rem;font-weight:800;letter-spacing:1.5px;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .submit-btn:hover{box-shadow:var(--gg);transform:translateY(-2px);}
+    #formResult{margin-top:14px;padding:14px 18px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:.82rem;display:none;}
+    #formResult.ok{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--green);}
+    #formResult.err{background:rgba(255,61,46,.1);border:1px solid rgba(255,61,46,.3);color:var(--red);}
+
+    /* STATUS */
+    .status-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:52px;display:flex;align-items:center;gap:16px;}
+    .status-dot{width:14px;height:14px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);flex-shrink:0;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+    .status-text strong{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;display:block;margin-bottom:3px;}
+    .status-text small{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);}
+
+    /* FOOTER */
+    .foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:1px;margin-top:40px;}
+
+    @media(max-width:720px){
+      .wrap{padding:32px 18px 60px;}
+      .hero h1{font-size:2rem;}
+      .row2{grid-template-columns:1fr;}
+      .topbar{padding:0 16px;}
+      .contact-grid{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:480px){
+      .contact-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
+  <div class="tb-btns">
+    <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i> Home</a>
+    <a href="https://alone-monster.github.io/codes/" class="btn bo"><i class="fas fa-code"></i> Codes</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-headset"></i> Support Center</div>
+    <h1>How Can We Help?</h1>
+    <p>Reach out through any platform — I'm always happy to help with questions, bug reports, collaborations, or just a chat.</p>
+  </div>
+
+  <!-- SERVICE STATUS -->
+  <div class="status-card">
+    <div class="status-dot"></div>
+    <div class="status-text">
+      <strong>All Systems Operational</strong>
+      <small>Website · AI Chatbot · Telegram Bot · Discord Bot — running normally</small>
+    </div>
+  </div>
+
+  <!-- CONTACT CHANNELS -->
+  <div class="sec-title"><i class="fas fa-satellite-dish"></i> Contact Channels <span>// pick your platform</span></div>
+  <div class="contact-grid">
+    <a href="https://github.com/chiragalonemonster" target="_blank" class="contact-card" style="--cc-color:#ccc;">
+      <div class="cc-icon"><i class="fab fa-github" style="color:#ccc;"></i></div>
+      <div class="cc-name">GitHub</div>
+      <div class="cc-handle">chiragalonemonster</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Open Profile</div>
+    </a>
+    <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="contact-card" style="--cc-color:#ff0000;">
+      <div class="cc-icon"><i class="fab fa-youtube" style="color:#ff0000;"></i></div>
+      <div class="cc-name">YouTube</div>
+      <div class="cc-handle">@UnspokenAesthetic</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Subscribe</div>
+    </a>
+    <a href="https://instagram.com/anxiety4410" target="_blank" class="contact-card" style="--cc-color:#e1306c;">
+      <div class="cc-icon"><i class="fab fa-instagram" style="color:#e1306c;"></i></div>
+      <div class="cc-name">Instagram</div>
+      <div class="cc-handle">@anxiety4410</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Follow</div>
+    </a>
+    <a href="https://t.me/alonemonster20" target="_blank" class="contact-card" style="--cc-color:#0088cc;">
+      <div class="cc-icon"><i class="fab fa-telegram" style="color:#0088cc;"></i></div>
+      <div class="cc-name">Telegram</div>
+      <div class="cc-handle">@alonemonster20</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Message</div>
+    </a>
+    <a href="https://t.me/AloneMonster_Robot" target="_blank" class="contact-card" style="--cc-color:#00d4ff;">
+      <div class="cc-icon"><i class="fab fa-telegram" style="color:#00d4ff;"></i></div>
+      <div class="cc-name">Telegram AI Bot</div>
+      <div class="cc-handle">@AloneMonster_Robot</div>
+      <div class="cc-action"><i class="fas fa-robot"></i> Start Chat</div>
+    </a>
+    <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="contact-card" style="--cc-color:#7289da;">
+      <div class="cc-icon"><i class="fab fa-discord" style="color:#7289da;"></i></div>
+      <div class="cc-name">Discord AI Bot</div>
+      <div class="cc-handle">Add to your server</div>
+      <div class="cc-action"><i class="fas fa-plus"></i> Add Bot</div>
+    </a>
+    <a href="https://facebook.com/chirag.alonemonster" target="_blank" class="contact-card" style="--cc-color:#1877f2;">
+      <div class="cc-icon"><i class="fab fa-facebook" style="color:#1877f2;"></i></div>
+      <div class="cc-name">Facebook</div>
+      <div class="cc-handle">chirag.alonemonster</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Visit</div>
+    </a>
+    <a href="https://x.com/naskar_chi26012" target="_blank" class="contact-card" style="--cc-color:#ccc;">
+      <div class="cc-icon"><i class="fab fa-x-twitter" style="color:#ccc;"></i></div>
+      <div class="cc-name">X (Twitter)</div>
+      <div class="cc-handle">@naskar_chi26012</div>
+      <div class="cc-action"><i class="fas fa-arrow-up-right-from-square"></i> Follow</div>
+    </a>
+  </div>
+
+  <!-- FAQ -->
+  <div class="sec-title"><i class="fas fa-circle-question"></i> Frequently Asked Questions <span>// quick answers</span></div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>How do I get a Groq API key for the AI chatbot?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a>, create a free account, and generate an API key. Then open any page's source JS and replace <code>YOUR_GROQ_API_KEY</code> with your actual key. The Llama 3.3 70B model is free to use within Groq's rate limits.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>The AI chatbot is not responding — what should I do?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>First check that your Groq API key is correctly set in the source file. If you're using the default placeholder key, it will not work. Also check the browser console (F12) for error messages. If the error is rate-limit related, wait a minute and try again.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>Can I use this website's code for my own projects?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>Yes! This is an open learning platform. You're welcome to study and adapt the code for personal projects. Please give credit if you use large sections. For commercial use, reach out first via Telegram or GitHub.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>How do I report a bug or broken feature?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>Use the contact form below and select "Bug Report" as the type. Include the page name, what you expected to happen, and what actually happened. Screenshots are very helpful. You can also <a href="https://github.com/chiragalonemonster" target="_blank">open a GitHub issue</a>.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>How do I request a new tutorial or code example?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>Send a message on Telegram (@alonemonster20) or fill out the form below with "Feature Request" selected. Popular requests will be prioritised for the next Codes article or YouTube video.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>How do I log in or create an account?</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="faq-a"><p>Visit the <a href="https://alone-monster.github.io/login.html">Login page</a>. You can sign in with Google or create an account with email. Your profile saves your learning progress and preferences.</p></div>
+    </div>
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="sec-title"><i class="fas fa-envelope-open-text"></i> Send a Message <span>// direct contact</span></div>
+  <div class="form-card">
+    <form id="contactForm" onsubmit="submitForm(event)">
+      <div class="row2">
+        <div class="fg">
+          <label>Your Name</label>
+          <input type="text" id="fName" placeholder="e.g. Rahul Sharma" required/>
+        </div>
+        <div class="fg">
+          <label>Your Email</label>
+          <input type="email" id="fEmail" placeholder="you@example.com" required/>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Message Type</label>
+        <select id="fType">
+          <option value="general">General Question</option>
+          <option value="bug">Bug Report</option>
+          <option value="feature">Feature Request</option>
+          <option value="collab">Collaboration</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Subject</label>
+        <input type="text" id="fSubject" placeholder="Brief description of your query" required/>
+      </div>
+      <div class="fg">
+        <label>Message</label>
+        <textarea id="fMessage" placeholder="Describe your question, issue, or idea in detail..." required></textarea>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <i class="fas fa-paper-plane"></i> Send Message
+      </button>
+      <div id="formResult"></div>
+    </form>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <p>© 2025 Alone Monster Coding Hub · Built by Chirag · <a href="https://alone-monster.github.io/" style="color:var(--green);text-decoration:none;">alone-monster.github.io</a></p>
+  </footer>
+
+</main>
+
+<script>
+function toggleFaq(el){
+  const item = el.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+function submitForm(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const result = document.getElementById('formResult');
+  const name = document.getElementById('fName').value.trim();
+  const email = document.getElementById('fEmail').value.trim();
+  const type = document.getElementById('fType').value;
+  const subject = document.getElementById('fSubject').value.trim();
+  const message = document.getElementById('fMessage').value.trim();
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+  // Simulate send (replace with actual backend/email service if needed)
+  setTimeout(()=>{
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+    result.style.display = 'block';
+    result.className = 'ok';
+    result.innerHTML = '✅ Message received! I\'ll get back to you at <strong>'+email+'</strong> as soon as possible. For urgent matters, contact me on Telegram: @alonemonster20';
+    document.getElementById('contactForm').reset();
+  }, 1200);
+}
+</script>
+</body>
+</html>
