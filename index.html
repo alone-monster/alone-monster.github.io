@@ -361,12 +361,12 @@
     .ytmi{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);}
     .ytmi span{color:var(--cyan);font-size:.86rem;display:block;font-weight:700;}
     .ytbtns{display:flex;gap:10px;flex-wrap:wrap;}
-    .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:670px;}
-    .ccard{display:flex;align-items:center;gap:13px;background:var(--bgc);border:1px solid var(--border);border-radius:8px;padding:17px;text-decoration:none;color:var(--muted);transition:all .18s;}
-    .ccard:hover{border-color:var(--green);color:var(--text);background:rgba(0,255,136,.04);transform:translateX(4px);}
-    .ccard i{font-size:1.2rem;width:20px;text-align:center;flex-shrink:0;}
-    .clbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-    .cval{font-size:.86rem;font-weight:600;margin-top:2px;}
+    .cgrid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;}
+    .ccard{display:inline-flex;align-items:center;gap:8px;background:var(--bgc);border:1px solid var(--border);border-radius:50px;padding:10px 18px;text-decoration:none;color:var(--muted);transition:all .22s;font-family:"JetBrains Mono",monospace;}
+    .ccard:hover{border-color:var(--green);color:var(--text);background:rgba(0,255,136,.06);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.35);}
+    .ccard i{font-size:1.1rem;flex-shrink:0;}
+    .clbl{font-size:.7rem;letter-spacing:.5px;font-weight:600;}
+    .cval{display:none;}
     .alayout{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:start;}
     .atext p{color:var(--muted);line-height:1.8;margin-bottom:14px;font-size:.95rem;}
     .skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
@@ -400,7 +400,7 @@
       .sec{padding:50px 18px;}
       .tgrid{grid-template-columns:1fr;}
       .bots-grid{grid-template-columns:1fr;}
-      .cgrid{grid-template-columns:1fr;}
+      .cgrid{gap:8px;}
       .alayout{grid-template-columns:1fr;}
       .ytcard{flex-direction:column;padding:22px;gap:18px;}
       .cspan{grid-column:span 1!important;}
@@ -933,10 +933,16 @@
     <a class="sb-item" href="https://alone-monster.github.io/youtube/" target="_blank">
       <i class="fab fa-youtube"></i> YouTube Tutorials
     </a>
+    <a class="sb-item" href="https://alone-monster.github.io/codes/" target="_blank">
+      <i class="fas fa-code"></i> Codes
+    </a>
     <div class="sb-divider"></div>
     <div class="sb-section-label">// Account</div>
-    <a class="sb-item" href="https://alone-monster.github.io/login.html" target="_blank">
+    <a class="sb-item" id="sbLoginItem" href="https://alone-monster.github.io/login.html">
       <i class="fas fa-sign-in-alt"></i> Login
+    </a>
+    <a class="sb-item" id="sbProfileItem" href="https://alone-monster.github.io/profile.html" style="display:none">
+      <i class="fas fa-user-circle"></i> My Profile
     </a>
     <a class="sb-item" href="https://alone-monster.github.io/settings/" target="_blank">
       <i class="fas fa-sliders-h"></i> Settings
@@ -948,6 +954,11 @@
     <div class="sb-section-label">// Help</div>
     <a class="sb-item" href="https://alone-monster.github.io/support/" target="_blank">
       <i class="fas fa-headset"></i> Support
+    </a>
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">// Updates</div>
+    <a class="sb-item" href="https://alone-monster.github.io/changelog.html" target="_blank">
+      <i class="fas fa-history"></i> Change Log
     </a>
   </nav>
   <div class="sb-footer"><span>alone-monster</span> $ explore --all</div>
@@ -1146,14 +1157,14 @@ ALONE MONSTER CODING HUB
         <p class="sdesc">Reach out on any platform — always open to collaborations, questions and discussions.</p>
       </div>
       <div class="cgrid">
-        <a href="https://github.com/chiragalonemonster"    target="_blank" class="ccard"><i class="fab fa-github" style="color:#ccc;"></i><div><div class="clbl">GitHub</div><div class="cval">chiragalonemonster</div></div></a>
-        <a href="https://m.youtube.com/@UnspokenAesthetic"  target="_blank" class="ccard"><i class="fab fa-youtube" style="color:#ff0000;"></i><div><div class="clbl">YouTube</div><div class="cval">@UnspokenAesthetic</div></div></a>
-        <a href="https://instagram.com/anxiety4410"         target="_blank" class="ccard"><i class="fab fa-instagram" style="color:#e1306c;"></i><div><div class="clbl">Instagram</div><div class="cval">@anxiety4410</div></div></a>
-        <a href="https://facebook.com/chirag.alonemonster"  target="_blank" class="ccard"><i class="fab fa-facebook" style="color:#1877f2;"></i><div><div class="clbl">Facebook</div><div class="cval">chirag.alonemonster</div></div></a>
-        <a href="https://t.me/alonemonster20"               target="_blank" class="ccard"><i class="fab fa-telegram" style="color:#0088cc;"></i><div><div class="clbl">Telegram</div><div class="cval">@alonemonster20</div></div></a>
-        <a href="https://x.com/naskar_chi26012"             target="_blank" class="ccard"><i class="fab fa-x-twitter" style="color:#ccc;"></i><div><div class="clbl">X (Twitter)</div><div class="cval">@naskar_chi26012</div></div></a>
-        <a href="https://t.me/AloneMonster_Robot"           target="_blank" class="ccard"><i class="fab fa-telegram" style="color:#00d4ff;"></i><div><div class="clbl">Telegram AI Bot</div><div class="cval">@AloneMonster_Robot</div></div></a>
-        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="ccard"><i class="fab fa-discord" style="color:#7289da;"></i><div><div class="clbl">Discord AI Bot</div><div class="cval">Add to Your Server</div></div></a>
+        <a href="https://github.com/chiragalonemonster" target="_blank" class="ccard" title="GitHub: chiragalonemonster"><i class="fab fa-github" style="color:#ccc;"></i><span class="clbl">GitHub</span></a>
+        <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="ccard" title="YouTube: @UnspokenAesthetic"><i class="fab fa-youtube" style="color:#ff0000;"></i><span class="clbl">YouTube</span></a>
+        <a href="https://instagram.com/anxiety4410" target="_blank" class="ccard" title="Instagram: @anxiety4410"><i class="fab fa-instagram" style="color:#e1306c;"></i><span class="clbl">Instagram</span></a>
+        <a href="https://facebook.com/chirag.alonemonster" target="_blank" class="ccard" title="Facebook: chirag.alonemonster"><i class="fab fa-facebook" style="color:#1877f2;"></i><span class="clbl">Facebook</span></a>
+        <a href="https://t.me/alonemonster20" target="_blank" class="ccard" title="Telegram: @alonemonster20"><i class="fab fa-telegram" style="color:#0088cc;"></i><span class="clbl">Telegram</span></a>
+        <a href="https://x.com/naskar_chi26012" target="_blank" class="ccard" title="X / Twitter: @naskar_chi26012"><i class="fab fa-x-twitter" style="color:#ccc;"></i><span class="clbl">X (Twitter)</span></a>
+        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="ccard" title="Telegram AI Bot: @AloneMonster_Robot"><i class="fab fa-telegram" style="color:#00d4ff;"></i><span class="clbl">AI Bot</span></a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="ccard" title="Add Discord AI Bot to your server"><i class="fab fa-discord" style="color:#7289da;"></i><span class="clbl">Discord Bot</span></a>
       </div>
     </section>
 
@@ -1245,7 +1256,7 @@ ALONE MONSTER CODING HUB
   </div><!-- /header -->
 
   <!-- MODEL SELECTOR -->
-  <div class="ai-model-bar">
+  <div class="ai-model-bar" style="display:none">
     <span class="ai-model-label">🤖 Model</span>
     <div class="ai-model-dropdown-wrap" id="modelDropdownWrap">
       <div class="ai-model-selected" id="modelSelected" onclick="toggleModelDropdown()">
@@ -1314,11 +1325,12 @@ ALONE MONSTER CODING HUB
 /* ═══════════════════════════════════════════════════════
    AI MODELS CONFIG
 ═══════════════════════════════════════════════════════ */
-/* Render Proxy URL — Deploy ke baad apna Render URL yahan daalo */
-const RENDER_PROXY = 'https://ai-proxy-vq3q.onrender.com/proxy';
+/* Groq Direct API — add your key below */
+const GROQ_API_KEY = 'YOUR_GROQ_API_KEY'; // Replace with key from console.groq.com
 
 const AI_MODELS = [
-  { id:'groq-llama', name:'Llama 3.3 70B (Groq)', desc:'Meta via Groq — blazing fast & free', badge:'fast', dot:'cyan', useProxy:true, provider:'groq', model:'llama-3.3-70b-versatile' },
+  { id:'groq-llama', name:'Llama 3.3 70B', desc:'Meta via Groq — blazing fast & free', badge:'fast', dot:'cyan',
+    useProxy:false, apiUrl:'https://api.groq.com/openai/v1/chat/completions', apiKey:GROQ_API_KEY, model:'llama-3.3-70b-versatile' },
 ];
 
 let activeModelId = 'groq-llama';
@@ -1396,6 +1408,22 @@ document.addEventListener('click',function(e){
     const s=document.getElementById('modelSelected'); if(s) s.classList.remove('open');
   }
 });
+
+/* ══ SIDEBAR AUTH ══════════════════════ */
+function updateSidebarAuth(){
+  try{
+    if(window.firebase&&firebase.auth){
+      firebase.auth().onAuthStateChanged(function(user){
+        var li=document.getElementById('sbLoginItem');
+        var pi=document.getElementById('sbProfileItem');
+        if(!li||!pi)return;
+        if(user){li.style.display='none';pi.style.display='';}
+        else{li.style.display='';pi.style.display='none';}
+      });
+    }
+  }catch(e){}
+}
+document.addEventListener('DOMContentLoaded',updateSidebarAuth);
 
 /* ══ SPLASH ════════════════════════════ */
 function hideSplash(){ document.getElementById('splash').classList.add('gone'); }
@@ -1611,33 +1639,21 @@ async function aiSendMessage(){
   const m=getActiveModel();
   try {
     let res, data, reply;
-    if(m.useProxy){
-      /* ── Groq / Gemini — Render proxy se ── */
-      res=await fetch(RENDER_PROXY,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({provider:m.provider, model:m.model, messages:[{role:'system',content:SITE_CONTEXT},...aiHistory]})
-      }); 
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'Proxy Error'}`);}
-      data=await res.json();
-      reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, could not generate a reply.';
-    } else {
-      /* ── Xiaomimimo / Cerebras / OpenRouter — Direct API ── */
-      res=await fetch(m.apiUrl,{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},
-        body:JSON.stringify({model:m.model, messages:[{role:'system',content:SITE_CONTEXT},...aiHistory], temperature:0.8, max_tokens:1024})
-      });
-      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
-      data=await res.json();
-      reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, could not generate a reply.';
-    }
+    /* ── Groq Direct API ── */
+    res=await fetch(m.apiUrl,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},
+      body:JSON.stringify({model:m.model, messages:[{role:'system',content:SITE_CONTEXT},...aiHistory], temperature:0.8, max_tokens:1024})
+    });
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
+    data=await res.json();
+    reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, could not generate a reply.';
     aiHistory.push({role:'assistant',content:reply});
     if(aiHistory.length>20) aiHistory=aiHistory.slice(-20);
     aiRemoveTyping(); aiAddMessage(markdownToHtml(reply),false);
   } catch(err){
     console.error('[Alone Monster AI]',err);
-    aiRemoveTyping(); aiAddMessage(`⚠️ <strong>AI Error (${m.name}):</strong> ${escHtml(err.message)}<br><small>Thoda wait karo aur dobara try karo.</small>`,false);
+    aiRemoveTyping(); aiAddMessage(`⚠️ <strong>AI Error (${m.name}):</strong> ${escHtml(err.message)}<br><small>Please wait a moment and try again.</small>`,false);
   } finally { aiIsTyping=false; sendBtn.disabled=false; }
 }
 
