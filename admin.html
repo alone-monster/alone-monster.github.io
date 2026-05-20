@@ -336,7 +336,7 @@
             <div class="sub">view · ban · promote</div>
           </div>
         </div>
-        <p class="desc">Saare registered members ki list dekho, role badlo, ya account suspend karo.</p>
+        <p class="desc">View all registered members, change their role, or suspend accounts.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
 
@@ -348,7 +348,7 @@
             <div class="sub">create · edit · publish</div>
           </div>
         </div>
-        <p class="desc">HTML/CSS, Python, JavaScript courses ke chapters add karo, edit karo aur publish karo.</p>
+        <p class="desc">Add, edit and publish chapters for HTML/CSS, Python and JavaScript courses.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
 
@@ -360,7 +360,7 @@
             <div class="sub">site-wide notices</div>
           </div>
         </div>
-        <p class="desc">Members ko nayi feature, event ya update ke baare mein notification bhejo.</p>
+        <p class="desc">Send site-wide notifications to members about new features, events or updates.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
 
@@ -372,7 +372,7 @@
             <div class="sub">traffic · engagement</div>
           </div>
         </div>
-        <p class="desc">Site traffic, popular pages aur learner progress ka real-time dashboard.</p>
+        <p class="desc">Real-time dashboard for site traffic, popular pages, and learner engagement.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
 
@@ -384,7 +384,7 @@
             <div class="sub">prompts · feedback</div>
           </div>
         </div>
-        <p class="desc">AI assistant ke saath kis tarah ke questions aaye, success rate aur error logs.</p>
+        <p class="desc">View prompts received by the AI assistant, success rates, and error logs.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
 
@@ -396,7 +396,31 @@
             <div class="sub">theme · meta · SEO</div>
           </div>
         </div>
-        <p class="desc">Site title, theme, OG tags, sitemap, aur global config yahan se control karo.</p>
+        <p class="desc">Control site title, theme, OG tags, sitemap, and global configuration from here.</p>
+        <span class="open">Open <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="feat-card" onclick="comingSoon('Support Inbox')">
+        <div class="head">
+          <div class="ico pink"><i class="fas fa-headset"></i></div>
+          <div>
+            <div class="name">Support Inbox</div>
+            <div class="sub">tickets · replies</div>
+          </div>
+        </div>
+        <p class="desc">Review and respond to support messages, bug reports, and feature requests from users.</p>
+        <span class="open">Open <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="feat-card" onclick="comingSoon('Codes Manager')">
+        <div class="head">
+          <div class="ico cyan"><i class="fas fa-code"></i></div>
+          <div>
+            <div class="name">Codes Manager</div>
+            <div class="sub">articles · snippets</div>
+          </div>
+        </div>
+        <p class="desc">Publish new code articles, manage existing snippets, and track which content gets the most views.</p>
         <span class="open">Open <i class="fas fa-arrow-right"></i></span>
       </div>
     </div>
@@ -450,7 +474,19 @@
       </div>
     </div>
 
-    <p class="foot">© Alone Monster Coding Hub · Admin Console · v1.0</p>
+    <h2 class="sec-title">
+      <i class="fas fa-rocket"></i> Quick Actions
+      <span class="tag">/ fast access</span>
+    </h2>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
+      <a href="index.html" class="btn bo"><i class="fas fa-home"></i> Visit Site</a>
+      <a href="python.html" class="btn bo"><i class="fab fa-python"></i> Python Course</a>
+      <a href="HTML&CSS.html" class="btn bo"><i class="fab fa-html5"></i> HTML/CSS Course</a>
+      <a href="javascript.html" class="btn bo"><i class="fab fa-js"></i> JS Course</a>
+      <a href="codes/" class="btn bo"><i class="fas fa-code"></i> Codes Page</a>
+      <a href="support.html" class="btn bo"><i class="fas fa-headset"></i> Support Page</a>
+    </div>
+    <p class="foot">© Alone Monster Coding Hub · Admin Console · v2.0</p>
   </main>
 
   <!-- ===== Firebase (only used by admin_logout.js to also signOut, optional) ===== -->
@@ -500,8 +536,12 @@
     })();
 
     // ── Coming soon stub for feature cards ─────────────
-    function comingSoon(name) {
-      alert(name + ' module — coming soon for admins.');
+    function comingSoon(name){
+      const t=document.createElement('div');
+      t.textContent='🔒 '+name+' module — coming soon!';
+      t.style.cssText='position:fixed;top:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0d0d18,#141422);border:1px solid rgba(247,37,133,.4);color:#f72585;padding:13px 26px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.5);letter-spacing:1px;white-space:nowrap;';
+      document.body.appendChild(t);
+      setTimeout(()=>{t.style.transition='opacity .4s';t.style.opacity='0';setTimeout(()=>t.remove(),400);},2200);
     }
   </script>
 
