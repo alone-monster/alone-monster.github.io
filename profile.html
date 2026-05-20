@@ -309,6 +309,7 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
     <button class="tab" data-tab="badges"><i class="fas fa-medal"></i> Badges</button>
     <button class="tab" data-tab="codes"><i class="fas fa-code"></i> Saved Codes</button>
     <button class="tab" data-tab="bookmarks"><i class="fas fa-bookmark"></i> Bookmarks</button>
+    <button class="tab" data-tab="codeslib"><i class="fas fa-code"></i> Code Library</button>
     <button class="tab" data-tab="activity"><i class="fas fa-history"></i> Activity</button>
     <button class="tab" data-tab="settings"><i class="fas fa-cog"></i> Settings</button>
   </div>
@@ -360,6 +361,24 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
   <div class="tabpane" id="pane-activity">
     <div class="sec-title"><i class="fas fa-history"></i> Recent Activity</div>
     <div class="activity-list" id="activityList"></div>
+  </div>
+
+  <!-- CODES LIBRARY -->
+  <div class="tabpane" id="pane-codeslib">
+    <div class="sec-title"><i class="fas fa-code"></i> Code Library <span class="tag">// ALONE MONSTER ARTICLES</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+      <a href="codes/article-python-scraper.html" style="text-decoration:none;" class="code-card">
+        <div class="ttl"><i class="fab fa-python"></i> Python Web Scraper</div>
+        <div class="meta">Intermediate · 12 min · BeautifulSoup + CSV</div>
+        <pre>import requests
+from bs4 import BeautifulSoup
+# Scrape any website!</pre>
+        <div class="acts"><span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:var(--cyan);">Read Article →</span></div>
+      </a>
+      <a href="codes/" style="text-decoration:none;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px dashed rgba(0,255,136,.2);border-radius:14px;padding:30px;color:var(--muted);">
+        <div style="text-align:center;"><i class="fas fa-plus" style="font-size:2rem;opacity:.3;display:block;margin-bottom:10px;"></i><span style="font-family:JetBrains Mono,monospace;font-size:.72rem;">Browse all articles →</span></div>
+      </a>
+    </div>
   </div>
 
   <!-- SETTINGS -->
@@ -556,6 +575,19 @@ function initProfile(user){
   const streak=updateStreak();
   $('streakDays').textContent=streak.count;
   $('statStreak').textContent=streak.count;
+
+  // XP = (lessons * 20) + (badges * 50) + (streak * 5)
+  const prog=getProgress();
+  const totalDone=prog.htmlcss.done+prog.python.done+prog.js.done;
+  const savedCodes=lsGet('amch_saved_codes',[]).length;
+  const earnedBadges=lsGet('amch_badges',[]).length;
+  const xp=(totalDone*20)+(earnedBadges*50)+(streak.count*5)+(savedCodes*10);
+  $('xpTotal').textContent=xp.toLocaleString();
+  $('statXp').textContent=xp.toLocaleString();
+
+  // Rank tag
+  const rank=xp>=5000?'🏆 Expert':xp>=2000?'💎 Advanced':xp>=500?'🔥 Intermediate':'⭐ Beginner';
+  $('rankTag').textContent=rank;
 
   // Stats
   const prog=getProgress();
