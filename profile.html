@@ -473,8 +473,10 @@ from bs4 import BeautifulSoup
 <!-- ============== FIREBASE ============== -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<!-- Admin logout button auto-injector (only shows when admin session active) -->
-<script src="admin_logout.js"></script>
+<!-- Admin logout button auto-injector (graceful — no error if file missing) -->
+<script>
+(function(){var s=document.createElement('script');s.src='admin_logout.js';s.onerror=function(){};document.head.appendChild(s);})();
+</script>
 
 <script>
 /* ===== Firebase Config (same as your auth.js) ===== */
@@ -571,49 +573,36 @@ function initProfile(user){
     $('memberSinceTag').textContent='📅 Joined '+d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
   }
 
-  // Streak + XP
+  // Streak
   const streak=updateStreak();
   $('streakDays').textContent=streak.count;
   $('statStreak').textContent=streak.count;
 
-  // XP = (lessons * 20) + (badges * 50) + (streak * 5)
-  const prog=getProgress();
-  const totalDone=prog.htmlcss.done+prog.python.done+prog.js.done;
-  const savedCodes=lsGet('amch_saved_codes',[]).length;
-  const earnedBadges=lsGet('amch_badges',[]).length;
-  const xp=(totalDone*20)+(earnedBadges*50)+(streak.count*5)+(savedCodes*10);
-  $('xpTotal').textContent=xp.toLocaleString();
-  $('statXp').textContent=xp.toLocaleString();
-
-  // Rank tag
-  const rank=xp>=5000?'🏆 Expert':xp>=2000?'💎 Advanced':xp>=500?'🔥 Intermediate':'⭐ Beginner';
-  $('rankTag').textContent=rank;
-
-  // Stats
+  // Progress (single declaration)
   const prog=getProgress();
   const lessons=prog.htmlcss.done+prog.python.done+prog.js.done;
   const totalLessons=prog.htmlcss.total+prog.python.total+prog.js.total;
-  const xp=lessons*50+streak.count*10;
   const hours=Math.round(lessons*0.4+streak.count*0.5);
 
-  $('statLessons').textContent=lessons;
-  $('statXp').textContent=xp;
-  $('xpTotal').textContent=xp;
-  $('statHours').textContent=hours+'h';
-
-  // Rank
-  let rank='⭐ Beginner';
-  if(lessons>=10)rank='🚀 Learner';
-  if(lessons>=25)rank='💎 Coder';
-  if(lessons>=50)rank='🔥 Pro Coder';
-  if(lessons>=80)rank='👑 Master';
-  $('rankTag').textContent=rank;
-
-  // Saved codes count
+  // Saved codes
   let codeCount=0;
   if(getEditor('htmlcss'))codeCount++;
   if(getEditor('python'))codeCount++;
   $('statCodes').textContent=codeCount;
+
+  // XP formula: (lessons × 20) + (streak × 5) + (codes × 10)
+  const xp=(lessons*20)+(streak.count*5)+(codeCount*10);
+  $('xpTotal').textContent=xp.toLocaleString();
+  $('statXp').textContent=xp.toLocaleString();
+  $('statLessons').textContent=lessons;
+  $('statHours').textContent=hours+'h';
+
+  // Rank (single declaration)
+  let rank='⭐ Beginner';
+  if(xp>=500) rank='🔥 Intermediate';
+  if(xp>=2000)rank='💎 Advanced';
+  if(xp>=5000)rank='🏆 Expert';
+  $('rankTag').textContent=rank;
 
   // Render everything
   renderHeatmap(streak.visits||[]);
