@@ -4447,5 +4447,6 @@ function runAndPreview(){
 window.addEventListener('offline',()=>{const t=document.createElement('div');t.textContent='📡 You are offline';t.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ff3366;color:#fff;padding:10px 22px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;';document.body.appendChild(t);});
 window.addEventListener('online',()=>{const t=document.createElement('div');t.textContent='✅ Back online!';t.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 22px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;';document.body.appendChild(t);setTimeout(()=>t.remove(),3000);});
 </script>
+<script src="api-handler.js"></script>
 </body>
 </html>
