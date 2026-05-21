@@ -4262,12 +4262,11 @@ function copyToEditor(idx){
 }
 
 /* ========== AI CHATBOT ========== */
-/* Groq Direct API — replace key at console.groq.com */
-const GROQ_API_KEY = 'YOUR_GROQ_API_KEY';
+/* Vercel Secure Proxy — API key stored on server, never exposed */
+const VERCEL_API_URL = 'https://alone-monster-github-io.vercel.app/api/chat';
 
 const AI_MODELS=[
-  {id:'groq-llama',name:'Llama 3.3 70B',desc:'Meta via Groq — blazing fast & free',badge:'fast',dot:'cyan',
-   useProxy:false,apiUrl:'https://api.groq.com/openai/v1/chat/completions',apiKey:GROQ_API_KEY,model:'llama-3.3-70b-versatile'},
+  {id:'groq-llama',name:'Llama 3.3 70B',desc:'Meta via Groq (Secure Proxy)',badge:'fast',dot:'cyan'},
 ];
 const SITE_CONTEXT=`=== ALONE MONSTER CODING HUB — JAVASCRIPT ASSISTANT ===
 You are Alone Monster AI — a JavaScript specialist.
@@ -4363,8 +4362,8 @@ async function aiSendMessage(){
   const m=getActiveModel();
   try{
     let res,data,reply;
-    res=await fetch(m.apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},body:JSON.stringify({model:m.model,messages:[{role:'system',content:SITE_CONTEXT},...aiHistory],temperature:0.8,max_tokens:1024})});
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
+    res=await fetch(VERCEL_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'system',content:SITE_CONTEXT},...aiHistory]})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error||e?.error?.message||'API Error'}`);}
     data=await res.json();reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, no reply.';
     aiHistory.push({role:'assistant',content:reply});
     if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
@@ -4447,6 +4446,5 @@ function runAndPreview(){
 window.addEventListener('offline',()=>{const t=document.createElement('div');t.textContent='📡 You are offline';t.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ff3366;color:#fff;padding:10px 22px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;';document.body.appendChild(t);});
 window.addEventListener('online',()=>{const t=document.createElement('div');t.textContent='✅ Back online!';t.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 22px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;';document.body.appendChild(t);setTimeout(()=>t.remove(),3000);});
 </script>
-<script src="api-handler.js"></script>
 </body>
 </html>
