@@ -1325,12 +1325,11 @@ ALONE MONSTER CODING HUB
 /* ═══════════════════════════════════════════════════════
    AI MODELS CONFIG
 ═══════════════════════════════════════════════════════ */
-/* Groq Direct API — add your key below */
-const GROQ_API_KEY = 'YOUR_GROQ_API_KEY'; // Replace with key from console.groq.com
+/* Vercel Secure Proxy — API key stored on server, never exposed */
+const VERCEL_API_URL = 'https://alone-monster-github-io.vercel.app/api/chat';
 
 const AI_MODELS = [
-  { id:'groq-llama', name:'Llama 3.3 70B', desc:'Meta via Groq — blazing fast & free', badge:'fast', dot:'cyan',
-    useProxy:false, apiUrl:'https://api.groq.com/openai/v1/chat/completions', apiKey:GROQ_API_KEY, model:'llama-3.3-70b-versatile' },
+  { id:'groq-llama', name:'Llama 3.3 70B', desc:'Meta via Groq (Secure Proxy)', badge:'fast', dot:'cyan' },
 ];
 
 let activeModelId = 'groq-llama';
@@ -1639,13 +1638,13 @@ async function aiSendMessage(){
   const m=getActiveModel();
   try {
     let res, data, reply;
-    /* ── Groq Direct API ── */
-    res=await fetch(m.apiUrl,{
+    /* ── Vercel Secure Proxy ── */
+    res=await fetch(VERCEL_API_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${m.apiKey}`},
-      body:JSON.stringify({model:m.model, messages:[{role:'system',content:SITE_CONTEXT},...aiHistory], temperature:0.8, max_tokens:1024})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'system',content:SITE_CONTEXT},...aiHistory]})
     });
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error?.message||'API Error'}`);}
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`HTTP ${res.status}: ${e?.error||e?.error?.message||'API Error'}`);}
     data=await res.json();
     reply=data.choices?.[0]?.message?.content?.trim()||'Sorry, could not generate a reply.';
     aiHistory.push({role:'assistant',content:reply});
@@ -1843,6 +1842,5 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSideb
   }
 })();
 </script>
-<script src="api-handler.js"></script>
 </body>
 </html>
