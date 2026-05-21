@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    // CORS headers taaki aapki website access kar sake
+    // CORS headers taaki aapki website se request access ho sake
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
     try {
         const { messages } = req.body;
-        const apiKey = process.env.GROQ_API_KEY; // Yeh Vercel se secure uthayega
+        const apiKey = process.env.GROQ_API_KEY; // Vercel Environment Variable se secure uthayega
 
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
