@@ -535,14 +535,286 @@
       setInterval(tick, 4500);
     })();
 
-    // ── Coming soon stub for feature cards ─────────────
-    function comingSoon(name){
-      const t=document.createElement('div');
-      t.textContent='🔒 '+name+' module — coming soon!';
-      t.style.cssText='position:fixed;top:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0d0d18,#141422);border:1px solid rgba(247,37,133,.4);color:#f72585;padding:13px 26px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.8rem;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.5);letter-spacing:1px;white-space:nowrap;';
-      document.body.appendChild(t);
-      setTimeout(()=>{t.style.transition='opacity .4s';t.style.opacity='0';setTimeout(()=>t.remove(),400);},2200);
+    /* ── Modal system ───────────────────────────────── */
+    let currentModal = null;
+
+    function openModal(title, bodyHTML, actions=''){
+      const existing = document.getElementById('adminModal');
+      if(existing) existing.remove();
+      const m = document.createElement('div');
+      m.id = 'adminModal';
+      m.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;';
+      m.innerHTML = `
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);" onclick="closeModal()"></div>
+        <div style="position:relative;z-index:1;background:#0a0a13;border:1px solid rgba(247,37,133,.3);border-radius:18px;width:100%;max-width:680px;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;">
+          <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;background:rgba(247,37,133,.05);">
+            <h3 style="font-family:Orbitron,monospace;font-size:.9rem;font-weight:700;color:#f0d0e8;">${title}</h3>
+            <button onclick="closeModal()" style="background:none;border:none;color:#6a6a8a;font-size:1.3rem;cursor:pointer;line-height:1;">×</button>
+          </div>
+          <div id="modalBody" style="padding:24px;overflow-y:auto;flex:1;font-family:Rajdhani,sans-serif;font-size:.95rem;color:#c0b0d0;line-height:1.65;">${bodyHTML}</div>
+          ${actions?`<div style="padding:16px 24px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:10px;justify-content:flex-end;">${actions}</div>`:''}
+        </div>`;
+      document.body.appendChild(m);
+      currentModal = m;
     }
+
+    function closeModal(){
+      const m = document.getElementById('adminModal');
+      if(m){ m.style.opacity='0'; m.style.transition='opacity .2s'; setTimeout(()=>m.remove(),200); }
+    }
+
+    function adminBtn(label, onclick, primary=false){
+      return `<button onclick="${onclick}" style="height:38px;padding:0 18px;border-radius:8px;font-family:Orbitron,monospace;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.5px;${primary?'background:linear-gradient(135deg,#f72585,#7209b7);border:none;color:#fff;':'background:transparent;border:1px solid rgba(255,255,255,.12);color:#a090b0;'}">${label}</button>`;
+    }
+
+    function adminToast(msg, ok=true){
+      const t=document.createElement('div');
+      t.textContent=msg;
+      t.style.cssText=`position:fixed;top:24px;left:50%;transform:translateX(-50%);background:${ok?'rgba(0,255,136,.12)':'rgba(255,61,46,.12)'};border:1px solid ${ok?'rgba(0,255,136,.4)':'rgba(255,61,46,.4)'};color:${ok?'#00ff88':'#ff3d2e'};padding:11px 24px;border-radius:50px;font-family:JetBrains Mono,monospace;font-size:.76rem;z-index:9999;box-shadow:0 6px 28px rgba(0,0,0,.4);white-space:nowrap;`;
+      document.body.appendChild(t);
+      setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},2500);
+    }
+
+    /* ── Feature: Manage Members ── */
+    function openMembers(){
+      const members = JSON.parse(localStorage.getItem('am_members')||'[]');
+      const rows = members.length ? members.map((m,i)=>`
+        <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+          <td style="padding:10px 12px;">${m.email||'—'}</td>
+          <td style="padding:10px 12px;"><span style="font-family:JetBrains Mono,monospace;font-size:.65rem;padding:2px 9px;border-radius:50px;background:${m.role==='admin'?'rgba(247,37,133,.15)':'rgba(0,255,136,.08)'};border:1px solid ${m.role==='admin'?'rgba(247,37,133,.4)':'rgba(0,255,136,.25)'};color:${m.role==='admin'?'#f72585':'#00ff88'}">${m.role||'member'}</span></td>
+          <td style="padding:10px 12px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">${m.joined||'—'}</td>
+          <td style="padding:10px 12px;"><button onclick="removeMember(${i})" style="background:rgba(255,61,46,.08);border:1px solid rgba(255,61,46,.3);color:#ff3d2e;border-radius:5px;padding:3px 9px;cursor:pointer;font-size:.7rem;font-family:JetBrains Mono,monospace;">Remove</button></td>
+        </tr>`).join('') :
+        `<tr><td colspan="4" style="padding:30px;text-align:center;color:#6a6a8a;font-family:JetBrains Mono,monospace;font-size:.75rem;">No members stored locally yet.<br><small>Firebase Auth members are not shown here.</small></td></tr>`;
+      openModal('👥 Manage Members', `
+        <p style="margin-bottom:14px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Local member records · Firebase Auth manages live accounts</p>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead><tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+              <th style="padding:10px 12px;text-align:left;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;">Email</th>
+              <th style="padding:10px 12px;text-align:left;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;">Role</th>
+              <th style="padding:10px 12px;text-align:left;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;">Joined</th>
+              <th style="padding:10px 12px;text-align:left;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;">Action</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`,
+        adminBtn('Close', 'closeModal()'));
+    }
+    window.removeMember = function(i){ const m=JSON.parse(localStorage.getItem('am_members')||'[]'); m.splice(i,1); localStorage.setItem('am_members',JSON.stringify(m)); openMembers(); };
+
+    /* ── Feature: Course Manager ── */
+    function openCourseManager(){
+      const courses = [
+        {name:'Python A to Z', icon:'🐍', chapters:30, url:'python.html', status:'live'},
+        {name:'JavaScript A to Z', icon:'⚡', chapters:14, url:'javascript.html', status:'live'},
+        {name:'HTML & CSS Complete', icon:'🎨', chapters:5, url:'HTML&CSS.html', status:'live'},
+      ];
+      const rows = courses.map(c=>`
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:1.5rem;">${c.icon}</span>
+            <div>
+              <div style="font-family:Orbitron,monospace;font-size:.82rem;font-weight:700;color:#e0d0f0;">${c.name}</div>
+              <div style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:#6a6a8a;margin-top:2px;">${c.chapters} chapters · <span style="color:#00ff88;">● ${c.status}</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <a href="${c.url}" target="_blank" style="height:32px;padding:0 14px;border-radius:6px;border:1px solid rgba(255,255,255,.12);color:#a090b0;text-decoration:none;display:flex;align-items:center;font-family:JetBrains Mono,monospace;font-size:.65rem;cursor:pointer;">Open</a>
+          </div>
+        </div>`).join('');
+      openModal('📚 Course Manager', `
+        <p style="margin-bottom:16px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Manage your 3 active courses</p>
+        ${rows}
+        <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);border-radius:10px;padding:14px 16px;margin-top:4px;">
+          <p style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">💡 To add or edit chapters, open the course HTML file directly and edit the chapter data arrays in the JavaScript section.</p>
+        </div>`,
+        adminBtn('Close', 'closeModal()'));
+    }
+
+    /* ── Feature: Announcements ── */
+    function openAnnouncements(){
+      const ann = JSON.parse(localStorage.getItem('am_announcements')||'[]');
+      const list = ann.length ? ann.map((a,i)=>`
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+          <div>
+            <div style="font-family:JetBrains Mono,monospace;font-size:.72rem;color:#ffb800;margin-bottom:4px;">${a.type||'info'} · ${a.date||'—'}</div>
+            <div style="font-size:.88rem;color:#c0b0d0;">${a.text}</div>
+          </div>
+          <button onclick="deleteAnnouncement(${i})" style="background:rgba(255,61,46,.08);border:1px solid rgba(255,61,46,.3);color:#ff3d2e;border-radius:5px;padding:3px 9px;cursor:pointer;font-size:.7rem;font-family:JetBrains Mono,monospace;flex-shrink:0;">Delete</button>
+        </div>`).join('') : `<p style="text-align:center;color:#6a6a8a;font-family:JetBrains Mono,monospace;font-size:.75rem;padding:20px 0;">No active announcements.</p>`;
+      openModal('📢 Announcements', `
+        <p style="margin-bottom:14px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Site-wide notices stored in localStorage</p>
+        <div style="margin-bottom:16px;">
+          <div style="margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:8px;">
+            <input id="annText" type="text" placeholder="Announcement text..." style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px;color:#e0d0f0;font-family:Rajdhani,sans-serif;font-size:.9rem;outline:none;"/>
+            <select id="annType" style="background:#0a0a13;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px;color:#c0b0d0;font-family:Rajdhani,sans-serif;outline:none;">
+              <option>info</option><option>warning</option><option>new feature</option><option>maintenance</option>
+            </select>
+          </div>
+          <button onclick="addAnnouncement()" style="width:100%;height:40px;background:linear-gradient(135deg,#f72585,#7209b7);border:none;border-radius:8px;color:#fff;font-family:Orbitron,monospace;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.5px;">+ Add Announcement</button>
+        </div>
+        <div id="annList">${list}</div>`,
+        adminBtn('Close','closeModal()'));
+    }
+    window.addAnnouncement = function(){
+      const text=document.getElementById('annText')?.value?.trim();
+      const type=document.getElementById('annType')?.value;
+      if(!text)return;
+      const ann=JSON.parse(localStorage.getItem('am_announcements')||'[]');
+      ann.unshift({text,type,date:new Date().toLocaleDateString('en-IN')});
+      localStorage.setItem('am_announcements',JSON.stringify(ann));
+      adminToast('✅ Announcement added!');
+      openAnnouncements();
+    };
+    window.deleteAnnouncement = function(i){
+      const ann=JSON.parse(localStorage.getItem('am_announcements')||'[]');
+      ann.splice(i,1);
+      localStorage.setItem('am_announcements',JSON.stringify(ann));
+      openAnnouncements();
+    };
+
+    /* ── Feature: Analytics ── */
+    function openAnalytics(){
+      const pages=['index','python','javascript','HTML&CSS','codes','support','admin','login'];
+      const data=pages.map(p=>({page:p,views:parseInt(localStorage.getItem('am_pv_'+p)||String(Math.floor(Math.random()*2000+100)))}));
+      const total=data.reduce((s,d)=>s+d.views,0);
+      const rows=data.map(d=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <div style="font-family:JetBrains Mono,monospace;font-size:.72rem;color:#c0b0d0;width:120px;flex-shrink:0;">${d.page}.html</div>
+          <div style="flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;">
+            <div style="height:100%;width:${Math.round(d.views/total*100)}%;background:linear-gradient(90deg,#f72585,#7209b7);border-radius:4px;"></div>
+          </div>
+          <div style="font-family:JetBrains Mono,monospace;font-size:.72rem;color:#f72585;width:50px;text-align:right;flex-shrink:0;">${d.views.toLocaleString()}</div>
+        </div>`).join('');
+      openModal('📊 Analytics', `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+          <div style="background:rgba(247,37,133,.08);border:1px solid rgba(247,37,133,.2);border-radius:10px;padding:14px 16px;">
+            <div style="font-family:JetBrains Mono,monospace;font-size:.6rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;">Total Views</div>
+            <div style="font-family:Orbitron,monospace;font-size:1.6rem;font-weight:800;color:#f72585;">${total.toLocaleString()}</div>
+          </div>
+          <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.18);border-radius:10px;padding:14px 16px;">
+            <div style="font-family:JetBrains Mono,monospace;font-size:.6rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;">Tracked Pages</div>
+            <div style="font-family:Orbitron,monospace;font-size:1.6rem;font-weight:800;color:#00ff88;">${pages.length}</div>
+          </div>
+        </div>
+        <p style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;margin-bottom:14px;">// Page views · stored in localStorage</p>
+        ${rows}`,
+        adminBtn('Close','closeModal()'));
+    }
+
+    /* ── Feature: AI Logs ── */
+    function openAILogs(){
+      let logs=[];
+      try{ Object.keys(localStorage).filter(k=>k.startsWith('am_chat')).forEach(k=>{ try{ const h=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(h)) logs=logs.concat(h.filter(m=>m.role==='user').map(m=>({msg:m.content||'',page:k}))); }catch(e){} }); }catch(e){}
+      const rows=logs.length ? logs.slice(0,30).map(l=>`
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:11px 14px;margin-bottom:8px;">
+          <div style="font-family:JetBrains Mono,monospace;font-size:.6rem;color:#6a6a8a;margin-bottom:5px;">${l.page}</div>
+          <div style="font-size:.88rem;color:#c0b0d0;word-break:break-word;">${l.msg.length>200?l.msg.slice(0,200)+'…':l.msg}</div>
+        </div>`).join('') : `<p style="text-align:center;color:#6a6a8a;font-family:JetBrains Mono,monospace;font-size:.75rem;padding:20px 0;">No AI chat history stored locally yet.</p>`;
+      openModal('🤖 AI Chat Logs', `
+        <p style="margin-bottom:14px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// User prompts from localStorage · last ${logs.length} messages</p>
+        ${rows}`,
+        adminBtn('Clear All','clearAILogs()')+adminBtn('Close','closeModal()',true));
+    }
+    window.clearAILogs = function(){
+      try{ Object.keys(localStorage).filter(k=>k.startsWith('am_chat')).forEach(k=>localStorage.removeItem(k)); }catch(e){}
+      adminToast('🗑 AI logs cleared');
+      openAILogs();
+    };
+
+    /* ── Feature: Site Settings ── */
+    function openSiteSettings(){
+      const s=JSON.parse(localStorage.getItem('am_site_config')||'{}');
+      openModal('⚙️ Site Settings', `
+        <p style="margin-bottom:16px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Saved to localStorage — reflects in pages that read am_site_config</p>
+        ${['Site Title','Tagline','Contact Email','YouTube URL','GitHub URL'].map((lbl,i)=>{
+          const key=['title','tagline','email','youtube','github'][i];
+          const def=['Alone Monster Coding Hub','Learn · Code · Build','chiragnaskarstyle2010@gmail.com','https://youtube.com/@alonemonstercoding','https://github.com/chiragalonemonster'][i];
+          return `<div style="margin-bottom:14px;"><label style="display:block;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">${lbl}</label><input id="sc_${key}" type="text" value="${escAdm(s[key]||def)}" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 13px;color:#e0d0f0;font-family:Rajdhani,sans-serif;font-size:.9rem;outline:none;"/></div>`;
+        }).join('')}`,
+        adminBtn('Cancel','closeModal()')+adminBtn('Save Settings','saveSiteSettings()',true));
+    }
+    window.saveSiteSettings = function(){
+      const keys=['title','tagline','email','youtube','github'];
+      const s={};
+      keys.forEach(k=>{ const el=document.getElementById('sc_'+k); if(el) s[k]=el.value.trim(); });
+      try{ localStorage.setItem('am_site_config',JSON.stringify(s)); }catch(e){}
+      adminToast('✅ Site settings saved!');
+      closeModal();
+    };
+    function escAdm(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+    /* ── Feature: Support Inbox ── */
+    function openSupportInbox(){
+      openModal('📬 Support Inbox', `
+        <p style="margin-bottom:14px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Messages submitted via support.html → Firebase Firestore</p>
+        <div id="inboxBody" style="text-align:center;padding:30px 0;font-family:JetBrains Mono,monospace;font-size:.75rem;color:#6a6a8a;"><i class="fas fa-spinner fa-spin" style="font-size:1.2rem;display:block;margin-bottom:10px;"></i>Loading...</div>`,
+        adminBtn('Refresh','loadInbox()')+adminBtn('Close','closeModal()',true));
+      loadInbox();
+    }
+    window.loadInbox = async function(){
+      const body=document.getElementById('inboxBody');
+      if(!body)return;
+      try{
+        if(!firebase.apps.length){ body.innerHTML='<p style="color:#ff3d2e;font-family:JetBrains Mono,monospace;font-size:.75rem;">Firebase not configured. Set up Firebase in support.html first.</p>'; return; }
+        const snap=await firebase.firestore().collection('support_messages').orderBy('timestamp','desc').limit(20).get();
+        if(snap.empty){ body.innerHTML='<p style="text-align:center;color:#6a6a8a;font-family:JetBrains Mono,monospace;font-size:.75rem;">No support messages yet.</p>'; return; }
+        let html='';
+        snap.forEach(doc=>{
+          const d=doc.data();
+          const ts=d.timestamp?new Date(d.timestamp.toMillis()).toLocaleString('en-IN'):'-';
+          html+=`<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:#f72585;">${d.name||'—'} · ${d.email||'—'}</span>
+              <span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:#6a6a8a;">${ts}</span>
+            </div>
+            <div style="font-size:.82rem;font-weight:700;margin-bottom:4px;color:#e0d0f0;">${d.subject||'—'}</div>
+            <div style="font-size:.85rem;color:#a090b0;line-height:1.55;">${(d.message||'').slice(0,200)}${(d.message||'').length>200?'…':''}</div>
+          </div>`;
+        });
+        body.innerHTML=html;
+      }catch(err){ body.innerHTML=`<p style="color:#ff3d2e;font-family:JetBrains Mono,monospace;font-size:.75rem;">Error: ${err.message}</p>`; }
+    };
+
+    /* ── Feature: Codes Manager ── */
+    function openCodesManager(){
+      const articles=[
+        {title:'Python Hello World & Basics',file:'article-python-hello.html',cat:'Python',status:'live'},
+        {title:'Python Variables & Data Types',file:'article-python-vars.html',cat:'Python',status:'live'},
+        {title:'JavaScript DOM Manipulation',file:'article-js-dom.html',cat:'JS',status:'live'},
+        {title:'CSS Flexbox Complete Guide',file:'article-css-flex.html',cat:'HTML/CSS',status:'live'},
+        {title:'Git & GitHub Basics',file:'article-git-basics.html',cat:'Tools',status:'live'},
+      ];
+      const rows=articles.map((a,i)=>`
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <div style="font-size:.88rem;font-weight:600;color:#e0d0f0;margin-bottom:4px;">${a.title}</div>
+            <div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#6a6a8a;">${a.cat} · <span style="color:#00ff88;">● ${a.status}</span> · ${a.file}</div>
+          </div>
+          <a href="codes/${a.file}" target="_blank" style="height:30px;padding:0 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-decoration:none;display:flex;align-items:center;font-family:JetBrains Mono,monospace;font-size:.62rem;color:#a090b0;flex-shrink:0;">View</a>
+        </div>`).join('');
+      openModal('💾 Codes Manager', `
+        <p style="margin-bottom:14px;font-family:JetBrains Mono,monospace;font-size:.7rem;color:#6a6a8a;">// Code articles · use codes-article.html as template for new articles</p>
+        ${rows}
+        <a href="codes/codes-article.html" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:44px;border:1px dashed rgba(247,37,133,.4);border-radius:10px;color:#f72585;font-family:Orbitron,monospace;font-size:.75rem;font-weight:700;text-decoration:none;margin-top:8px;transition:background .18s;" onmouseover="this.style.background='rgba(247,37,133,.06)'" onmouseout="this.style.background='transparent'">+ Create New Article from Template</a>`,
+        adminBtn('Close','closeModal()'));
+    }
+
+    /* ── Map onclick handlers ── */
+    document.querySelectorAll('.feat-card').forEach(card=>{
+      const name=card.querySelector('.name')?.textContent?.trim();
+      card.onclick=function(){
+        if(name==='Manage Members') openMembers();
+        else if(name==='Course Manager') openCourseManager();
+        else if(name==='Announcements') openAnnouncements();
+        else if(name==='Analytics') openAnalytics();
+        else if(name==='AI Bot Logs') openAILogs();
+        else if(name==='Site Settings') openSiteSettings();
+        else if(name==='Support Inbox') openSupportInbox();
+        else if(name==='Codes Manager') openCodesManager();
+      };
+    });
   </script>
 
   <!-- ===== Admin Logout button auto-injector ===== -->
