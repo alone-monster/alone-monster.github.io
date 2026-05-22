@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Settings — Alone Monster Coding Hub</title>
+  <meta name="description" content="Customize your Alone Monster Coding Hub experience — themes, display, chatbot preferences, and account settings."/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
+      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;
+      --accent:var(--green);
+      --gg:0 0 24px rgba(0,255,136,.4);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;}
+
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+    .orb1{width:500px;height:500px;background:rgba(0,212,255,.07);top:-100px;right:-100px;}
+    .orb2{width:400px;height:400px;background:rgba(139,60,247,.06);bottom:-100px;left:-100px;}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;margin-right:auto;}
+    .tb-brand span{color:var(--green);}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:36px;padding:0 14px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+    .save-btn{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000;font-weight:800;}
+    .save-btn:hover{box-shadow:var(--gg);}
+
+    /* LAYOUT */
+    .layout{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:48px 28px 80px;display:grid;grid-template-columns:220px 1fr;gap:28px;}
+
+    /* SIDEBAR */
+    .sidebar{position:sticky;top:76px;align-self:start;}
+    .nav-section{margin-bottom:6px;}
+    .nav-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:0 12px;margin-bottom:6px;margin-top:16px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--muted);transition:all .18s;border:1px solid transparent;}
+    .nav-item i{width:18px;text-align:center;font-size:.85rem;}
+    .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+    .nav-item.active{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.2);color:var(--green);}
+
+    /* PANELS */
+    .panels{display:flex;flex-direction:column;gap:20px;}
+    .panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .panel-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+    .panel-head .ph-icon{width:38px;height:38px;border-radius:9px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.95rem;}
+    .panel-head h3{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;color:var(--text);}
+    .panel-head p{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:2px;}
+    .panel-body{padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+
+    /* SETTING ROW */
+    .setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+    .setting-row:last-child{border-bottom:none;padding-bottom:0;}
+    .setting-info .si-title{font-size:.95rem;font-weight:600;color:var(--text);}
+    .setting-info .si-desc{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);margin-top:3px;}
+    .setting-control{flex-shrink:0;}
+
+    /* TOGGLE */
+    .toggle-wrap{position:relative;width:46px;height:24px;cursor:pointer;display:inline-block;}
+    .toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
+    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:24px;border:1px solid var(--border);transition:all .25s;}
+    .toggle-wrap input:checked + .toggle-slider{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(0,255,136,.4);}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:50%;transform:translateY(-50%);background:#fff;border-radius:50%;transition:transform .25s;}
+    .toggle-wrap input:checked + .toggle-slider::before{transform:translateY(-50%) translateX(22px);}
+
+    /* SELECT */
+    .st-select{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;padding:8px 12px;outline:none;cursor:pointer;transition:border-color .2s;min-width:140px;}
+    .st-select:focus{border-color:var(--green);}
+    .st-select option{background:#0a0a13;}
+
+    /* RANGE */
+    .range-wrap{display:flex;align-items:center;gap:10px;min-width:160px;}
+    .range-wrap input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:rgba(255,255,255,.1);border-radius:4px;outline:none;}
+    .range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--green);cursor:pointer;box-shadow:0 0 8px rgba(0,255,136,.4);}
+    .range-val{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--green);min-width:32px;text-align:right;}
+
+    /* COLOR SWATCHES */
+    .swatches{display:flex;gap:8px;flex-wrap:wrap;}
+    .swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .18s;}
+    .swatch.active{border-color:#fff;transform:scale(1.2);box-shadow:0 0 10px var(--sw-color);}
+
+    /* SAVE BAR */
+    .save-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;padding:14px 28px;background:rgba(5,5,9,.96);backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px;transform:translateY(100%);transition:transform .3s;}
+    .save-bar.show{transform:translateY(0);}
+    .save-bar p{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);}
+    .save-bar p span{color:var(--gold);}
+    .sb-btns{display:flex;gap:10px;}
+    .sb-save{height:40px;padding:0 22px;background:linear-gradient(135deg,var(--green),var(--cyan));border:none;border-radius:8px;color:#000;font-family:'Orbitron',monospace;font-size:.78rem;font-weight:800;cursor:pointer;transition:all .2s;}
+    .sb-save:hover{box-shadow:var(--gg);}
+    .sb-discard{height:40px;padding:0 18px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;}
+    .sb-discard:hover{border-color:var(--red);color:var(--red);}
+
+    /* TOAST */
+    .toast{position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-20px);background:#0d0d18;border:1px solid rgba(0,255,136,.4);color:var(--green);padding:11px 22px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.76rem;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* DANGER */
+    .danger-btn{height:40px;padding:0 18px;background:rgba(255,61,46,.08);border:1px solid rgba(255,61,46,.3);border-radius:8px;color:var(--red);font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;}
+    .danger-btn:hover{background:rgba(255,61,46,.15);border-color:var(--red);}
+
+    @media(max-width:720px){
+      .layout{grid-template-columns:1fr;padding:28px 16px 100px;}
+      .sidebar{position:static;display:flex;flex-wrap:wrap;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px;}
+      .nav-label{display:none;}
+      .nav-item{padding:8px 12px;font-size:.8rem;}
+      .topbar{padding:0 16px;}
+      .range-wrap{min-width:120px;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
+  <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i></a>
+  <a href="https://alone-monster.github.io/profile.html" class="btn bo"><i class="fas fa-user"></i> Profile</a>
+  <button onclick="saveSettings()" class="btn save-btn"><i class="fas fa-check"></i> Save</button>
+</header>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-label">Preferences</div>
+    <div class="nav-item active" onclick="scrollTo('sec-appearance')"><i class="fas fa-palette"></i> Appearance</div>
+    <div class="nav-item" onclick="scrollTo('sec-display')"><i class="fas fa-desktop"></i> Display</div>
+    <div class="nav-item" onclick="scrollTo('sec-ai')"><i class="fas fa-robot"></i> AI Chatbot</div>
+    <div class="nav-item" onclick="scrollTo('sec-editor')"><i class="fas fa-code"></i> Code Editor</div>
+    <div class="nav-label">Account</div>
+    <div class="nav-item" onclick="scrollTo('sec-account')"><i class="fas fa-user-gear"></i> Account</div>
+    <div class="nav-item" onclick="scrollTo('sec-privacy')"><i class="fas fa-shield-halved"></i> Privacy</div>
+    <div class="nav-label">System</div>
+    <div class="nav-item" onclick="scrollTo('sec-advanced')"><i class="fas fa-sliders"></i> Advanced</div>
+  </aside>
+
+  <!-- PANELS -->
+  <div class="panels">
+
+    <!-- APPEARANCE -->
+    <div class="panel" id="sec-appearance">
+      <div class="panel-head">
+        <div class="ph-icon"><i class="fas fa-palette"></i></div>
+        <div><h3>Appearance</h3><p>Theme, accent color, and visual style</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Theme</div>
+            <div class="si-desc">Overall color scheme of the website</div>
+          </div>
+          <div class="setting-control">
+            <select class="st-select" id="setting-theme" onchange="markDirty()">
+              <option value="dark">Dark (Default)</option>
+              <option value="darker">Darker</option>
+              <option value="midnight">Midnight Blue</option>
+              <option value="forest">Forest Green</option>
+              <option value="light">Light Mode</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Accent Color</div>
+            <div class="si-desc">Primary highlight color across the site</div>
+          </div>
+          <div class="setting-control">
+            <div class="swatches" id="swatches">
+              <div class="swatch active" style="background:#00ff88;--sw-color:#00ff88;" data-color="#00ff88" onclick="setAccent('#00ff88',this)" title="Green"></div>
+              <div class="swatch" style="background:#00d4ff;--sw-color:#00d4ff;" data-color="#00d4ff" onclick="setAccent('#00d4ff',this)" title="Cyan"></div>
+              <div class="swatch" style="background:#ff2d87;--sw-color:#ff2d87;" data-color="#ff2d87" onclick="setAccent('#ff2d87',this)" title="Pink"></div>
+              <div class="swatch" style="background:#8b3cf7;--sw-color:#8b3cf7;" data-color="#8b3cf7" onclick="setAccent('#8b3cf7',this)" title="Violet"></div>
+              <div class="swatch" style="background:#ffb800;--sw-color:#ffb800;" data-color="#ffb800" onclick="setAccent('#ffb800',this)" title="Gold"></div>
+              <div class="swatch" style="background:#4361ee;--sw-color:#4361ee;" data-color="#4361ee" onclick="setAccent('#4361ee',this)" title="Blue"></div>
+              <div class="swatch" style="background:#ff8a1e;--sw-color:#ff8a1e;" data-color="#ff8a1e" onclick="setAccent('#ff8a1e',this)" title="Orange"></div>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Background Grid</div>
+            <div class="si-desc">Show the animated dot/line grid background</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-grid" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Glow Effects</div>
+            <div class="si-desc">Neon glow on buttons, borders, and icons</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-glow" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Reduced Motion</div>
+            <div class="si-desc">Disable animations and transitions</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-motion" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Explore Themes</div>
+            <div class="si-desc">Browse all available visual themes</div>
+          </div>
+          <div class="setting-control">
+            <a href="https://alone-monster.github.io/themes.html" class="btn bo"><i class="fas fa-swatchbook"></i> Themes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPLAY -->
+    <div class="panel" id="sec-display">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.2);color:var(--cyan);"><i class="fas fa-desktop"></i></div>
+        <div><h3>Display</h3><p>Font size, layout, and reading preferences</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Font Size</div>
+            <div class="si-desc">Base text size for reading content</div>
+          </div>
+          <div class="setting-control">
+            <div class="range-wrap">
+              <input type="range" id="setting-fontsize" min="12" max="20" value="16" oninput="updateRange('setting-fontsize','fs-val','px');markDirty()"/>
+              <span class="range-val" id="fs-val">16px</span>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Code Font Size</div>
+            <div class="si-desc">Font size in the code editor and snippets</div>
+          </div>
+          <div class="setting-control">
+            <div class="range-wrap">
+              <input type="range" id="setting-codefont" min="11" max="20" value="14" oninput="updateRange('setting-codefont','cf-val','px');markDirty()"/>
+              <span class="range-val" id="cf-val">14px</span>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Compact Mode</div>
+            <div class="si-desc">Reduce padding and spacing between elements</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-compact" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Sticky Navigation</div>
+            <div class="si-desc">Keep the top navigation bar fixed while scrolling</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-sticky" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CHATBOT -->
+    <div class="panel" id="sec-ai">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(139,60,247,.1);border-color:rgba(139,60,247,.2);color:var(--violet);"><i class="fas fa-robot"></i></div>
+        <div><h3>AI Chatbot</h3><p>Model, behavior, and chat preferences</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Default AI Model</div>
+            <div class="si-desc">Model used when the chatbot opens</div>
+          </div>
+          <div class="setting-control">
+            <select class="st-select" id="setting-aimodel" onchange="markDirty()">
+              <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Default)</option>
+              <option value="llama-3.1-8b-instant">Llama 3.1 8B (Fast)</option>
+              <option value="gemma2-9b-it">Gemma 2 9B</option>
+              <option value="meta-llama/llama-4-scout-17b-16e-instruct">Llama 4 Scout (Vision)</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Auto-open Chatbot</div>
+            <div class="si-desc">Automatically open the chatbot when you visit a course page</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-autoai" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Chat Sound Effects</div>
+            <div class="si-desc">Play a sound when the AI responds</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-aisound" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Save Chat History</div>
+            <div class="si-desc">Remember your last conversation in localStorage</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-aichat" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Clear Chat History</div>
+            <div class="si-desc">Delete all saved conversations from your device</div>
+          </div>
+          <div class="setting-control">
+            <button class="danger-btn" onclick="clearChatHistory()"><i class="fas fa-trash"></i> Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CODE EDITOR -->
+    <div class="panel" id="sec-editor">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(255,184,0,.1);border-color:rgba(255,184,0,.2);color:var(--gold);"><i class="fas fa-code"></i></div>
+        <div><h3>Code Editor</h3><p>Editor theme and behavior</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Editor Theme</div>
+            <div class="si-desc">Syntax highlighting style for the live editor</div>
+          </div>
+          <div class="setting-control">
+            <select class="st-select" id="setting-editortheme" onchange="markDirty()">
+              <option value="dark">Dark Neon (Default)</option>
+              <option value="dracula">Dracula</option>
+              <option value="monokai">Monokai</option>
+              <option value="github">GitHub Dark</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Line Numbers</div>
+            <div class="si-desc">Show line numbers in the code editor</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-linenums" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Auto-indent</div>
+            <div class="si-desc">Automatically indent new lines to match previous</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-autoindent" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Tab Size</div>
+            <div class="si-desc">Number of spaces per tab character</div>
+          </div>
+          <div class="setting-control">
+            <select class="st-select" id="setting-tabsize" onchange="markDirty()" style="min-width:80px;">
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="panel" id="sec-account">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(67,97,238,.1);border-color:rgba(67,97,238,.2);color:var(--blue);"><i class="fas fa-user-gear"></i></div>
+        <div><h3>Account</h3><p>Login, profile, and connected accounts</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Profile Page</div>
+            <div class="si-desc">View and edit your profile information</div>
+          </div>
+          <div class="setting-control">
+            <a href="https://alone-monster.github.io/profile.html" class="btn bo"><i class="fas fa-user"></i> View Profile</a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Login / Sign Up</div>
+            <div class="si-desc">Access your account or create a new one</div>
+          </div>
+          <div class="setting-control">
+            <a href="https://alone-monster.github.io/login.html" class="btn bo"><i class="fas fa-right-to-bracket"></i> Login</a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Sign Out</div>
+            <div class="si-desc">Sign out of your current session</div>
+          </div>
+          <div class="setting-control">
+            <button class="danger-btn" onclick="signOut()"><i class="fas fa-right-from-bracket"></i> Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIVACY -->
+    <div class="panel" id="sec-privacy">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.2);color:var(--green);"><i class="fas fa-shield-halved"></i></div>
+        <div><h3>Privacy</h3><p>Data and tracking preferences</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Analytics</div>
+            <div class="si-desc">Allow anonymous usage data to improve the site</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-analytics" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Remember Progress</div>
+            <div class="si-desc">Save course progress in browser storage</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-progress" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Clear All Data</div>
+            <div class="si-desc">Delete all locally stored settings and progress</div>
+          </div>
+          <div class="setting-control">
+            <button class="danger-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> Clear Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADVANCED -->
+    <div class="panel" id="sec-advanced">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(255,45,135,.1);border-color:rgba(255,45,135,.2);color:var(--pink);"><i class="fas fa-sliders"></i></div>
+        <div><h3>Advanced</h3><p>Developer options and debugging tools</p></div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Debug Mode</div>
+            <div class="si-desc">Show debug info and verbose logging in console</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-debug" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Offline Mode</div>
+            <div class="si-desc">Use cached resources when internet is unavailable</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-wrap"><input type="checkbox" id="setting-offline" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="si-title">Reset All Settings</div>
+            <div class="si-desc">Restore all settings to their default values</div>
+          </div>
+          <div class="setting-control">
+            <button class="danger-btn" onclick="resetSettings()"><i class="fas fa-rotate-left"></i> Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="saveBar">
+  <p><span>⚠</span> You have unsaved changes</p>
+  <div class="sb-btns">
+    <button class="sb-discard" onclick="discardChanges()">Discard</button>
+    <button class="sb-save" onclick="saveSettings()"><i class="fas fa-check"></i> Save Changes</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'am_settings';
+let dirty = false;
+let currentSettings = {};
+
+/* ── Load settings ── */
+function loadSettings(){
+  try{
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+    if(s.theme)          document.getElementById('setting-theme').value = s.theme;
+    if(s.accent)         setAccent(s.accent, document.querySelector(`.swatch[data-color="${s.accent}"]`), false);
+    if(s.fontsize)       { document.getElementById('setting-fontsize').value=s.fontsize; updateRange('setting-fontsize','fs-val','px'); }
+    if(s.codefont)       { document.getElementById('setting-codefont').value=s.codefont; updateRange('setting-codefont','cf-val','px'); }
+    if(s.aimodel)        document.getElementById('setting-aimodel').value = s.aimodel;
+    if(s.editortheme)    document.getElementById('setting-editortheme').value = s.editortheme;
+    if(s.tabsize)        document.getElementById('setting-tabsize').value = s.tabsize;
+    const bools = ['grid','glow','motion','compact','sticky','autoai','aisound','aichat','linenums','autoindent','analytics','progress','debug','offline'];
+    bools.forEach(k => {
+      const el = document.getElementById('setting-'+k);
+      if(el && s[k]!==undefined) el.checked = s[k];
+    });
+    currentSettings = {...s};
+  } catch(e){}
+}
+
+/* ── Save settings ── */
+function saveSettings(){
+  const s = {
+    theme:       document.getElementById('setting-theme').value,
+    fontsize:    document.getElementById('setting-fontsize').value,
+    codefont:    document.getElementById('setting-codefont').value,
+    aimodel:     document.getElementById('setting-aimodel').value,
+    editortheme: document.getElementById('setting-editortheme').value,
+    tabsize:     document.getElementById('setting-tabsize').value,
+  };
+  const bools = ['grid','glow','motion','compact','sticky','autoai','aisound','aichat','linenums','autoindent','analytics','progress','debug','offline'];
+  bools.forEach(k => { s[k] = document.getElementById('setting-'+k)?.checked ?? false; });
+  const sw = document.querySelector('.swatch.active');
+  if(sw) s.accent = sw.dataset.color;
+
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch(e){}
+  currentSettings = {...s};
+  dirty = false;
+  document.getElementById('saveBar').classList.remove('show');
+  showToast('✅ Settings saved!');
+}
+
+/* ── Dirty state ── */
+function markDirty(){
+  if(!dirty){ dirty=true; document.getElementById('saveBar').classList.add('show'); }
+}
+
+/* ── Discard changes ── */
+function discardChanges(){
+  dirty = false;
+  document.getElementById('saveBar').classList.remove('show');
+  loadSettings();
+  showToast('↩ Changes discarded');
+}
+
+/* ── Accent color ── */
+function setAccent(color, el, mark=true){
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+  if(el){ el.classList.add('active'); el.style.setProperty('--sw-color',color); }
+  document.documentElement.style.setProperty('--accent', color);
+  document.documentElement.style.setProperty('--green', color);
+  if(mark) markDirty();
+}
+
+/* ── Range input ── */
+function updateRange(id, valId, unit){
+  const v = document.getElementById(id).value;
+  document.getElementById(valId).textContent = v+unit;
+}
+
+/* ── Scroll to section ── */
+function scrollTo(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+/* ── Actions ── */
+function clearChatHistory(){
+  if(!confirm('Clear all saved chat history? This cannot be undone.')) return;
+  try{
+    Object.keys(localStorage).filter(k=>k.startsWith('am_chat_')).forEach(k=>localStorage.removeItem(k));
+    localStorage.removeItem('am_chat_history');
+  } catch(e){}
+  showToast('🗑 Chat history cleared');
+}
+
+function clearAllData(){
+  if(!confirm('Delete ALL locally stored data including settings and progress? This cannot be undone.')) return;
+  try{ localStorage.clear(); } catch(e){}
+  showToast('🗑 All data cleared');
+  setTimeout(()=>location.reload(), 1200);
+}
+
+function resetSettings(){
+  if(!confirm('Reset all settings to defaults?')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); } catch(e){}
+  showToast('↩ Settings reset to defaults');
+  setTimeout(()=>location.reload(), 1200);
+}
+
+function signOut(){
+  if(!confirm('Sign out of your current session?')) return;
+  try{
+    localStorage.removeItem('am_admin_session');
+    localStorage.removeItem('am_admin_since');
+    localStorage.removeItem('am_user');
+  } catch(e){}
+  showToast('👋 Signed out');
+  setTimeout(()=>window.location.href='https://alone-monster.github.io/login.html', 1200);
+}
+
+/* ── Toast ── */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+/* ── Init ── */
+loadSettings();
+</script>
+</body>
+</html>
