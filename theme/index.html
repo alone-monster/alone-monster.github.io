@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Themes — Alone Monster Coding Hub</title>
+  <meta name="description" content="Choose your visual theme for Alone Monster Coding Hub — Dark, Midnight, Forest, Cyberpunk, Aurora, and more."/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;
+      --gg:0 0 24px rgba(0,255,136,.4);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;}
+
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+    .orb1{width:600px;height:600px;background:rgba(0,255,136,.07);top:-200px;right:-100px;}
+    .orb2{width:500px;height:500px;background:rgba(139,60,247,.06);bottom:-100px;left:-100px;}
+
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;margin-right:auto;}
+    .tb-brand span{color:var(--green);}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:36px;padding:0 14px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+
+    .wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:56px 28px 80px;}
+
+    .hero{text-align:center;margin-bottom:60px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.22);border-radius:50px;padding:7px 18px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;}
+    .hero h1{font-family:'Orbitron',monospace;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:900;background:linear-gradient(135deg,#fff 30%,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+    .hero p{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto;line-height:1.65;}
+
+    /* CURRENT THEME BAR */
+    .current-bar{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:12px;padding:16px 22px;margin-bottom:40px;display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:.76rem;}
+    .current-dot{width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);flex-shrink:0;animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+    .current-bar span{color:var(--green);font-weight:700;}
+
+    /* THEMES GRID */
+    .themes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-bottom:60px;}
+
+    /* THEME CARD */
+    .theme-card{border-radius:18px;overflow:hidden;cursor:pointer;border:2px solid var(--border);transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;}
+    .theme-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.6);}
+    .theme-card.active{border-color:var(--green);box-shadow:0 0 0 1px var(--green),0 16px 50px rgba(0,0,0,.5);}
+    .theme-card .active-badge{position:absolute;top:14px;right:14px;background:var(--green);color:#000;font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:1px;text-transform:uppercase;display:none;}
+    .theme-card.active .active-badge{display:block;}
+
+    /* PREVIEW */
+    .theme-preview{height:160px;padding:16px;position:relative;overflow:hidden;}
+    .preview-topbar{height:28px;border-radius:7px;margin-bottom:10px;display:flex;align-items:center;padding:0 10px;gap:7px;}
+    .preview-dot{width:8px;height:8px;border-radius:50%;}
+    .preview-title{font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;margin-left:6px;}
+    .preview-code{padding:8px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.52rem;line-height:1.7;}
+    .preview-code .kw{display:inline;}
+    .preview-btn{display:inline-block;padding:4px 12px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:700;margin-top:8px;}
+
+    /* THEME INFO */
+    .theme-info{padding:16px 18px 20px;}
+    .theme-name{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:4px;}
+    .theme-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+    .theme-tags{display:flex;gap:6px;flex-wrap:wrap;}
+    .ttag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:3px 9px;border-radius:50px;border:1px solid rgba(255,255,255,.08);color:var(--muted);}
+    .apply-btn{width:100%;height:40px;border:none;border-radius:9px;font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:12px;letter-spacing:.8px;}
+    .apply-btn.active-style{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.35);}
+    .apply-btn.apply-style{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);}
+    .apply-btn.apply-style:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);}
+
+    /* TOAST */
+    .toast{position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-20px);background:#0d0d18;border:1px solid rgba(0,255,136,.4);color:var(--green);padding:11px 22px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.76rem;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    .foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:1px;margin-top:20px;}
+
+    @media(max-width:720px){
+      .wrap{padding:36px 18px 60px;}
+      .themes-grid{grid-template-columns:1fr 1fr;}
+      .topbar{padding:0 16px;}
+    }
+    @media(max-width:480px){
+      .themes-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="toast" id="toast"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
+  <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i></a>
+  <a href="https://alone-monster.github.io/settings.html" class="btn bo"><i class="fas fa-gear"></i> Settings</a>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-swatchbook"></i> Visual Themes</div>
+    <h1>Choose Your Theme</h1>
+    <p>Pick a visual style that matches your personality. Your choice is saved locally.</p>
+  </div>
+
+  <div class="current-bar">
+    <div class="current-dot"></div>
+    Current theme: <span id="currentThemeName">Dark Neon (Default)</span>
+    &nbsp;·&nbsp; <a href="https://alone-monster.github.io/settings.html" style="color:var(--green);text-decoration:none;">More settings →</a>
+  </div>
+
+  <div class="themes-grid" id="themesGrid"></div>
+
+  <footer class="foot">
+    <p>© 2025 Alone Monster Coding Hub · <a href="https://alone-monster.github.io/" style="color:var(--green);text-decoration:none;">alone-monster.github.io</a></p>
+  </footer>
+</main>
+
+<script>
+const THEMES = [
+  {
+    id:'dark-neon', name:'Dark Neon', desc:'The default — deep black backgrounds with electric green accents and glowing borders.',
+    tags:['Default','Dark','Neon'],
+    bg:'#050509', bg2:'#0a0a13', text:'#e8e8f0', accent:'#00ff88', accent2:'#00d4ff',
+    previewBg:'#050509', barBg:'rgba(0,0,0,.6)', codeBg:'rgba(0,255,136,.06)', btnBg:'#00ff88', btnText:'#000',
+    kw:'#00ff88', str:'#00d4ff', fn:'#ff2d87'
+  },
+  {
+    id:'midnight-blue', name:'Midnight Blue', desc:'Deep navy blue with electric cyan accents — perfect for late-night coding sessions.',
+    tags:['Dark','Blue','Calm'],
+    bg:'#03060f', bg2:'#06091a', text:'#d8e8ff', accent:'#4d9fff', accent2:'#00d4ff',
+    previewBg:'#03060f', barBg:'rgba(0,10,30,.7)', codeBg:'rgba(77,159,255,.06)', btnBg:'#4d9fff', btnText:'#000',
+    kw:'#4d9fff', str:'#00d4ff', fn:'#b48eff'
+  },
+  {
+    id:'cyberpunk', name:'Cyberpunk', desc:'Neon pink and electric yellow on dark — aggressive, futuristic, and eye-catching.',
+    tags:['Dark','Neon','Bold'],
+    bg:'#060108', bg2:'#0c010f', text:'#f0d8ff', accent:'#ff2d87', accent2:'#ffb800',
+    previewBg:'#060108', barBg:'rgba(20,0,30,.7)', codeBg:'rgba(255,45,135,.06)', btnBg:'#ff2d87', btnText:'#fff',
+    kw:'#ff2d87', str:'#ffb800', fn:'#b48eff'
+  },
+  {
+    id:'forest', name:'Forest Green', desc:'Deep forest greens and earthy tones — calm, natural, and easy on the eyes.',
+    tags:['Dark','Green','Nature'],
+    bg:'#020a04', bg2:'#071209', text:'#d8f0dc', accent:'#4caf50', accent2:'#81c784',
+    previewBg:'#020a04', barBg:'rgba(0,15,5,.7)', codeBg:'rgba(76,175,80,.06)', btnBg:'#4caf50', btnText:'#000',
+    kw:'#4caf50', str:'#81c784', fn:'#a5d6a7'
+  },
+  {
+    id:'aurora', name:'Aurora', desc:'Purple and teal inspired by the Northern Lights — mystical and beautiful.',
+    tags:['Dark','Purple','Gradient'],
+    bg:'#04030e', bg2:'#08061a', text:'#e8d8ff', accent:'#8b3cf7', accent2:'#00e5d4',
+    previewBg:'#04030e', barBg:'rgba(10,5,30,.7)', codeBg:'rgba(139,60,247,.06)', btnBg:'#8b3cf7', btnText:'#fff',
+    kw:'#8b3cf7', str:'#00e5d4', fn:'#ff6bab'
+  },
+  {
+    id:'solar', name:'Solar', desc:'Warm oranges and reds like a sunset — energetic and warm.',
+    tags:['Dark','Warm','Orange'],
+    bg:'#0a0402', bg2:'#140805', text:'#ffe8d8', accent:'#ff8a1e', accent2:'#ff3d2e',
+    previewBg:'#0a0402', barBg:'rgba(30,10,0,.7)', codeBg:'rgba(255,138,30,.06)', btnBg:'#ff8a1e', btnText:'#000',
+    kw:'#ff8a1e', str:'#ff3d2e', fn:'#ffb800'
+  },
+  {
+    id:'ocean', name:'Ocean', desc:'Deep ocean blues and teals — cool, clean, and professional.',
+    tags:['Dark','Blue','Clean'],
+    bg:'#02090e', bg2:'#041018', text:'#d8f0ff', accent:'#00b4d8', accent2:'#0077b6',
+    previewBg:'#02090e', barBg:'rgba(0,15,30,.7)', codeBg:'rgba(0,180,216,.06)', btnBg:'#00b4d8', btnText:'#000',
+    kw:'#00b4d8', str:'#48cae4', fn:'#90e0ef'
+  },
+  {
+    id:'rose-gold', name:'Rose Gold', desc:'Elegant rose gold and soft pink tones — stylish, modern, and luxurious.',
+    tags:['Dark','Pink','Elegant'],
+    bg:'#0a0508', bg2:'#120a0f', text:'#ffeef4', accent:'#e91e8c', accent2:'#f4a261',
+    previewBg:'#0a0508', barBg:'rgba(25,5,15,.7)', codeBg:'rgba(233,30,140,.06)', btnBg:'#e91e8c', btnText:'#fff',
+    kw:'#e91e8c', str:'#f4a261', fn:'#c77dff'
+  },
+  {
+    id:'dracula', name:'Dracula', desc:'The classic Dracula color scheme — dark purple with vivid syntax colors.',
+    tags:['Dark','Classic','Code'],
+    bg:'#282a36', bg2:'#1e1f29', text:'#f8f8f2', accent:'#50fa7b', accent2:'#8be9fd',
+    previewBg:'#282a36', barBg:'rgba(30,31,41,.8)', codeBg:'rgba(80,250,123,.05)', btnBg:'#50fa7b', btnText:'#282a36',
+    kw:'#ff79c6', str:'#f1fa8c', fn:'#50fa7b'
+  },
+  {
+    id:'monokai', name:'Monokai', desc:'The legendary Monokai theme — bold, warm, and perfect for code reading.',
+    tags:['Dark','Classic','Warm'],
+    bg:'#272822', bg2:'#1e1f1a', text:'#f8f8f2', accent:'#a6e22e', accent2:'#66d9e8',
+    previewBg:'#272822', barBg:'rgba(30,31,26,.8)', codeBg:'rgba(166,226,46,.05)', btnBg:'#a6e22e', btnText:'#272822',
+    kw:'#f92672', str:'#e6db74', fn:'#a6e22e'
+  },
+  {
+    id:'github-dark', name:'GitHub Dark', desc:'GitHub\'s official dark theme — minimal, readable, and familiar.',
+    tags:['Dark','Minimal','Pro'],
+    bg:'#0d1117', bg2:'#161b22', text:'#e6edf3', accent:'#3fb950', accent2:'#58a6ff',
+    previewBg:'#0d1117', barBg:'rgba(13,17,23,.9)', codeBg:'rgba(63,185,80,.05)', btnBg:'#3fb950', btnText:'#000',
+    kw:'#ff7b72', str:'#a5d6ff', fn:'#d2a8ff'
+  },
+  {
+    id:'vscode', name:'VS Code', desc:'Inspired by Visual Studio Code\'s default dark theme.',
+    tags:['Dark','Editor','Clean'],
+    bg:'#1e1e1e', bg2:'#252526', text:'#d4d4d4', accent:'#569cd6', accent2:'#4ec9b0',
+    previewBg:'#1e1e1e', barBg:'rgba(30,30,30,.9)', codeBg:'rgba(86,156,214,.05)', btnBg:'#569cd6', btnText:'#000',
+    kw:'#569cd6', str:'#ce9178', fn:'#dcdcaa'
+  },
+];
+
+let activeTheme = localStorage.getItem('am_theme') || 'dark-neon';
+
+function renderThemes(){
+  const grid = document.getElementById('themesGrid');
+  const cur = THEMES.find(t=>t.id===activeTheme) || THEMES[0];
+  document.getElementById('currentThemeName').textContent = cur.name;
+
+  grid.innerHTML = THEMES.map(t => `
+    <div class="theme-card${t.id===activeTheme?' active':''}" id="card-${t.id}" onclick="applyTheme('${t.id}')">
+      <div class="active-badge"><i class="fas fa-check"></i> Active</div>
+      <div class="theme-preview" style="background:${t.previewBg};">
+        <div class="preview-topbar" style="background:${t.barBg};border:1px solid rgba(255,255,255,.08);">
+          <div class="preview-dot" style="background:#ff5f56;"></div>
+          <div class="preview-dot" style="background:#ffbd2e;"></div>
+          <div class="preview-dot" style="background:#27c93f;"></div>
+          <div class="preview-title" style="color:${t.text};opacity:.5;">alone-monster.github.io</div>
+        </div>
+        <div class="preview-code" style="background:${t.codeBg};border:1px solid rgba(255,255,255,.06);color:${t.text};">
+          <span style="color:${t.kw};">def</span> <span style="color:${t.fn};">hello_world</span>():<br>
+          &nbsp;&nbsp;<span style="color:${t.str};">"Alone Monster"</span><br>
+          &nbsp;&nbsp;<span style="color:${t.kw};">return</span> <span style="color:${t.accent};">True</span>
+        </div>
+        <div class="preview-btn" style="background:${t.btnBg};color:${t.btnText};margin-top:8px;font-family:JetBrains Mono,monospace;font-size:.5rem;font-weight:700;padding:5px 14px;border-radius:50px;display:inline-block;">${t.accent}</div>
+      </div>
+      <div class="theme-info" style="background:${t.bg2};border-top:1px solid rgba(255,255,255,.06);">
+        <div class="theme-name">${t.name}</div>
+        <div class="theme-desc">${t.desc}</div>
+        <div class="theme-tags">${t.tags.map(tag=>`<span class="ttag">${tag}</span>`).join('')}</div>
+        <button class="apply-btn ${t.id===activeTheme?'active-style':'apply-style'}" onclick="event.stopPropagation();applyTheme('${t.id}')">
+          ${t.id===activeTheme?'<i class="fas fa-check"></i> Applied':'Apply Theme'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function applyTheme(id){
+  const t = THEMES.find(th=>th.id===id);
+  if(!t) return;
+  activeTheme = id;
+  localStorage.setItem('am_theme', id);
+
+  // Apply CSS vars
+  const r = document.documentElement.style;
+  r.setProperty('--bg', t.bg);
+  r.setProperty('--bg2', t.bg2);
+  r.setProperty('--bgc', t.bg2);
+  r.setProperty('--text', t.text);
+  r.setProperty('--green', t.accent);
+  r.setProperty('--cyan', t.accent2);
+
+  // Save to settings
+  try{
+    const s = JSON.parse(localStorage.getItem('am_settings')||'{}');
+    s.theme = id;
+    s.accent = t.accent;
+    localStorage.setItem('am_settings', JSON.stringify(s));
+  } catch(e){}
+
+  renderThemes();
+  showToast(`✅ Theme "${t.name}" applied!`);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+renderThemes();
+</script>
+</body>
+</html>
