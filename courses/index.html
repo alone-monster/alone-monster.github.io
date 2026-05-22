@@ -1,1 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Courses — Alone Monster Coding Hub</title>
+  <meta name="description" content="Free coding courses by Chirag — Python A to Z, JavaScript A to Z, HTML & CSS Complete. Learn to code with live editors on every page."/>
+  <meta property="og:title" content="Courses — Alone Monster Coding Hub"/>
+  <meta property="og:description" content="Free coding courses with live editors — Python, JavaScript, HTML & CSS."/>
+  <meta property="og:url" content="https://alone-monster.github.io/courses/"/>
+  <meta name="theme-color" content="#00ff88"/>
+  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
+      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
+      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
+      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;--orange:#ff8a1e;
+      --gg:0 0 24px rgba(0,255,136,.4);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;overflow-y:auto;min-height:100vh;}
 
+    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+    .orb1{width:600px;height:600px;background:rgba(0,255,136,.07);top:-200px;right:-100px;}
+    .orb2{width:500px;height:500px;background:rgba(139,60,247,.06);bottom:-150px;left:-100px;}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 28px;height:60px;}
+    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;margin-right:auto;}
+    .tb-brand span{color:var(--green);}
+    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:36px;padding:0 14px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+
+    /* WRAP */
+    .wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:56px 28px 80px;}
+
+    /* HERO */
+    .hero{text-align:center;margin-bottom:72px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.22);border-radius:50px;padding:7px 20px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:22px;}
+    .hero h1{font-family:'Orbitron',monospace;font-size:clamp(2.4rem,6vw,4rem);font-weight:900;line-height:1.1;margin-bottom:16px;}
+    .hero h1 .grad{background:linear-gradient(135deg,#fff 30%,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .hero h1 .grad2{background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .hero p{color:var(--muted);font-size:1.05rem;max-width:580px;margin:0 auto 28px;line-height:1.7;}
+    .hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
+    .hs{text-align:center;}
+    .hs .sn{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;color:var(--green);}
+    .hs .sl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
+
+    /* COURSES GRID */
+    .courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px;margin-bottom:60px;}
+
+    /* COURSE CARD */
+    .course-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;position:relative;transition:all .3s cubic-bezier(.4,0,.2,1);}
+    .course-card:hover{transform:translateY(-8px);border-color:var(--card-color,var(--green));box-shadow:0 24px 64px rgba(0,0,0,.55);}
+    .course-thumb{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .course-thumb .big-icon{font-size:5rem;z-index:1;filter:drop-shadow(0 0 30px var(--card-color,var(--green)));}
+    .course-thumb::before{content:'';position:absolute;inset:0;background:var(--thumb-bg,linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,255,.1)));}
+    .course-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--bg2));}
+    .course-badge{position:absolute;top:16px;left:16px;z-index:2;padding:5px 14px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;background:var(--badge-bg);border:1px solid var(--badge-border);color:var(--card-color,var(--green));}
+    .course-live{position:absolute;top:16px;right:16px;z-index:2;display:flex;align-items:center;gap:6px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:50px;padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);}
+    .course-live span{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse2 1.5s infinite;}
+    @keyframes pulse2{0%,100%{opacity:1;}50%{opacity:.3;}}
+    .course-body{padding:22px 24px;}
+    .course-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.3;}
+    .course-desc{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:18px;}
+    .course-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+    .cm{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:5px;}
+    .cm i{color:var(--card-color,var(--green));}
+    .course-topics{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px;}
+    .ct{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:4px 10px;border-radius:50px;border:1px solid rgba(255,255,255,.08);color:var(--muted);}
+    .course-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:48px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--card-color,var(--green)),var(--card-color2,var(--cyan)));color:#000;font-family:'Orbitron',monospace;font-size:.82rem;font-weight:800;letter-spacing:1px;cursor:pointer;text-decoration:none;transition:all .22s;}
+    .course-btn:hover{box-shadow:0 8px 30px rgba(0,255,136,.3);transform:translateY(-1px);}
+
+    /* SECTION TITLE */
+    .sec-title{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+    .sec-title i{color:var(--green);}
+
+    /* FEATURES GRID */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:60px;}
+    .feat{background:var(--bgc);border:1px solid var(--border);border-radius:14px;padding:22px 20px;display:flex;gap:14px;align-items:flex-start;transition:all .2s;}
+    .feat:hover{border-color:rgba(0,255,136,.3);transform:translateY(-3px);}
+    .feat-ico{width:44px;height:44px;border-radius:10px;background:rgba(0,255,136,.1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .feat-text .ft-t{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:5px;}
+    .feat-text .ft-d{color:var(--muted);font-size:.82rem;line-height:1.5;}
+
+    /* CTA */
+    .cta-box{background:linear-gradient(135deg,rgba(0,255,136,.07),rgba(0,212,255,.05));border:1px solid rgba(0,255,136,.2);border-radius:20px;padding:48px 40px;text-align:center;margin-bottom:60px;}
+    .cta-box h2{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;margin-bottom:12px;}
+    .cta-box p{color:var(--muted);font-size:.98rem;max-width:500px;margin:0 auto 26px;line-height:1.65;}
+    .cta-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+    .cta-btn-prim{height:50px;padding:0 28px;background:linear-gradient(135deg,var(--green),var(--cyan));border:none;border-radius:10px;color:#000;font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;letter-spacing:1px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .22s;}
+    .cta-btn-prim:hover{box-shadow:var(--gg);transform:translateY(-2px);}
+    .cta-btn-sec{height:50px;padding:0 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .22s;}
+    .cta-btn-sec:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+
+    /* FOOTER */
+    .foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:1px;margin-top:40px;}
+
+    @media(max-width:720px){
+      .wrap{padding:36px 18px 60px;}
+      .courses-grid{grid-template-columns:1fr;}
+      .hero h1{font-size:2rem;}
+      .cta-box{padding:32px 20px;}
+      .topbar{padding:0 16px;gap:8px;}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
+  <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i> Home</a>
+  <a href="https://alone-monster.github.io/codes/" class="btn bo"><i class="fas fa-code"></i> Codes</a>
+  <a href="https://alone-monster.github.io/support/" class="btn bo"><i class="fas fa-headset"></i></a>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-graduation-cap"></i> Free Coding Courses</div>
+    <h1><span class="grad">Learn to Code</span><br><span class="grad2">From Zero to Hero</span></h1>
+    <p>Three complete, beginner-friendly courses with a <strong>live code editor</strong> on every lesson — no downloads, no setup, just open and start coding.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="sn">3</div><div class="sl">Courses</div></div>
+      <div class="hs"><div class="sn">80+</div><div class="sl">Chapters</div></div>
+      <div class="hs"><div class="sn">185+</div><div class="sl">Projects</div></div>
+      <div class="hs"><div class="sn">100%</div><div class="sl">Free</div></div>
+    </div>
+  </div>
+
+  <!-- COURSES -->
+  <div class="courses-grid">
+
+    <!-- Python -->
+    <div class="course-card" style="--card-color:var(--pink);--card-color2:var(--violet);--thumb-bg:linear-gradient(135deg,rgba(255,45,135,.12),rgba(139,60,247,.1));--badge-bg:rgba(255,45,135,.12);--badge-border:rgba(255,45,135,.35);">
+      <div class="course-thumb">
+        <div class="course-badge">Python</div>
+        <div class="course-live"><span></span>Live Editor</div>
+        <span class="big-icon">🐍</span>
+      </div>
+      <div class="course-body">
+        <div class="course-title">Python A to Z</div>
+        <div class="course-desc">Complete Python course from absolute zero. Variables, loops, functions, OOP, file handling, web scraping, AI/ML and 55 real projects.</div>
+        <div class="course-meta">
+          <span class="cm"><i class="fas fa-layer-group"></i> 30 Chapters</span>
+          <span class="cm"><i class="fas fa-cube"></i> 55 Projects</span>
+          <span class="cm"><i class="fas fa-gauge-high"></i> Beginner → Advanced</span>
+        </div>
+        <div class="course-topics">
+          <span class="ct">Variables</span><span class="ct">Loops</span><span class="ct">Functions</span>
+          <span class="ct">OOP</span><span class="ct">Files</span><span class="ct">Web Scraping</span>
+          <span class="ct">AI/ML</span><span class="ct">Telegram Bot</span>
+        </div>
+        <a class="course-btn" href="https://alone-monster.github.io/python/">
+          <i class="fab fa-python"></i> Start Python Course
+        </a>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <div class="course-card" style="--card-color:var(--gold);--card-color2:var(--orange);--thumb-bg:linear-gradient(135deg,rgba(255,184,0,.12),rgba(255,138,30,.1));--badge-bg:rgba(255,184,0,.12);--badge-border:rgba(255,184,0,.35);">
+      <div class="course-thumb">
+        <div class="course-badge">JavaScript</div>
+        <div class="course-live"><span></span>Live Editor</div>
+        <span class="big-icon">⚡</span>
+      </div>
+      <div class="course-body">
+        <div class="course-title">JavaScript A to Z</div>
+        <div class="course-desc">Master JavaScript from the ground up. DOM manipulation, ES6+, async/await, API calls, React basics, and 30 real working projects.</div>
+        <div class="course-meta">
+          <span class="cm"><i class="fas fa-layer-group"></i> 14 Chapters</span>
+          <span class="cm"><i class="fas fa-cube"></i> 30 Projects</span>
+          <span class="cm"><i class="fas fa-gauge-high"></i> Beginner → Pro</span>
+        </div>
+        <div class="course-topics">
+          <span class="ct">DOM</span><span class="ct">ES6+</span><span class="ct">Fetch API</span>
+          <span class="ct">Promises</span><span class="ct">JSON</span><span class="ct">Local Storage</span>
+          <span class="ct">Modules</span><span class="ct">React Basics</span>
+        </div>
+        <a class="course-btn" href="https://alone-monster.github.io/javascript/">
+          <i class="fab fa-js"></i> Start JavaScript Course
+        </a>
+      </div>
+    </div>
+
+    <!-- HTML & CSS -->
+    <div class="course-card" style="--card-color:var(--orange);--card-color2:var(--red);--thumb-bg:linear-gradient(135deg,rgba(255,138,30,.12),rgba(255,61,46,.1));--badge-bg:rgba(255,138,30,.12);--badge-border:rgba(255,138,30,.35);">
+      <div class="course-thumb">
+        <div class="course-badge">HTML / CSS</div>
+        <div class="course-live"><span></span>Live Editor</div>
+        <span class="big-icon">🎨</span>
+      </div>
+      <div class="course-body">
+        <div class="course-title">HTML &amp; CSS Complete</div>
+        <div class="course-desc">Build beautiful websites from scratch. HTML5 semantics, CSS3 animations, Flexbox, Grid, responsive design, and 100 real working examples.</div>
+        <div class="course-meta">
+          <span class="cm"><i class="fas fa-layer-group"></i> 5 Chapters</span>
+          <span class="cm"><i class="fas fa-cube"></i> 100 Examples</span>
+          <span class="cm"><i class="fas fa-gauge-high"></i> Beginner → Advanced</span>
+        </div>
+        <div class="course-topics">
+          <span class="ct">HTML5</span><span class="ct">CSS3</span><span class="ct">Flexbox</span>
+          <span class="ct">Grid</span><span class="ct">Animations</span><span class="ct">Responsive</span>
+          <span class="ct">Forms</span><span class="ct">Accessibility</span>
+        </div>
+        <a class="course-btn" href="https://alone-monster.github.io/html-css/">
+          <i class="fab fa-html5"></i> Start HTML/CSS Course
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FEATURES -->
+  <div class="sec-title"><i class="fas fa-sparkles"></i> Why These Courses?</div>
+  <div class="features-grid">
+    <div class="feat">
+      <div class="feat-ico">💻</div>
+      <div class="feat-text">
+        <div class="ft-t">Live Code Editor</div>
+        <div class="ft-d">Every lesson has a built-in editor — write and run code directly in your browser.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">🤖</div>
+      <div class="feat-text">
+        <div class="ft-t">AI Study Assistant</div>
+        <div class="ft-d">Each course page has an AI chatbot to answer your questions instantly.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">🆓</div>
+      <div class="feat-text">
+        <div class="ft-t">100% Free</div>
+        <div class="ft-d">No payment, no signup required. All courses are completely free forever.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">📱</div>
+      <div class="feat-text">
+        <div class="ft-t">Mobile Friendly</div>
+        <div class="ft-d">Learn from your phone or tablet — fully responsive design on all devices.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">🏗️</div>
+      <div class="feat-text">
+        <div class="ft-t">Real Projects</div>
+        <div class="ft-d">Build 185+ actual projects — not just theory. Portfolio-worthy results.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">🎯</div>
+      <div class="feat-text">
+        <div class="ft-t">Structured Path</div>
+        <div class="ft-d">Step-by-step curriculum designed to take you from beginner to job-ready.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">📎</div>
+      <div class="feat-text">
+        <div class="ft-t">File Upload AI</div>
+        <div class="ft-d">Upload your code files to the AI and get instant feedback and debugging help.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-ico">🌟</div>
+      <div class="feat-text">
+        <div class="ft-t">Community</div>
+        <div class="ft-d">Join via Telegram or YouTube comments — learn with others.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h2>Ready to Start Learning?</h2>
+    <p>Pick any course above and start coding right away. No installation, no cost — just open and learn.</p>
+    <div class="cta-btns">
+      <a class="cta-btn-prim" href="https://alone-monster.github.io/python/"><i class="fab fa-python"></i> Start with Python</a>
+      <a class="cta-btn-sec" href="https://youtube.com/@alonemonstercoding" target="_blank"><i class="fab fa-youtube"></i> Watch on YouTube</a>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <p>© 2025 Alone Monster Coding Hub · <a href="https://alone-monster.github.io/" style="color:var(--green);text-decoration:none;">alone-monster.github.io</a></p>
+  </footer>
+</main>
+</body>
+</html>
