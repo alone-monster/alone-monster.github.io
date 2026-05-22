@@ -530,6 +530,13 @@
     .ai-send-btn{width:36px;height:36px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,#ff3d2e,#ff8a1e);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;transition:all .18s;align-self:flex-end;}
     .ai-send-btn:hover{transform:scale(1.07);}
     .ai-send-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+    .ai-upload-btn{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6a6a8a;font-size:.8rem;transition:all .18s;align-self:flex-end;}
+    .ai-upload-btn:hover{border-color:rgba(255,138,30,.5);color:#ff8a1e;background:rgba(255,138,30,.08);}
+    .ai-attach-area{display:none;flex-wrap:wrap;gap:6px;padding:8px 10px 0;}
+    .ai-attach-chip{display:flex;align-items:center;gap:5px;background:rgba(255,138,30,.08);border:1px solid rgba(255,138,30,.25);border-radius:50px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#ff8a1e;max-width:160px;}
+    .ai-attach-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ai-attach-chip button{background:none;border:none;color:#6a6a8a;cursor:pointer;font-size:.85rem;line-height:1;padding:0 0 0 2px;transition:color .15s;}
+    .ai-attach-chip button:hover{color:#ff3d2e;}
     .ai-about-wrap{font-family:'JetBrains Mono',monospace;font-size:.73rem;line-height:1.8;}
     .ai-about-title-line{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;background:linear-gradient(135deg,#ff3d2e,#ffb066);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;display:block;letter-spacing:.8px;}
     .ai-about-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:5px;}
@@ -742,7 +749,7 @@
         <div class="fcredit">Inspired by <b>Debosmita Mandal</b></div>
         <div class="ficons">
           <a href="https://github.com/chiragalonemonster" target="_blank"><i class="fab fa-github"></i></a>
-          <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="https://youtube.com/@alonemonstercoding" target="_blank"><i class="fab fa-youtube"></i></a>
           <a href="https://t.me/alonemonster20" target="_blank"><i class="fab fa-telegram"></i></a>
         </div>
         <div><span style="color:var(--red);">alone-monster</span> $ html_css.html</div>
@@ -876,9 +883,12 @@
       <div class="ai-quick-item" onclick="aiUseHint('How to make a responsive navbar?')"><span class="ai-quick-cmd">nav</span><span class="ai-quick-desc">Responsive navbar</span></div>
       <div class="ai-quick-item" onclick="aiUseHint('CSS animation examples for buttons')"><span class="ai-quick-cmd">anim</span><span class="ai-quick-desc">Animations</span></div>
     </div>
+    <div class="ai-attach-area" id="aiAttachArea"></div>
+    <input type="file" id="aiFileInput" style="display:none;" multiple accept="image/*,.txt,.py,.js,.html,.css,.json,.md,.ts,.jsx,.tsx,.csv" onchange="aiHandleFileSelect(event)"/>
     <div class="ai-input-row">
       <button class="ai-quick-toggle" id="aiQuickToggle" onclick="toggleQuickPanel()"><i class="fas fa-bolt"></i></button>
-      <textarea id="aiInput" class="ai-text-input" rows="1" placeholder="Ask about HTML, CSS, layouts..." oninput="aiHandleInput()" onkeydown="aiHandleKey(event)"></textarea>
+      <button class="ai-upload-btn" onclick="document.getElementById('aiFileInput').click()" title="Attach file or image"><i class="fas fa-paperclip"></i></button>
+      <textarea id="aiInput" class="ai-text-input" rows="1" placeholder="Ask about HTML, CSS… or attach a file 📎" oninput="aiHandleInput()" onkeydown="aiHandleKey(event)"></textarea>
       <button class="ai-send-btn" id="aiSendBtn" onclick="aiSendMessage()"><i class="fas fa-paper-plane"></i></button>
     </div>
   </div>
@@ -2304,8 +2314,8 @@ You are Alone Monster AI — an HTML & CSS specialist.
 Creator: Chirag — passionate tech enthusiast, coder & content creator from India.
 Inspired by: Debosmita Mandal.
 Website: chiragalonemonster.github.io
-Telegram: @AloneMonster_Robot | @alonemonster20
-YouTube: @UnspokenAesthetic | GitHub: chiragalonemonster
+Telegram: @alonemonster20
+YouTube: @alonemonstercoding | GitHub: chiragalonemonster
 
 === YOUR SPECIALIZATION ===
 You are an expert in HTML, CSS, and modern web design. Topics include:
@@ -2355,6 +2365,28 @@ document.addEventListener('click',e=>{
 });
 
 let aiChatOpen=false,aiIsFullscreen=false,aiIsTyping=false,aiHistory=[],quickPanelOpen=false;
+let aiAttachments=[];
+function aiHandleFileSelect(e){
+  Array.from(e.target.files).forEach(f=>{
+    if(aiAttachments.length>=5)return;
+    const r=new FileReader();
+    if(f.type.startsWith('image/')){
+      r.onload=ev=>{aiAttachments.push({type:'image',name:f.name,data:ev.target.result});aiRenderAttachments();};
+      r.readAsDataURL(f);
+    }else{
+      r.onload=ev=>{aiAttachments.push({type:'text',name:f.name,content:ev.target.result});aiRenderAttachments();};
+      r.readAsText(f,'utf-8');
+    }
+  });
+  e.target.value='';
+}
+function aiRenderAttachments(){
+  const a=document.getElementById('aiAttachArea');if(!a)return;
+  if(aiAttachments.length===0){a.style.display='none';return;}
+  a.style.display='flex';
+  a.innerHTML=aiAttachments.map((f,i)=>`<div class="ai-attach-chip"><i class="${f.type==='image'?'fas fa-image':'fas fa-file-code'}"></i><span>${f.name.length>22?f.name.slice(0,22)+'…':f.name}</span><button onclick="aiRemoveAttachment(${i})" title="Remove">×</button></div>`).join('');
+}
+function aiRemoveAttachment(idx){aiAttachments.splice(idx,1);aiRenderAttachments();}
 function toggleAiChat(){
   aiChatOpen=!aiChatOpen;
   const win=$('aiChatWindow');const btn=$('aiFloatBtn');const bd=$('aiBackdrop');
@@ -2379,16 +2411,27 @@ function aiAddMessage(html,isUser){
 }
 function aiShowTyping(){const wrap=$('aiMessages');const d=document.createElement('div');d.className='ai-msg ai-msg-bot';d.id='aiTypingIndicator';d.innerHTML='<div class="ai-bubble" style="padding:10px 14px;"><div class="ai-typing-indicator"><div class="ai-tdot"></div><div class="ai-tdot"></div><div class="ai-tdot"></div></div></div>';wrap.appendChild(d);wrap.scrollTop=wrap.scrollHeight;}
 function aiRemoveTyping(){const t=$('aiTypingIndicator');if(t)t.remove();}
-function aiGetAboutHTML(){return `<div class="ai-about-wrap"><span class="ai-about-title-line">🎨 ALONE MONSTER HTML &amp; CSS HUB</span><div class="ai-about-row"><span class="ai-about-key">👤</span><span class="ai-about-val"><strong>Creator:</strong> Chirag — coder &amp; tech enthusiast</span></div><div class="ai-about-row"><span class="ai-about-key">💡</span><span class="ai-about-val"><strong>Inspired by:</strong> Debosmita Mandal</span></div><div class="ai-about-row"><span class="ai-about-key">📚</span><span class="ai-about-val"><strong>Course:</strong> 5 chapters · 35+ lessons</span></div><div class="ai-about-row"><span class="ai-about-key">💻</span><span class="ai-about-val"><strong>Editor:</strong> Live HTML/CSS/JS preview!</span></div><div class="ai-about-row"><span class="ai-about-key">📦</span><span class="ai-about-val"><strong>Projects:</strong> 100 real working examples</span></div><div class="ai-about-row"><span class="ai-about-key">🤖</span><span class="ai-about-val"><strong>Telegram:</strong> @AloneMonster_Robot</span></div></div>`;}
+function aiGetAboutHTML(){return `<div class="ai-about-wrap"><span class="ai-about-title-line">🎨 ALONE MONSTER HTML &amp; CSS HUB</span><div class="ai-about-row"><span class="ai-about-key">👤</span><span class="ai-about-val"><strong>Creator:</strong> Chirag — coder &amp; tech enthusiast</span></div><div class="ai-about-row"><span class="ai-about-key">💡</span><span class="ai-about-val"><strong>Inspired by:</strong> Debosmita Mandal</span></div><div class="ai-about-row"><span class="ai-about-key">📚</span><span class="ai-about-val"><strong>Course:</strong> 5 chapters · 35+ lessons</span></div><div class="ai-about-row"><span class="ai-about-key">💻</span><span class="ai-about-val"><strong>Editor:</strong> Live HTML/CSS/JS preview!</span></div><div class="ai-about-row"><span class="ai-about-key">📦</span><span class="ai-about-val"><strong>Projects:</strong> 100 real working examples</span></div></div>`;}
 function escHtml2(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
 function markdownToHtml(t){return t?t.replace(/\*\*([^*]+?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+?)`/g,'<code>$1</code>').replace(/\n/g,'<br>'):'';}
 async function aiSendMessage(){
   const inp=$('aiInput');const sendBtn=$('aiSendBtn');
-  const raw=inp.value.trim();if(!raw||aiIsTyping)return;
-  inp.value='';inp.style.height='auto';aiAddMessage(escHtml2(raw),true);
+  const raw=inp.value.trim();if((!raw&&aiAttachments.length===0)||aiIsTyping)return;
+  inp.value='';inp.style.height='auto';
+  let displayHtml=raw?escHtml2(raw):'';let q=raw;
+  if(aiAttachments.length>0){
+    let fileText='';
+    aiAttachments.forEach(f=>{
+      if(f.type==='text'){const ext=f.name.split('.').pop()||'txt';const content=f.content.length>4000?f.content.slice(0,4000)+'\n…(truncated)':f.content;fileText+=`\n\n[Attached: ${f.name}]\n\`\`\`${ext}\n${content}\n\`\`\``;displayHtml+=`<br><span style="font-family:JetBrains Mono,monospace;font-size:.7rem;background:rgba(255,138,30,.1);border:1px solid rgba(255,138,30,.2);color:#ff8a1e;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="fas fa-file-code"></i> ${escHtml2(f.name)}</span>`;}
+      else if(f.type==='image'){fileText+=`\n\n[Attached image: ${f.name}] (describe what you see)`;displayHtml+=`<br><img src="${f.data}" style="max-width:220px;max-height:160px;border-radius:8px;margin-top:6px;border:1px solid rgba(255,255,255,.1);" alt="${escHtml2(f.name)}"/>`;}
+    });
+    if(fileText) q=(raw?raw+'\n':'')+fileText;
+    aiAttachments=[];aiRenderAttachments();
+  }
+  aiAddMessage(displayHtml||'<i class="fas fa-paperclip"></i> Attached file',true);
   const lw=raw.trim().toLowerCase();
   if(lw==='/about'){aiShowTyping();await new Promise(r=>setTimeout(r,650));aiRemoveTyping();aiAddMessage(aiGetAboutHTML(),false);return;}
-  aiHistory.push({role:'user',content:raw});
+  aiHistory.push({role:'user',content:q||raw});
   aiIsTyping=true;sendBtn.disabled=true;aiShowTyping();
   const m=getActiveModel();
   try{
