@@ -473,6 +473,13 @@
     .ai-send-btn{width:36px;height:36px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,#ff2d87,#8b3cf7);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;transition:all .18s;align-self:flex-end;}
     .ai-send-btn:hover{transform:scale(1.07);}
     .ai-send-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+    .ai-upload-btn{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6a6a8a;font-size:.8rem;transition:all .18s;align-self:flex-end;}
+    .ai-upload-btn:hover{border-color:rgba(255,45,135,.5);color:#ff2d87;background:rgba(255,45,135,.08);}
+    .ai-attach-area{display:none;flex-wrap:wrap;gap:6px;padding:8px 10px 0;}
+    .ai-attach-chip{display:flex;align-items:center;gap:5px;background:rgba(255,45,135,.08);border:1px solid rgba(255,45,135,.25);border-radius:50px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#ff2d87;max-width:160px;}
+    .ai-attach-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ai-attach-chip button{background:none;border:none;color:#6a6a8a;cursor:pointer;font-size:.85rem;line-height:1;padding:0 0 0 2px;transition:color .15s;}
+    .ai-attach-chip button:hover{color:#ff3d2e;}
     .ai-about-wrap{font-family:'JetBrains Mono',monospace;font-size:.73rem;line-height:1.8;}
     .ai-about-title-line{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;background:linear-gradient(135deg,#ff2d87,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;display:block;letter-spacing:.8px;}
     .ai-about-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:5px;}
@@ -710,7 +717,7 @@
         <div>© 2025 <span style="color:var(--pink);">Alone Monster Coding Hub</span> · Python A to Z 🐍</div>
         <div class="ficons">
           <a href="https://github.com/chiragalonemonster" target="_blank"><i class="fab fa-github"></i></a>
-          <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="https://youtube.com/@alonemonstercoding" target="_blank"><i class="fab fa-youtube"></i></a>
           <a href="https://t.me/alonemonster20" target="_blank"><i class="fab fa-telegram"></i></a>
         </div>
         <div><span style="color:var(--pink);">alone-monster</span> $ python3_coding.py</div>
@@ -861,9 +868,12 @@ Output will appear here!
       <div class="ai-quick-item" onclick="aiUseHint('I have an error in my code, help me fix it')"><span class="ai-quick-cmd">/debug</span><span class="ai-quick-desc">Help with code errors and debugging</span></div>
       <div class="ai-quick-item" onclick="aiUseHint('Give me a beginner Python project idea')"><span class="ai-quick-cmd">/project</span><span class="ai-quick-desc">Get Python project ideas</span></div>
     </div>
+    <div class="ai-attach-area" id="aiAttachArea"></div>
+    <input type="file" id="aiFileInput" style="display:none;" multiple accept="image/*,.txt,.py,.js,.html,.css,.json,.md,.ts,.jsx,.tsx,.csv" onchange="aiHandleFileSelect(event)"/>
     <div class="ai-input-row">
       <button class="ai-quick-toggle" id="aiQuickToggle" onclick="toggleQuickPanel()"><i class="fas fa-bolt"></i></button>
-      <textarea class="ai-text-input" id="aiInput" placeholder="Ask a Python question..." rows="1" oninput="aiHandleInput()" onkeydown="aiHandleKey(event)"></textarea>
+      <button class="ai-upload-btn" onclick="document.getElementById('aiFileInput').click()" title="Attach file or image"><i class="fas fa-paperclip"></i></button>
+      <textarea class="ai-text-input" id="aiInput" placeholder="Ask a Python question… or attach a file 📎" rows="1" oninput="aiHandleInput()" onkeydown="aiHandleKey(event)"></textarea>
       <button class="ai-send-btn" id="aiSendBtn" onclick="aiSendMessage()"><i class="fas fa-paper-plane"></i></button>
     </div>
   </div>
@@ -1445,7 +1455,7 @@ def data():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)`,tag:'FLASK · WEB · API'},
-{num:'27',ico:'🤖',title:'Telegram Bot',desc:'Your <b>@AloneMonster_Robot</b> is built exactly like this! Create your own bot with python-telegram-bot.',points:['pip install python-telegram-bot','CommandHandler — /start, /help etc.','MessageHandler — normal text messages','app.run_polling() — start the bot'],code:`import os
+{num:'27',ico:'🤖',title:'Telegram Bot',desc:'Your <b></b> is built exactly like this! Create your own bot with python-telegram-bot.',points:['pip install python-telegram-bot','CommandHandler — /start, /help etc.','MessageHandler — normal text messages','app.run_polling() — start the bot'],code:`import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -2970,8 +2980,8 @@ const SITE_CONTEXT=`=== ALONE MONSTER CODING HUB — PYTHON ASSISTANT ===
 You are Alone Monster AI — a Python programming specialist.
 Creator: Chirag — passionate tech enthusiast, coder & content creator from India.
 Website: chiragalonemonster.github.io
-Telegram: @AloneMonster_Robot | @alonemonster20
-YouTube: @UnspokenAesthetic | GitHub: chiragalonemonster
+Telegram: @alonemonster20
+YouTube: @alonemonstercoding | GitHub: chiragalonemonster
 
 === YOUR SPECIALIZATION ===
 You are an expert in Python. Variables, loops, functions, OOP, decorators, generators,
@@ -3023,6 +3033,28 @@ document.addEventListener('click',e=>{
   }
 });
 let aiChatOpen=false,aiIsFullscreen=false,aiIsTyping=false,aiHistory=[],quickPanelOpen=false;
+let aiAttachments=[];
+function aiHandleFileSelect(e){
+  Array.from(e.target.files).forEach(f=>{
+    if(aiAttachments.length>=5)return;
+    const r=new FileReader();
+    if(f.type.startsWith('image/')){
+      r.onload=ev=>{aiAttachments.push({type:'image',name:f.name,data:ev.target.result});aiRenderAttachments();};
+      r.readAsDataURL(f);
+    }else{
+      r.onload=ev=>{aiAttachments.push({type:'text',name:f.name,content:ev.target.result});aiRenderAttachments();};
+      r.readAsText(f,'utf-8');
+    }
+  });
+  e.target.value='';
+}
+function aiRenderAttachments(){
+  const a=document.getElementById('aiAttachArea');if(!a)return;
+  if(aiAttachments.length===0){a.style.display='none';return;}
+  a.style.display='flex';
+  a.innerHTML=aiAttachments.map((f,i)=>`<div class="ai-attach-chip"><i class="${f.type==='image'?'fas fa-image':'fas fa-file-code'}"></i><span>${f.name.length>22?f.name.slice(0,22)+'…':f.name}</span><button onclick="aiRemoveAttachment(${i})" title="Remove">×</button></div>`).join('');
+}
+function aiRemoveAttachment(idx){aiAttachments.splice(idx,1);aiRenderAttachments();}
 function toggleAiChat(){
   aiChatOpen=!aiChatOpen;const win=document.getElementById('aiChatWindow');const btn=document.getElementById('aiFloatBtn');const bd=document.getElementById('aiBackdrop');
   if(aiChatOpen){win.classList.add('ai-open');btn.classList.add('ai-btn-hidden');bd.classList.add('ai-backdrop-show');if(!quickPanelOpen)openQuickPanel();}
@@ -3049,17 +3081,29 @@ function aiAddMessage(html,isUser){
 }
 function aiShowTyping(){const wrap=document.getElementById('aiMessages');const d=document.createElement('div');d.className='ai-msg ai-msg-bot';d.id='aiTypingIndicator';d.innerHTML='<div class="ai-bubble" style="padding:14px 18px;"><div class="ai-typing-indicator"><div class="ai-tdot"></div><div class="ai-tdot"></div><div class="ai-tdot"></div></div></div>';wrap.appendChild(d);wrap.scrollTop=wrap.scrollHeight;}
 function aiRemoveTyping(){const t=document.getElementById('aiTypingIndicator');if(t)t.remove();}
-function aiGetAboutHTML(){return `<div class="ai-about-wrap"><span class="ai-about-title-line">🐍 ALONE MONSTER PYTHON HUB</span><div class="ai-about-row"><span class="ai-about-key">👤</span><span class="ai-about-val"><strong>Creator:</strong> Chirag — coder & tech enthusiast</span></div><div class="ai-about-row"><span class="ai-about-key">📚</span><span class="ai-about-val"><strong>Course:</strong> 30 chapters — Variables to AI</span></div><div class="ai-about-row"><span class="ai-about-key">💻</span><span class="ai-about-val"><strong>Editor:</strong> Live Python 3.10 execution!</span></div><div class="ai-about-row"><span class="ai-about-key">📦</span><span class="ai-about-val"><strong>Projects:</strong> 55 real Python projects</span></div><div class="ai-about-row"><span class="ai-about-key">🤖</span><span class="ai-about-val"><strong>Telegram:</strong> @AloneMonster_Robot</span></div></div>`;}
+function aiGetAboutHTML(){return `<div class="ai-about-wrap"><span class="ai-about-title-line">🐍 ALONE MONSTER PYTHON HUB</span><div class="ai-about-row"><span class="ai-about-key">👤</span><span class="ai-about-val"><strong>Creator:</strong> Chirag — coder & tech enthusiast</span></div><div class="ai-about-row"><span class="ai-about-key">📚</span><span class="ai-about-val"><strong>Course:</strong> 30 chapters — Variables to AI</span></div><div class="ai-about-row"><span class="ai-about-key">💻</span><span class="ai-about-val"><strong>Editor:</strong> Live Python 3.10 execution!</span></div><div class="ai-about-row"><span class="ai-about-key">📦</span><span class="ai-about-val"><strong>Projects:</strong> 55 real Python projects</span></div></div>`;}
 function escHtml2(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
 function markdownToHtml(t){return t?t.replace(/\*\*([^*]+?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+?)`/g,'<code>$1</code>').replace(/\n/g,'<br>'):'';}
 async function aiSendMessage(){
   const inp=document.getElementById('aiInput');const sendBtn=document.getElementById('aiSendBtn');
-  const raw=inp.value.trim();if(!raw||aiIsTyping)return;
-  inp.value='';inp.style.height='auto';aiAddMessage(escHtml2(raw),true);
+  const raw=inp.value.trim();if((!raw&&aiAttachments.length===0)||aiIsTyping)return;
+  inp.value='';inp.style.height='auto';
+  let displayHtml=raw?escHtml2(raw):'';
+  let q=raw;
+  if(aiAttachments.length>0){
+    let fileText='';
+    aiAttachments.forEach(f=>{
+      if(f.type==='text'){const ext=f.name.split('.').pop()||'txt';const content=f.content.length>4000?f.content.slice(0,4000)+'\n…(truncated)':f.content;fileText+=`\n\n[Attached: ${f.name}]\n\`\`\`${ext}\n${content}\n\`\`\``;displayHtml+=`<br><span style="font-family:JetBrains Mono,monospace;font-size:.7rem;background:rgba(255,45,135,.1);border:1px solid rgba(255,45,135,.2);color:#ff2d87;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="fas fa-file-code"></i> ${escHtml2(f.name)}</span>`;}
+      else if(f.type==='image'){fileText+=`\n\n[Attached image: ${f.name}] (describe what you see)`;displayHtml+=`<br><img src="${f.data}" style="max-width:220px;max-height:160px;border-radius:8px;margin-top:6px;border:1px solid rgba(255,255,255,.1);" alt="${escHtml2(f.name)}"/>`;}
+    });
+    if(fileText) q=(raw?raw+'\n':'')+fileText;
+    aiAttachments=[];aiRenderAttachments();
+  }
+  aiAddMessage(displayHtml||'<i class="fas fa-paperclip"></i> Attached file',true);
   const lw=raw.trim().toLowerCase();
   if(lw==='/about'){aiShowTyping();await new Promise(r=>setTimeout(r,650));aiRemoveTyping();aiAddMessage(aiGetAboutHTML(),false);return;}
   if(lw==='/python'){aiUseHint('What is Python? Where should I start learning?');return;}
-  aiHistory.push({role:'user',content:raw});
+  aiHistory.push({role:'user',content:q||raw});
   aiIsTyping=true;sendBtn.disabled=true;aiShowTyping();
   const m=getActiveModel();
   try{
