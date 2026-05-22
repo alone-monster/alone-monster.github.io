@@ -46,13 +46,13 @@
     "name": "Chirag",
     "sameAs": [
       "https://github.com/chiragalonemonster",
-      "https://www.youtube.com/@UnspokenAesthetic",
+      "https://youtube.com/@alonemonstercoding",
       "https://t.me/alonemonster20"
     ]
   },
   "sameAs": [
     "https://github.com/chiragalonemonster",
-    "https://www.youtube.com/@UnspokenAesthetic",
+    "https://youtube.com/@alonemonstercoding",
     "https://t.me/alonemonster20"
   ],
   "hasCourse": [
@@ -783,6 +783,13 @@
     .ai-send-btn:hover{transform:scale(1.07);box-shadow:0 6px 22px rgba(255,45,135,.58);}
     .ai-send-btn:active{transform:scale(0.94);}
     .ai-send-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+    .ai-upload-btn{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;transition:all .18s;align-self:flex-end;}
+    .ai-upload-btn:hover{border-color:rgba(0,255,136,.5);color:var(--green);background:rgba(0,255,136,.08);}
+    .ai-attach-area{display:none;flex-wrap:wrap;gap:6px;padding:8px 10px 0;}
+    .ai-attach-chip{display:flex;align-items:center;gap:5px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:50px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--green);max-width:160px;}
+    .ai-attach-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ai-attach-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;line-height:1;padding:0 0 0 2px;transition:color .15s;}
+    .ai-attach-chip button:hover{color:var(--red);}
 
     /* /about card */
     .ai-about-wrap{font-family:'JetBrains Mono',monospace;font-size:.73rem;line-height:1.8;}
@@ -1013,7 +1020,7 @@ ALONE MONSTER CODING HUB
       <div class="hstats">
         <div><div class="sn">10+</div><div class="sl">Tech Topics</div></div>
         <div><div class="sn">20+</div><div class="sl">Languages</div></div>
-        <div><div class="sn">2</div><div class="sl">AI Bots</div></div>
+        <div><div class="sn">1</div><div class="sl">AI Chatbot</div></div>
         <div><div class="sn">∞</div><div class="sl">Things to Learn</div></div>
       </div>
       <div class="term">
@@ -1025,7 +1032,7 @@ ALONE MONSTER CODING HUB
           <div class="tl2"><span class="to2">Python, JS, AI/ML, Android</span></div>
           <div class="tl2"><span class="to2">Rooting, Web Dev, Linux</span></div>
           <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="tc2">ls bots/</span></div>
-          <div class="tl2"><span class="to2">telegram_bot/  discord_bot/</span></div>
+          <div class="tl2"><span class="to2">courses/  codes/  apps/</span></div>
           <div class="tl2" style="margin-top:5px;"><span class="tp2">➜</span><span class="tc2">./start.sh</span></div>
           <div class="tl2"><span class="tm2"># Loading Alone Monster Hub...</span></div>
           <div class="tl2"><span class="to2">Status: <span style="color:var(--green);">READY ✓</span></span></div>
@@ -1034,32 +1041,32 @@ ALONE MONSTER CODING HUB
       </div>
     </section>
 
-    <!-- AI BOTS -->
+    <!-- WEBSITE AI -->
     <section id="ai-bots" class="sec">
       <div class="shdr">
-        <div class="stag">// 01 · MY AI BOTS</div>
-        <h2 class="stitle">Try My <span>AI Creations</span></h2>
-        <p class="sdesc">I built these AI-powered bots myself — chat, get code help, and experience AI first-hand.</p>
+        <div class="stag">// 01 · WEBSITE AI</div>
+        <h2 class="stitle">Try <span>Alone Monster AI</span></h2>
+        <p class="sdesc">A built-in AI assistant powered by Llama 3.3 70B — ask anything about coding, tech, or this site.</p>
       </div>
       <div class="bots-grid">
-        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="bfc">
-          <div class="bbadge"><i class="fab fa-telegram"></i> TELEGRAM BOT</div>
+        <div class="bfc" onclick="toggleAiChat()" style="cursor:pointer;">
+          <div class="bbadge"><i class="fas fa-robot"></i> WEBSITE AI</div>
           <span class="bico">🤖</span>
-          <div class="bname">AloneMonster Robot</div>
-          <p class="bdesc">My AI Telegram bot — chat with it, ask questions, get code help and more, running 24/7.</p>
-          <div class="blink"><i class="fab fa-telegram"></i> Open on Telegram →</div>
-        </a>
-        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="bfc disc">
-          <div class="bbadge d"><i class="fab fa-discord"></i> DISCORD BOT</div>
-          <span class="bico">🛡️</span>
-          <div class="bname">Discord AI Bot</div>
-          <p class="bdesc">Add my AI Discord bot to your server for smart replies, coding help and tech assistance.</p>
-          <div class="blink d"><i class="fab fa-discord"></i> Add to Discord →</div>
+          <div class="bname">Alone Monster AI</div>
+          <p class="bdesc">Ask me anything about coding, Python, JavaScript, HTML/CSS, tech topics and more. Upload files or images for analysis!</p>
+          <div class="blink"><i class="fas fa-comment-dots"></i> Open Chat →</div>
+        </div>
+        <a href="https://alone-monster.github.io/courses/" class="bfc" style="--bfc-color:var(--cyan);">
+          <div class="bbadge" style="background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.3);color:var(--cyan);"><i class="fas fa-graduation-cap"></i> FREE COURSES</div>
+          <span class="bico">📚</span>
+          <div class="bname">Learn to Code</div>
+          <p class="bdesc">Python A to Z · JavaScript A to Z · HTML &amp; CSS Complete — free courses with live code editor on every page.</p>
+          <div class="blink" style="color:var(--cyan);"><i class="fas fa-arrow-right"></i> Explore Courses →</div>
         </a>
       </div>
       <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;">
-        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="btn bc"><i class="fab fa-telegram"></i> Open Telegram Bot</a>
-        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="btn bd"><i class="fab fa-discord"></i> Add Discord Bot</a>
+        <button onclick="toggleAiChat()" class="btn bc"><i class="fas fa-robot"></i> Open AI Chat</button>
+        <a href="https://alone-monster.github.io/courses/" class="btn bo"><i class="fas fa-graduation-cap"></i> View Courses</a>
       </div>
     </section>
 
@@ -1105,7 +1112,7 @@ ALONE MONSTER CODING HUB
       <div class="ytcard">
         <i class="fab fa-youtube yticon"></i>
         <div class="ytinfo">
-          <h3>UnspokenAesthetic</h3>
+          <h3>Alone Monster Coding</h3>
           <p>Tech tutorials, Android guides, AI tools, programming tips, and YouTube growth hacks — all in one place.</p>
           <div class="ytmeta">
             <div class="ytmi"><span>Tech</span>Focus</div>
@@ -1113,8 +1120,8 @@ ALONE MONSTER CODING HUB
             <div class="ytmi"><span>Free</span>Content</div>
           </div>
           <div class="ytbtns">
-            <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="btn bp" style="background:#ff0000;"><i class="fab fa-youtube"></i> Subscribe Now</a>
-            <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="btn bo"><i class="fas fa-play"></i> Watch Videos</a>
+            <a href="https://youtube.com/@alonemonstercoding" target="_blank" class="btn bp" style="background:#ff0000;"><i class="fab fa-youtube"></i> Subscribe Now</a>
+            <a href="https://youtube.com/@alonemonstercoding" target="_blank" class="btn bo"><i class="fas fa-play"></i> Watch Videos</a>
           </div>
         </div>
       </div>
@@ -1130,11 +1137,10 @@ ALONE MONSTER CODING HUB
         <div class="atext">
           <p>Hey! I'm <strong>Chirag</strong> — a passionate tech enthusiast, coder, and content creator. I love exploring everything from AI to Android rooting and web development.</p>
           <p>My mission is to make complex technical topics <strong>accessible to everyone</strong> — whether you're a complete beginner or an experienced developer.</p>
-          <p>I build AI bots, create content across YouTube and Telegram, and share scripts, tools, and tutorials that solve real problems.</p>
+          <p>I create content on YouTube, build AI-powered tools, and share scripts, tutorials, and projects that solve real problems.</p>
           <div class="skills">
             <span class="sk">Python</span><span class="sk">JavaScript</span><span class="sk">Android Dev</span>
             <span class="sk">AI / ML</span><span class="sk">Linux</span><span class="sk">Web Dev</span>
-            <span class="sk">Telegram Bots</span><span class="sk">Discord Bots</span>
             <span class="sk">API Integration</span><span class="sk">Git / GitHub</span><span class="sk">Bash Scripting</span>
           </div>
         </div>
@@ -1142,8 +1148,8 @@ ALONE MONSTER CODING HUB
           <h4>// MY JOURNEY</h4>
           <div class="tli"><div class="tlidot"></div><div><div class="tlih">Started Coding</div><div class="tlip">Began with Python and web basics — fell in love with building things.</div></div></div>
           <div class="tli"><div class="tlidot"></div><div><div class="tlih">Android Exploration</div><div class="tlip">Dived deep into rooting, custom ROMs and Android customization.</div></div></div>
-          <div class="tli"><div class="tlidot"></div><div><div class="tlih">YouTube Channel</div><div class="tlip">Launched UnspokenAesthetic to share tech knowledge.</div></div></div>
-          <div class="tli"><div class="tlidot"></div><div><div class="tlih">Built AI Bots</div><div class="tlip">Created Telegram &amp; Discord AI bots — exploring LLM integrations.</div></div></div>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">YouTube Channel</div><div class="tlip">Launched Alone Monster Coding to share tech knowledge.</div></div></div>
+          <div class="tli"><div class="tlidot"></div><div><div class="tlih">Built AI Features</div><div class="tlip">Integrated AI chatbot into the website — exploring LLM APIs and prompt engineering.</div></div></div>
           <div class="tli"><div class="tlidot" style="background:var(--cyan);box-shadow:var(--gc);"></div><div><div class="tlih">Now — Creating &amp; Growing</div><div class="tlip">Sharing content, building projects, learning every single day.</div></div></div>
         </div>
       </div>
@@ -1158,13 +1164,11 @@ ALONE MONSTER CODING HUB
       </div>
       <div class="cgrid">
         <a href="https://github.com/chiragalonemonster" target="_blank" class="ccard" title="GitHub: chiragalonemonster"><i class="fab fa-github" style="color:#ccc;"></i><span class="clbl">GitHub</span></a>
-        <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" class="ccard" title="YouTube: @UnspokenAesthetic"><i class="fab fa-youtube" style="color:#ff0000;"></i><span class="clbl">YouTube</span></a>
+        <a href="https://youtube.com/@alonemonstercoding" target="_blank" class="ccard" title="YouTube: @alonemonstercoding"><i class="fab fa-youtube" style="color:#ff0000;"></i><span class="clbl">YouTube</span></a>
         <a href="https://instagram.com/anxiety4410" target="_blank" class="ccard" title="Instagram: @anxiety4410"><i class="fab fa-instagram" style="color:#e1306c;"></i><span class="clbl">Instagram</span></a>
         <a href="https://facebook.com/chirag.alonemonster" target="_blank" class="ccard" title="Facebook: chirag.alonemonster"><i class="fab fa-facebook" style="color:#1877f2;"></i><span class="clbl">Facebook</span></a>
         <a href="https://t.me/alonemonster20" target="_blank" class="ccard" title="Telegram: @alonemonster20"><i class="fab fa-telegram" style="color:#0088cc;"></i><span class="clbl">Telegram</span></a>
         <a href="https://x.com/naskar_chi26012" target="_blank" class="ccard" title="X / Twitter: @naskar_chi26012"><i class="fab fa-x-twitter" style="color:#ccc;"></i><span class="clbl">X (Twitter)</span></a>
-        <a href="https://t.me/AloneMonster_Robot" target="_blank" class="ccard" title="Telegram AI Bot: @AloneMonster_Robot"><i class="fab fa-telegram" style="color:#00d4ff;"></i><span class="clbl">AI Bot</span></a>
-        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" class="ccard" title="Add Discord AI Bot to your server"><i class="fab fa-discord" style="color:#7289da;"></i><span class="clbl">Discord Bot</span></a>
       </div>
     </section>
 
@@ -1173,10 +1177,9 @@ ALONE MONSTER CODING HUB
       <div>© 2025 <span style="color:var(--green);">Alone Monster Coding Hub</span> · Built with ⚡</div>
       <div class="ficons">
         <a href="https://github.com/chiragalonemonster"   target="_blank"><i class="fab fa-github"></i></a>
-        <a href="https://m.youtube.com/@UnspokenAesthetic" target="_blank" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-youtube"></i></a>
+        <a href="https://youtube.com/@alonemonstercoding" target="_blank" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-youtube"></i></a>
         <a href="https://t.me/alonemonster20"              target="_blank" onmouseover="this.style.color='#0088cc'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-telegram"></i></a>
         <a href="https://x.com/naskar_chi26012"            target="_blank" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-x-twitter"></i></a>
-        <a href="https://discord.com/oauth2/authorize?client_id=1493033487211434176" target="_blank" onmouseover="this.style.color='#7289da'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-discord"></i></a>
       </div>
       <div><span style="color:var(--green);">alone-monster</span> $ ./run --mode=always</div>
     </footer>
@@ -1191,7 +1194,7 @@ ALONE MONSTER CODING HUB
   </a>
   <div class="dock-sep"></div>
   <a class="dock-item" data-target="ai-bots" onclick="dockNav('ai-bots');return false;" href="#ai-bots">
-    <i class="fas fa-robot"></i><span>AI Bots</span>
+    <i class="fas fa-robot"></i><span>AI Chat</span>
   </a>
   <a class="dock-item" data-target="topics" onclick="dockNav('topics');return false;" href="#topics">
     <i class="fas fa-microchip"></i><span>Topics</span>
@@ -1292,23 +1295,30 @@ ALONE MONSTER CODING HUB
         <span class="ai-quick-cmd">/topics</span>
         <span class="ai-quick-desc">See all tech topics covered</span>
       </div>
-      <div class="ai-quick-item" onclick="aiUseHint('Tell me about the AI bots')">
-        <span class="ai-quick-cmd">/bots</span>
-        <span class="ai-quick-desc">Explore Chirag's AI bots</span>
+      <div class="ai-quick-item" onclick="aiUseHint('What are the free courses available?')">
+        <span class="ai-quick-cmd">/courses</span>
+        <span class="ai-quick-desc">Explore free coding courses</span>
       </div>
       <div class="ai-quick-item" onclick="aiUseHint('How can I contact Chirag?')">
         <span class="ai-quick-cmd">/contact</span>
         <span class="ai-quick-desc">Get contact &amp; social links</span>
       </div>
     </div>
+    <!-- Attachments area -->
+    <div class="ai-attach-area" id="aiAttachArea"></div>
+    <!-- Hidden file input -->
+    <input type="file" id="aiFileInput" style="display:none;" multiple accept="image/*,.txt,.py,.js,.html,.css,.json,.md,.ts,.jsx,.tsx,.csv" onchange="aiHandleFileSelect(event)"/>
     <!-- Input row -->
     <div class="ai-input-row">
       <button class="ai-quick-toggle" id="aiQuickToggle" onclick="toggleQuickPanel()" title="Quick commands">
         <i class="fas fa-bolt"></i>
       </button>
+      <button class="ai-upload-btn" onclick="document.getElementById('aiFileInput').click()" title="Attach file or image">
+        <i class="fas fa-paperclip"></i>
+      </button>
       <textarea
         class="ai-text-input" id="aiInput"
-        placeholder="Ask Alone Monster anything..."
+        placeholder="Ask anything… or attach a file 📎"
         rows="1"
         oninput="aiHandleInput()"
         onkeydown="aiHandleKey(event)"
@@ -1507,26 +1517,47 @@ Creator     : Chirag (aka Alone Monster)
 Mission     : Make complex tech topics accessible to everyone — beginners to advanced developers
 
 === STATS ===
-- 10+ Tech Topics  - 20+ Programming Languages  - 2 AI Bots  - ∞ Things to Learn
+- 10+ Tech Topics  - 20+ Programming Languages  - Built-in AI Chatbot  - ∞ Things to Learn
 
-=== AI BOTS ===
-1. AloneMonster Robot — Telegram: @AloneMonster_Robot
-2. Discord AI Bot — Add via Discord OAuth
+=== WEBSITE AI ===
+Built-in AI chatbot (Alone Monster AI) — powered by Llama 3.3 70B via Groq API. Available on every page. Supports file/image uploads for analysis.
 
 === TOPICS ===
-AI/ML, Programming, Android Rooting (Magisk, custom ROMs), Web Dev, Linux & Terminal, YouTube Growth, Cybersecurity, Cloud & DevOps, Bots & Automation, Learn to Code
+AI/ML, Programming, Android Rooting (Magisk, custom ROMs), Web Dev, Linux & Terminal, YouTube Growth, Cybersecurity, Cloud & DevOps, Automation, Learn to Code
 
 === SKILLS ===
-Python, JavaScript, Android Dev, AI/ML, Linux, Web Dev, Telegram Bots, Discord Bots, API Integration, Git/GitHub, Bash
+Python, JavaScript, Android Dev, AI/ML, Linux, Web Dev, API Integration, Git/GitHub, Bash Scripting
 
 === CONTACT ===
-YouTube: @UnspokenAesthetic | GitHub: chiragalonemonster | Instagram: @anxiety4410
+YouTube: @alonemonstercoding | GitHub: chiragalonemonster | Instagram: @anxiety4410
 Facebook: chirag.alonemonster | Telegram: @alonemonster20 | X: @naskar_chi26012
 
 === PERSONALITY ===
 Friendly, helpful tech assistant. Use emojis occasionally. Keep responses concise but complete.`;
 
 let aiChatOpen=false,aiIsFullscreen=false,aiIsTyping=false,aiHistory=[],quickPanelOpen=false;
+let aiAttachments=[];
+function aiHandleFileSelect(e){
+  Array.from(e.target.files).forEach(f=>{
+    if(aiAttachments.length>=5)return;
+    const r=new FileReader();
+    if(f.type.startsWith('image/')){
+      r.onload=ev=>{aiAttachments.push({type:'image',name:f.name,data:ev.target.result});aiRenderAttachments();};
+      r.readAsDataURL(f);
+    }else{
+      r.onload=ev=>{aiAttachments.push({type:'text',name:f.name,content:ev.target.result});aiRenderAttachments();};
+      r.readAsText(f,'utf-8');
+    }
+  });
+  e.target.value='';
+}
+function aiRenderAttachments(){
+  const a=document.getElementById('aiAttachArea');if(!a)return;
+  if(aiAttachments.length===0){a.style.display='none';return;}
+  a.style.display='flex';
+  a.innerHTML=aiAttachments.map((f,i)=>`<div class="ai-attach-chip"><i class="${f.type==='image'?'fas fa-image':'fas fa-file-code'}"></i><span>${f.name.length>22?f.name.slice(0,22)+'…':f.name}</span><button onclick="aiRemoveAttachment(${i})" title="Remove">×</button></div>`).join('');
+}
+function aiRemoveAttachment(idx){aiAttachments.splice(idx,1);aiRenderAttachments();}
 
 /* ── Toggle open/close ── */
 function toggleAiChat(){
@@ -1609,9 +1640,9 @@ function aiGetAboutHTML(){
     <span class="ai-about-title-line">⚡ ALONE MONSTER CODING HUB</span>
     <div class="ai-about-row"><span class="ai-about-key">👤</span><span class="ai-about-val"><strong>Creator:</strong> Chirag — passionate tech enthusiast, coder &amp; content creator</span></div>
     <div class="ai-about-row"><span class="ai-about-key">🎯</span><span class="ai-about-val"><strong>Mission:</strong> Make complex tech topics accessible to everyone</span></div>
-    <div class="ai-about-row"><span class="ai-about-key">📊</span><span class="ai-about-val"><strong>Stats:</strong> 10+ Topics · 20+ Languages · 2 AI Bots · ∞ To Learn</span></div>
-    <div class="ai-about-row"><span class="ai-about-key">🤖</span><span class="ai-about-val"><strong>AI Bots:</strong> @AloneMonster_Robot (Telegram) · Discord AI Bot</span></div>
-    <div class="ai-about-row"><span class="ai-about-key">📺</span><span class="ai-about-val"><strong>YouTube:</strong> @UnspokenAesthetic</span></div>
+    <div class="ai-about-row"><span class="ai-about-key">📊</span><span class="ai-about-val"><strong>Stats:</strong> 10+ Topics · 20+ Languages · Built-in AI Chat · ∞ To Learn</span></div>
+    <div class="ai-about-row"><span class="ai-about-key">🤖</span><span class="ai-about-val"><strong>AI Chat:</strong> Built into every page — powered by Llama 3.3 70B (Groq)</span></div>
+    <div class="ai-about-row"><span class="ai-about-key">📺</span><span class="ai-about-val"><strong>YouTube:</strong> @alonemonstercoding</span></div>
     <div class="ai-about-row"><span class="ai-about-key">🐙</span><span class="ai-about-val"><strong>GitHub:</strong> chiragalonemonster</span></div>
     <div class="ai-about-row"><span class="ai-about-key">📱</span><span class="ai-about-val"><strong>Social:</strong> @anxiety4410 (IG) · @alonemonster20 (TG) · @naskar_chi26012 (X)</span></div>
     <div class="ai-about-row"><span class="ai-about-key">🛠️</span><span class="ai-about-val"><strong>Skills:</strong> Python · JS · AI/ML · Android · Linux · Web Dev · Bots · APIs</span></div>
@@ -1624,14 +1655,34 @@ function markdownToHtml(t){ return t?t.replace(/\*\*([^\*]+?)\*\*/g,'<strong>$1<
 
 async function aiSendMessage(){
   const inp=document.getElementById('aiInput'),sendBtn=document.getElementById('aiSendBtn');
-  const raw=inp.value.trim(); if(!raw||aiIsTyping) return;
+  const raw=inp.value.trim();
+  if((!raw&&aiAttachments.length===0)||aiIsTyping) return;
   inp.value=''; inp.style.height='auto';
-  aiAddMessage(escHtml(raw),true);
+  /* Build display and content with any attachments */
+  let displayHtml=raw?escHtml(raw):'';
+  let q=raw;
+  if(aiAttachments.length>0){
+    let fileText='';
+    aiAttachments.forEach(f=>{
+      if(f.type==='text'){
+        const ext=f.name.split('.').pop()||'txt';
+        const content=f.content.length>4000?f.content.slice(0,4000)+'\n…(truncated)':f.content;
+        fileText+=`\n\n[Attached file: ${f.name}]\n\`\`\`${ext}\n${content}\n\`\`\``;
+        displayHtml+=`<br><span style="font-family:JetBrains Mono,monospace;font-size:.7rem;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);color:var(--green);padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="fas fa-file-code"></i> ${escHtml(f.name)}</span>`;
+      } else if(f.type==='image'){
+        fileText+=`\n\n[Attached image: ${f.name}] (describe what you see in this image)`;
+        displayHtml+=`<br><img src="${f.data}" style="max-width:220px;max-height:160px;border-radius:8px;margin-top:6px;border:1px solid rgba(255,255,255,.1);" alt="${escHtml(f.name)}"/>`;
+      }
+    });
+    if(fileText) q=(raw?raw+'\n':'')+fileText;
+    aiAttachments=[];
+    aiRenderAttachments();
+  }
+  aiAddMessage(displayHtml||'<i class="fas fa-paperclip"></i> Attached file',true);
   const lw=raw.trim().toLowerCase();
   if(lw==='/about'){ aiShowTyping(); await new Promise(r=>setTimeout(r,650)); aiRemoveTyping(); aiAddMessage(aiGetAboutHTML(),false); return; }
-  let q=raw;
   if(lw==='/topics') q='What topics do you cover?';
-  if(lw==='/bots')   q='Tell me about the AI bots';
+  if(lw==='/courses') q='What are the free courses available?';
   if(lw==='/contact') q='How can I contact Chirag?';
   aiHistory.push({role:'user',content:q});
   aiIsTyping=true; sendBtn.disabled=true; aiShowTyping();
@@ -1801,7 +1852,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSideb
 
 <script>
 (function(){
-  const REPO='alone-monster/alone-monster.github.io';
+  const REPO='chiragalonemonster/alone-monster.github.io';
   const LS_KEY='am_seen_release';
   const DELAY=3000;
 
