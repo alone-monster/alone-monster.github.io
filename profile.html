@@ -263,9 +263,9 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
 <nav class="topbar">
   <div class="tb-left"><span class="hi">ALONE MONSTER CODING HUB</span> $ <span>my_profile</span></div>
   <div class="tb-btns">
-    <a href="index.html" class="btn bo"><i class="fas fa-home"></i> <span>Home</span></a>
-    <a href="HTML&CSS.html" class="btn bo"><i class="fab fa-html5"></i> <span>HTML/CSS</span></a>
-    <a href="python.html" class="btn bo"><i class="fab fa-python"></i> <span>Python</span></a>
+    <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i> <span>Home</span></a>
+    <a href="https://alone-monster.github.io/html-css" class="btn bo"><i class="fab fa-html5"></i> <span>HTML/CSS</span></a>
+    <a href="https://alone-monster.github.io/python" class="btn bo"><i class="fab fa-python"></i> <span>Python</span></a>
     <button class="btn bd" onclick="signOut()"><i class="fas fa-sign-out-alt"></i> <span>Sign Out</span></button>
     <!-- Admin Logout button — auto-shown only in admin session by admin_logout.js -->
   </div>
@@ -638,7 +638,7 @@ function renderHeatmap(visits){
 function renderCourses(){
   const prog=getProgress();
   const list=[
-    {key:'htmlcss',name:'HTML & CSS',sub:'Web Design Foundations',icon:'<i class="fab fa-html5"></i>',cls:'html',url:'HTML&CSS.html'},
+    {key:'htmlcss',name:'HTML & CSS',sub:'Web Design Foundations',icon:'<i class="fab fa-html5"></i>',cls:'html',url:'https://alone-monster.github.io/html-css'},
     {key:'python',name:'Python',sub:'Programming Essentials',icon:'<i class="fab fa-python"></i>',cls:'python',url:'python.html'},
     {key:'js',name:'JavaScript',sub:'Coming Soon',icon:'<i class="fab fa-js"></i>',cls:'js',url:'#'}
   ];
@@ -693,12 +693,12 @@ function renderBadges(lessons,streak,codes){
 function renderCodes(){
   const items=[];
   const html=getEditor('htmlcss');
-  if(html){items.push({title:'HTML/CSS Editor',icon:'fab fa-html5',lang:'html',code:(html.h||'').slice(0,400),url:'HTML&CSS.html'});}
+  if(html){items.push({title:'HTML/CSS Editor',icon:'fab fa-html5',lang:'html',code:(html.h||'').slice(0,400),url:'https://alone-monster.github.io/html-css'});}
   const py=getEditor('python');
-  if(py){items.push({title:'Python Editor',icon:'fab fa-python',lang:'python',code:(typeof py==='string'?py:(py.code||py.c||'')).slice(0,400),url:'python.html'});}
+  if(py){items.push({title:'Python Editor',icon:'fab fa-python',lang:'python',code:(typeof py==='string'?py:(py.code||py.c||'')).slice(0,400),url:'https://alone-monster.github.io/python'});}
 
   if(items.length===0){
-    $('codeList').innerHTML=`<div class="empty-state"><i class="fas fa-code"></i><p>No saved snippets yet. Open the code editor on any course page and your code will autosave here.</p><a href="HTML&CSS.html" class="btn bp" style="display:inline-flex;"><i class="fas fa-play"></i> <span>Try the Editor</span></a></div>`;
+    $('codeList').innerHTML=`<div class="empty-state"><i class="fas fa-code"></i><p>No saved snippets yet. Open the code editor on any course page and your code will autosave here.</p><a href="https://alone-monster.github.io/html-css" class="btn bp" style="display:inline-flex;"><i class="fas fa-play"></i> <span>Try the Editor</span></a></div>`;
     return;
   }
   $('codeList').innerHTML=`<div class="code-list">${items.map(it=>`
