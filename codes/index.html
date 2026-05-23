@@ -1,285 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Codes — Alone Monster Coding Hub</title>
-  <meta name="description" content="Code snippets, tutorials, and programming articles by Chirag — Python, JavaScript, HTML/CSS and more."/>
-  <link rel="icon" href="https://alone-monster.github.io/favicon.ico"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <style>
-    :root{
-      --bg:#050509;--bg2:#0a0a13;--bgc:#0d0d18;
-      --text:#e8e8f0;--muted:#6a6a8a;--border:rgba(255,255,255,.08);
-      --green:#00ff88;--cyan:#00d4ff;--pink:#ff2d87;--violet:#8b3cf7;
-      --gold:#ffb800;--red:#ff3d2e;--blue:#4361ee;--orange:#ff8a1e;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;overflow-y:auto;min-height:100vh;}
-    .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
-    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
-    .orb1{width:500px;height:500px;background:rgba(139,60,247,.07);top:-200px;right:-100px;}
-    .orb2{width:400px;height:400px;background:rgba(0,255,136,.06);bottom:-100px;left:-100px;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Codes — Alone Monster Coding Hub</title>
+<meta name="description" content="Free readymade code snippets — HTML, CSS, JavaScript UI components by Alone Monster Coding Hub."/>
+<meta property="og:title" content="Codes — Alone Monster Coding Hub"/>
+<meta property="og:description" content="Browse free readymade code snippets and UI templates by Chirag."/>
+<meta property="og:url" content="https://alone-monster.github.io/codes/"/>
+<meta property="og:type" content="website"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#050509;--bg2:#0c0c14;--bgc:#10101c;--bgs:#08080f;
+  --green:#00ff88;--cyan:#00d4ff;
+  --text:#e8e8f0;--muted:#6b6b8a;
+  --border:rgba(0,255,136,.15);
+  --gg:0 0 20px rgba(0,255,136,.45);
+  --gc:0 0 20px rgba(0,212,255,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;width:100%;max-width:100vw;
+  padding-bottom:40px;
+}
+@media(hover:hover){body{cursor:none;}}
 
-    /* TOPBAR */
-    .topbar{position:sticky;top:0;z-index:100;background:rgba(5,5,9,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 28px;height:60px;}
-    .tb-brand{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:800;color:var(--text);text-decoration:none;margin-right:auto;}
-    .tb-brand span{color:var(--green);}
-    .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;height:36px;padding:0 14px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-    .bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
-    .bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--green);border-radius:50%;pointer-events:none;z-index:8998;transform:translate(-50%,-50%);transition:transform .08s;mix-blend-mode:screen;}
+#cursor.big{transform:translate(-50%,-50%) scale(2.6);}
+.ripple{position:fixed;width:60px;height:60px;border-radius:50%;border:2px solid var(--green);pointer-events:none;z-index:8999;transform:translate(-50%,-50%) scale(0);opacity:1;animation:rout 1.5s ease-out forwards;}
+@keyframes rout{0%{transform:translate(-50%,-50%) scale(0);opacity:.85;}100%{transform:translate(-50%,-50%) scale(4.8);opacity:0;}}
 
-    /* WRAP */
-    .wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:40px 28px 80px;}
+/* MATRIX */
+#mc{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.04;pointer-events:none;}
 
-    /* HERO */
-    .hero{margin-bottom:40px;}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.22);border-radius:50px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
-    .hero h1{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .hero p{color:var(--muted);font-size:.98rem;max-width:580px;line-height:1.6;}
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:150;
+  background:rgba(5,5,9,.97);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:60px;width:100%;
+}
+.tb-logo{font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;color:var(--green);text-shadow:var(--gg);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.tb-logo i{font-size:.9rem;}
+.tb-right{display:flex;gap:8px;align-items:center;}
+.tb-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:5px;height:36px;padding:0 16px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+.tb-btn.bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.tb-btn.bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+.tb-btn.bp{background:var(--green);color:#000;}
+.tb-btn.bp:hover{box-shadow:var(--gg);transform:translateY(-1px);}
 
-    /* FILTER BAR */
-    .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:32px;}
-    .search-wrap{position:relative;flex:1;min-width:220px;max-width:360px;}
-    .search-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.88rem;}
-    .search-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px 12px 10px 36px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.92rem;outline:none;transition:all .2s;}
-    .search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,255,136,.1);}
-    .filter-tags{display:flex;gap:7px;flex-wrap:wrap;}
-    .ftag{padding:8px 15px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .18s;}
-    .ftag:hover,.ftag.active{background:rgba(0,255,136,.1);border-color:var(--green);color:var(--green);}
-    .count-badge{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-left:auto;white-space:nowrap;}
+/* SNIPPET HUB BANNER BUTTON */
+.hub-banner{
+  display:flex;justify-content:center;align-items:center;
+  padding:22px 20px 8px;position:relative;z-index:1;
+}
+.hub-btn{
+  font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:2px;
+  color:#000;background:linear-gradient(90deg,var(--green),var(--cyan),var(--green));
+  background-size:200% auto;
+  border:none;cursor:pointer;border-radius:8px;
+  height:44px;padding:0 28px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 0 24px rgba(0,255,136,.4),0 0 50px rgba(0,212,255,.15);
+  animation:hubShimmer 2.8s linear infinite, hubPulse 2s ease-in-out infinite;
+  transition:transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.hub-btn::before{
+  content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;
+  background:rgba(255,255,255,.25);transform:skewX(-20deg);
+  animation:hubShine 2.8s ease-in-out infinite;
+}
+@keyframes hubShimmer{0%{background-position:0% center;}100%{background-position:200% center;}}
+@keyframes hubPulse{0%,100%{box-shadow:0 0 24px rgba(0,255,136,.4),0 0 50px rgba(0,212,255,.15);}50%{box-shadow:0 0 36px rgba(0,212,255,.6),0 0 70px rgba(0,255,136,.2);}}
+@keyframes hubShine{0%{left:-60%;}60%,100%{left:130%;}}
+.hub-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 40px rgba(0,255,136,.6),0 0 80px rgba(0,212,255,.3);}
+.hub-btn i{font-size:1rem;}
 
-    /* ARTICLES GRID */
-    .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+/* PAGE HEADER */
+.page-header{padding:32px 52px 20px;position:relative;z-index:1;}
+.ph-tag{font-family:'JetBrains Mono',monospace;font-size:.61rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.ph-title{font-family:'Orbitron',monospace;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;line-height:1.1;}
+.ph-title .g{color:var(--green);text-shadow:var(--gg);}
+.ph-desc{color:var(--muted);margin-top:10px;font-size:.95rem;max-width:580px;line-height:1.65;}
+.ph-line{width:60px;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:2px;margin-top:18px;}
 
-    /* ARTICLE CARD */
-    .art-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .28s;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;}
-    .art-card:hover{transform:translateY(-5px);border-color:var(--card-color,var(--green));box-shadow:0 16px 48px rgba(0,0,0,.5);}
-    .art-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:var(--card-bg,linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,255,.1)));position:relative;overflow:hidden;}
-    .art-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(5,5,9,.8));}
-    .art-thumb .cat-badge{position:absolute;top:14px;left:14px;z-index:1;padding:5px 12px;border-radius:50px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
-    .art-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
-    .art-title{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;color:var(--text);line-height:1.35;}
-    .art-desc{color:var(--muted);font-size:.86rem;line-height:1.55;flex:1;}
-    .art-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
-    .art-date{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted);}
-    .art-tags{display:flex;gap:5px;}
-    .art-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:3px 9px;border-radius:50px;border:1px solid rgba(255,255,255,.08);color:var(--muted);}
-    .art-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);}
-    .art-footer .read-time{display:flex;align-items:center;gap:5px;}
-    .art-footer .open-link{margin-left:auto;color:var(--card-color,var(--green));display:flex;align-items:center;gap:5px;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;}
+/* SEARCH BAR */
+.search-wrap{padding:0 52px 30px;position:relative;z-index:1;}
+.search-box{
+  position:relative;max-width:620px;
+}
+.search-box input{
+  width:100%;background:var(--bgc);border:1px solid var(--border);
+  border-radius:10px;height:50px;padding:0 50px 0 20px;
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;
+  color:var(--text);outline:none;transition:all .2s;
+}
+.search-box input::placeholder{color:var(--muted);}
+.search-box input:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(0,255,136,.12);}
+.search-box .s-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.95rem;pointer-events:none;transition:color .2s;}
+.search-box input:focus + .s-icon{color:var(--green);}
+.search-count{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:8px;letter-spacing:.5px;}
+.search-count span{color:var(--green);}
+.no-results{display:none;padding:60px 0;text-align:center;}
+.no-results i{font-size:2.5rem;color:var(--muted);margin-bottom:14px;display:block;}
+.no-results p{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);}
 
-    /* EMPTY STATE */
-    .empty{text-align:center;padding:80px 20px;color:var(--muted);display:none;}
-    .empty i{font-size:3rem;opacity:.3;margin-bottom:16px;display:block;}
-    .empty p{font-size:.95rem;}
+/* SNIPPETS GRID */
+.snippets-section{padding:0 52px 60px;position:relative;z-index:1;}
+.snippets-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:24px;
+}
 
-    /* FEATURED BANNER */
-    .featured{background:linear-gradient(135deg,rgba(139,60,247,.12),rgba(0,212,255,.08));border:1px solid rgba(139,60,247,.3);border-radius:18px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;gap:24px;cursor:pointer;transition:all .25s;text-decoration:none;}
-    .featured:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,.4);}
-    .featured-icon{width:70px;height:70px;border-radius:18px;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
-    .featured-badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--violet);letter-spacing:2px;text-transform:uppercase;background:rgba(139,60,247,.12);border:1px solid rgba(139,60,247,.3);border-radius:50px;padding:4px 12px;display:inline-block;margin-bottom:6px;}
-    .featured-title{font-family:'Orbitron',monospace;font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;}
-    .featured-desc{color:var(--muted);font-size:.9rem;line-height:1.55;}
-    .featured-arrow{margin-left:auto;color:var(--cyan);font-size:1.5rem;flex-shrink:0;}
+/* SNIPPET CARD */
+.snippet-card{
+  background:var(--bgc);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  position:relative;cursor:pointer;
+  display:flex;flex-direction:column;
+}
+.snippet-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:2;
+}
+.snippet-card:hover{
+  border-color:rgba(0,255,136,.4);
+  transform:translateY(-6px);
+  box-shadow:0 18px 50px rgba(0,0,0,.5),0 0 30px rgba(0,255,136,.12);
+}
+.snippet-card:hover::before{transform:scaleX(1);}
 
-    /* SECTION TITLE */
-    .sec-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
-    .sec-title i{color:var(--green);}
+/* Card image — 16:9 */
+.card-img-wrap{
+  width:100%;aspect-ratio:16/9;overflow:hidden;
+  background:#0a0a12;position:relative;
+}
+.card-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .4s ease;display:block;
+}
+.snippet-card:hover .card-img-wrap img{transform:scale(1.04);}
+.card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, transparent 50%, rgba(5,5,9,.7) 100%);
+  pointer-events:none;
+}
 
-    /* FOOTER */
-    .foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-top:60px;letter-spacing:1px;}
+/* Card body */
+.card-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1;}
+.card-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  color:var(--green);letter-spacing:2px;text-transform:uppercase;
+  background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);
+  padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;
+  width:fit-content;
+}
+.card-name{
+  font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;
+  color:var(--text);letter-spacing:.5px;line-height:1.3;
+}
+.card-desc{
+  font-size:.85rem;color:var(--muted);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  flex:1;
+}
+.card-footer{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
+.card-btn{
+  width:100%;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;
+  letter-spacing:.8px;border:none;cursor:pointer;border-radius:7px;height:40px;
+  background:transparent;border:1px solid rgba(0,255,136,.35);color:var(--green);
+  text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+}
+.card-btn:hover{
+  background:rgba(0,255,136,.1);border-color:var(--green);
+  box-shadow:0 0 18px rgba(0,255,136,.25);transform:translateY(-1px);
+}
 
-    @media(max-width:720px){
-      .wrap{padding:28px 16px 60px;}
-      .hero h1{font-size:1.7rem;}
-      .featured{flex-direction:column;gap:16px;padding:22px 20px;}
-      .featured-arrow{display:none;}
-      .topbar{padding:0 16px;}
-    }
-  </style>
+/* SECTION DIVIDER */
+.sec-divider{
+  height:1px;background:var(--border);margin:0 52px 0;
+}
+
+/* BOTTOM DOCK */
+.dock-nav{
+  position:fixed;bottom:25px;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;align-items:center;gap:6px;
+  padding:10px 16px;background:rgba(8,8,15,.95);
+  border:1px solid rgba(0,255,136,.32);border-radius:80px;
+  box-shadow:0 12px 60px rgba(0,0,0,.75),0 0 0 1px rgba(0,255,136,.1),inset 0 1px 0 rgba(0,255,136,.15);
+  backdrop-filter:blur(24px);max-width:calc(100vw - 24px);width:max-content;
+}
+.dock-nav::before{
+  content:'';position:absolute;top:-1px;left:15%;right:15%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),var(--cyan),var(--green),transparent);
+  border-radius:2px;filter:blur(.4px);
+}
+.dock-item{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;padding:10px 14px;border-radius:50px;
+  cursor:pointer;text-decoration:none;border:1px solid transparent;
+  color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.61rem;
+  letter-spacing:.5px;transition:all .25s cubic-bezier(.4,0,.2,1);
+  min-width:0;white-space:nowrap;background:transparent;flex-shrink:1;
+}
+.dock-item i{font-size:1.25rem;transition:all .25s;line-height:1;}
+.dock-item span{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.7;transition:opacity .2s;line-height:1;font-weight:500;}
+.dock-item:hover,.dock-item.dock-active{color:var(--green);background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.35);box-shadow:0 0 24px rgba(0,255,136,.25),inset 0 0 16px rgba(0,255,136,.07);}
+.dock-item:hover i,.dock-item.dock-active i{filter:drop-shadow(0 0 8px var(--green));}
+.dock-item:hover span,.dock-item.dock-active span{opacity:1;color:var(--green);}
+.dock-item.dock-active::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);}
+.dock-sep{width:1px;height:36px;background:rgba(0,255,136,.15);margin:0 2px;flex-shrink:0;}
+
+/* GRID BG */
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,255,136,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.022) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+
+@keyframes fup{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fup .6s both;}
+
+footer{
+  border-top:1px solid var(--border);
+  padding:24px 52px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);
+  position:relative;z-index:1;
+}
+.ficons{display:flex;gap:13px;}
+.ficons a{color:var(--muted);text-decoration:none;font-size:.88rem;transition:color .15s;}
+.ficons a:hover{color:var(--green);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .page-header{padding:24px 18px 16px;}
+  .search-wrap{padding:0 18px 22px;}
+  .snippets-section{padding:0 18px 60px;}
+  .sec-divider{margin:0 18px;}
+  .topbar{padding:0 14px;}
+  .snippets-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:11px;text-align:center;padding:20px 18px;}
+  .dock-nav{bottom:20px;padding:8px 10px;gap:2px;max-width:calc(100vw - 20px);}
+  .dock-item{padding:9px 10px;min-width:0;flex:1;max-width:70px;}
+  .dock-item i{font-size:1.2rem;}
+  .dock-item span{font-size:.52rem;display:block;letter-spacing:.3px;}
+}
+@media(max-width:400px){
+  .dock-nav{padding:7px 8px;gap:1px;}
+  .dock-item{padding:8px 7px;max-width:58px;}
+  .dock-item span{font-size:.48rem;letter-spacing:.2px;}
+}
+</style>
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
+
+<div id="cursor"></div>
+<canvas id="mc"></canvas>
+<div class="grid-bg"></div>
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="https://alone-monster.github.io/" class="tb-brand">ALONE<span>MONSTER</span></a>
-  <a href="https://alone-monster.github.io/" class="btn bo"><i class="fas fa-home"></i> Home</a>
-  <a href="https://alone-monster.github.io/python/" class="btn bo"><i class="fab fa-python"></i> Python</a>
-  <a href="https://alone-monster.github.io/html-css/" class="btn bo"><i class="fab fa-html5"></i> HTML/CSS</a>
-  <a href="https://alone-monster.github.io/javascript/" class="btn bo"><i class="fab fa-js"></i> JS</a>
-  <a href="https://alone-monster.github.io/support/" class="btn bo"><i class="fas fa-headset"></i></a>
+  <a href="https://alone-monster.github.io/" class="tb-logo">
+    <i class="fas fa-terminal"></i> Alone Monster
+  </a>
+  <div class="tb-right">
+    <a href="https://alone-monster.github.io/" class="tb-btn bo"><i class="fas fa-arrow-left"></i> Home</a>
+    <a href="https://github.com/alone-monster" target="_blank" rel="noopener" class="tb-btn bp"><i class="fab fa-github"></i> GitHub</a>
+  </div>
 </header>
 
-<main class="wrap">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge"><i class="fas fa-code"></i> Code Library</div>
-    <h1>Codes &amp; Snippets</h1>
-    <p>Ready-to-use code snippets, tutorials, and mini-projects. Copy, learn, and build — all in one place.</p>
-  </div>
-
-  <!-- FEATURED -->
-  <a class="featured" href="codes/article-python-scraper.html">
-    <div class="featured-icon">🕷️</div>
-    <div>
-      <div class="featured-badge">⭐ Featured Article</div>
-      <div class="featured-title">Python Web Scraper — Full Tutorial</div>
-      <div class="featured-desc">Build a complete web scraper using Python + BeautifulSoup. Scrape any website, save data to CSV, and handle pagination — step by step.</div>
-    </div>
-    <i class="fas fa-arrow-right featured-arrow"></i>
+<!-- SNIPPET HUB BUTTON -->
+<div class="hub-banner fade-up">
+  <a href="https://github.com/alone-monster/Snippet-Hub" target="_blank" rel="noopener" class="hub-btn">
+    <i class="fas fa-code-branch"></i>
+    Snippet Hub
+    <i class="fab fa-github"></i>
   </a>
+</div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <div class="search-wrap">
-      <i class="fas fa-search"></i>
-      <input class="search-input" type="text" id="searchInput" placeholder="Search articles..." oninput="filterArticles()"/>
-    </div>
-    <div class="filter-tags">
-      <button class="ftag active" data-filter="all" onclick="setFilter('all',this)">All</button>
-      <button class="ftag" data-filter="python" onclick="setFilter('python',this)">Python</button>
-      <button class="ftag" data-filter="javascript" onclick="setFilter('javascript',this)">JavaScript</button>
-      <button class="ftag" data-filter="html" onclick="setFilter('html',this)">HTML/CSS</button>
-      <button class="ftag" data-filter="tools" onclick="setFilter('tools',this)">Tools</button>
-      <button class="ftag" data-filter="beginner" onclick="setFilter('beginner',this)">Beginner</button>
-    </div>
-    <div class="count-badge" id="countBadge">Loading...</div>
+<!-- PAGE HEADER -->
+<div class="page-header fade-up">
+  <p class="ph-tag">// Free Snippets</p>
+  <h1 class="ph-title">Code <span class="g">Snippets</span></h1>
+  <p class="ph-desc">Browse readymade UI components and frontend templates — free to use, study, and build upon. Click any snippet to explore its full details and source code.</p>
+  <div class="ph-line"></div>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-wrap fade-up">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search snippets... (e.g. login, form, card)" autocomplete="off" spellcheck="false"/>
+    <i class="fas fa-search s-icon"></i>
   </div>
+  <p class="search-count">Showing <span id="countDisplay">1</span> snippet(s)</p>
+</div>
 
-  <!-- ARTICLES -->
-  <div class="sec-title"><i class="fas fa-layer-group"></i> All Articles</div>
-  <div class="articles-grid" id="articlesGrid"></div>
-  <div class="empty" id="emptyState">
-    <i class="fas fa-magnifying-glass"></i>
-    <p>No articles match your search. Try different keywords or clear the filter.</p>
-  </div>
+<div class="sec-divider"></div>
 
-  <footer class="foot">
-    <p>© 2025 Alone Monster Coding Hub · <a href="https://alone-monster.github.io/" style="color:var(--green);text-decoration:none;">alone-monster.github.io</a></p>
-  </footer>
-</main>
+<!-- SNIPPETS GRID -->
+<section class="snippets-section" style="padding-top:30px;">
+  <div class="snippets-grid" id="snippetsGrid">
 
-<script>
-const ARTICLES = [
-  {
-    id:'py-hello-world', slug:'article-python-hello.html',
-    title:'Python Hello World & Basics', desc:'Everything you need to get started with Python — variables, data types, print, and your first program.',
-    cat:'Python', filter:'python', tags:['beginner','python'], icon:'🐍', date:'May 2025', readTime:'5 min',
-    bg:'linear-gradient(135deg,rgba(255,45,135,.12),rgba(139,60,247,.1))', color:'#ff2d87',
-    catStyle:'background:rgba(255,45,135,.15);border:1px solid rgba(255,45,135,.4);color:#ff2d87;'
-  },
-  {
-    id:'py-loops', slug:'article-python-loops.html',
-    title:'Python Loops — for, while & Patterns', desc:'Master for and while loops in Python. Includes number patterns, star patterns, and nested loop examples.',
-    cat:'Python', filter:'python', tags:['beginner','python'], icon:'🔁', date:'May 2025', readTime:'7 min',
-    bg:'linear-gradient(135deg,rgba(255,45,135,.1),rgba(255,138,30,.1))', color:'#ff8a1e',
-    catStyle:'background:rgba(255,138,30,.15);border:1px solid rgba(255,138,30,.4);color:#ff8a1e;'
-  },
-  {
-    id:'py-scraper', slug:'article-python-scraper.html',
-    title:'Python Web Scraper Full Tutorial', desc:'Scrape any website with Python + BeautifulSoup. Handle pagination, save to CSV, and extract images.',
-    cat:'Python', filter:'python', tags:['intermediate','python','scraping'], icon:'🕷️', date:'May 2025', readTime:'12 min',
-    bg:'linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,255,.1))', color:'#00ff88',
-    catStyle:'background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.4);color:#00ff88;'
-  },
-  {
-    id:'js-dom', slug:'article-js-dom.html',
-    title:'JavaScript DOM Manipulation Guide', desc:'Learn how to select, create, modify and delete HTML elements dynamically using vanilla JavaScript.',
-    cat:'JavaScript', filter:'javascript', tags:['beginner','javascript','dom'], icon:'🌐', date:'May 2025', readTime:'8 min',
-    bg:'linear-gradient(135deg,rgba(247,223,30,.1),rgba(255,184,0,.1))', color:'#ffb800',
-    catStyle:'background:rgba(255,184,0,.15);border:1px solid rgba(255,184,0,.4);color:#ffb800;'
-  },
-  {
-    id:'js-fetch', slug:'article-js-fetch.html',
-    title:'Fetch API & Async/Await Explained', desc:'Master API calls in JavaScript — fetch(), Promises, async/await, and error handling with real examples.',
-    cat:'JavaScript', filter:'javascript', tags:['intermediate','javascript','api'], icon:'⚡', date:'May 2025', readTime:'10 min',
-    bg:'linear-gradient(135deg,rgba(67,97,238,.12),rgba(0,212,255,.1))', color:'#4361ee',
-    catStyle:'background:rgba(67,97,238,.15);border:1px solid rgba(67,97,238,.4);color:#4361ee;'
-  },
-  {
-    id:'html-flexbox', slug:'article-html-flexbox.html',
-    title:'CSS Flexbox — Complete Cheat Sheet', desc:'Everything about Flexbox in one place. Containers, items, alignment, and 10 real-world layout examples.',
-    cat:'HTML/CSS', filter:'html', tags:['beginner','css','layout'], icon:'🎨', date:'May 2025', readTime:'9 min',
-    bg:'linear-gradient(135deg,rgba(255,61,46,.1),rgba(255,138,30,.1))', color:'#ff3d2e',
-    catStyle:'background:rgba(255,61,46,.15);border:1px solid rgba(255,61,46,.4);color:#ff3d2e;'
-  },
-  {
-    id:'html-grid', slug:'article-html-grid.html',
-    title:'CSS Grid Layout — Full Tutorial', desc:'Build complex layouts with CSS Grid. Rows, columns, areas, auto-fit, auto-fill — all covered with live demos.',
-    cat:'HTML/CSS', filter:'html', tags:['intermediate','css','layout'], icon:'▦', date:'May 2025', readTime:'11 min',
-    bg:'linear-gradient(135deg,rgba(209,58,189,.12),rgba(67,97,238,.1))', color:'#d13abd',
-    catStyle:'background:rgba(209,58,189,.15);border:1px solid rgba(209,58,189,.4);color:#d13abd;'
-  },
-  {
-    id:'tools-git', slug:'article-git-basics.html',
-    title:'Git & GitHub Basics for Beginners', desc:'Learn version control from scratch. git init, add, commit, push, pull, branching, and merging explained simply.',
-    cat:'Tools', filter:'tools', tags:['beginner','git','tools'], icon:'🐙', date:'May 2025', readTime:'8 min',
-    bg:'linear-gradient(135deg,rgba(255,138,30,.1),rgba(255,61,46,.1))', color:'#ff8a1e',
-    catStyle:'background:rgba(255,138,30,.15);border:1px solid rgba(255,138,30,.4);color:#ff8a1e;'
-  },
-];
-
-let activeFilter = 'all';
-let searchTerm = '';
-
-function renderArticles(){
-  const grid = document.getElementById('articlesGrid');
-  const empty = document.getElementById('emptyState');
-  const countBadge = document.getElementById('countBadge');
-  const filtered = ARTICLES.filter(a=>{
-    const matchFilter = activeFilter==='all' || a.filter===activeFilter || a.tags.includes(activeFilter);
-    const matchSearch = !searchTerm || a.title.toLowerCase().includes(searchTerm) || a.desc.toLowerCase().includes(searchTerm) || a.tags.some(t=>t.includes(searchTerm));
-    return matchFilter && matchSearch;
-  });
-
-  countBadge.textContent = filtered.length + ' article' + (filtered.length!==1?'s':'');
-
-  if(filtered.length===0){
-    grid.innerHTML=''; empty.style.display='block'; return;
-  }
-  empty.style.display='none';
-  grid.innerHTML = filtered.map(a=>`
-    <a class="art-card" href="${a.slug}" style="--card-color:${a.color};">
-      <div class="art-thumb" style="background:${a.bg};">
-        <span style="z-index:1;">${a.icon}</span>
-        <div class="cat-badge" style="${a.catStyle}">${a.cat}</div>
+    <!-- ════════════════════════════════════════════════
+         ARTICLE 1 — Neo Login UI
+         ════════════════════════════════════════════════ -->
+    <article class="snippet-card" data-keywords="neo login ui html css javascript login register form authentication animated responsive social media modern">
+      <div class="card-img-wrap">
+        <img src="images/article-1-preview.png" alt="Neo Login UI Preview" loading="lazy" onerror="this.src='https://via.placeholder.com/640x360/10101c/00ff88?text=Neo+Login+UI'"/>
+        <div class="card-img-overlay"></div>
       </div>
-      <div class="art-body">
-        <div class="art-title">${a.title}</div>
-        <div class="art-desc">${a.desc}</div>
-        <div class="art-meta">
-          <div class="art-date">${a.date}</div>
-          <div class="art-tags">${a.tags.slice(0,2).map(t=>`<span class="art-tag">${t}</span>`).join('')}</div>
+      <div class="card-body">
+        <span class="card-tag"><i class="fas fa-code"></i> HTML / CSS / JS</span>
+        <h2 class="card-name">Neo Login UI</h2>
+        <p class="card-desc">A modern and fully responsive Login &amp; Registration UI designed using HTML, CSS, and JavaScript, featuring smooth animated transitions, clean authentication forms, social media login integration, mobile-friendly responsive layout, and a professional modern UI/UX design suitable for websites, web apps, and frontend portfolio projects.</p>
+        <div class="card-footer">
+          <a href="https://alone-monster.github.io/codes/article-1" class="card-btn">
+            <i class="fas fa-eye"></i> View Details
+          </a>
         </div>
       </div>
-      <div class="art-footer">
-        <div class="read-time"><i class="fas fa-clock"></i> ${a.readTime} read</div>
-        <div class="open-link">Read Article <i class="fas fa-arrow-right"></i></div>
+    </article>
+    <!-- END ARTICLE 1 -->
+
+    <!-- ════════════════════════════════════════════════
+         TEMPLATE — Copy this block for each new snippet
+         ════════════════════════════════════════════════
+    <article class="snippet-card" data-keywords="KEYWORDS HERE FOR SEARCH">
+      <div class="card-img-wrap">
+        <img src="../codes/images/article-N-preview.png" alt="SNIPPET NAME Preview" loading="lazy"/>
+        <div class="card-img-overlay"></div>
       </div>
-    </a>
-  `).join('');
+      <div class="card-body">
+        <span class="card-tag"><i class="fas fa-code"></i> HTML / CSS / JS</span>
+        <h2 class="card-name">SNIPPET NAME HERE</h2>
+        <p class="card-desc">SHORT DESCRIPTION HERE — 1-2 lines describing what this snippet does.</p>
+        <div class="card-footer">
+          <a href="https://alone-monster.github.io/codes/article-N" class="card-btn">
+            <i class="fas fa-eye"></i> View Details
+          </a>
+        </div>
+      </div>
+    </article>
+         ════════════════════════════════════════════════
+         END TEMPLATE
+         ════════════════════════════════════════════════ -->
+
+  </div>
+
+  <!-- No results message -->
+  <div class="no-results" id="noResults">
+    <i class="fas fa-search-minus"></i>
+    <p>No snippets found for "<span id="searchQuery"></span>".<br/>Try a different keyword.</p>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 <span style="color:var(--green)">Alone Monster Coding Hub</span> — Built by Chirag</span>
+  <div class="ficons">
+    <a href="https://github.com/alone-monster" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://youtube.com/@alonemonstercoding" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://t.me/alonemonster20" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+  </div>
+</footer>
+
+
+<script>
+/* ── CUSTOM CURSOR ── */
+const cur = document.getElementById('cursor');
+if(window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove', e => { cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px'; });
+  document.addEventListener('click', e => {
+    const r = document.createElement('div'); r.className='ripple';
+    r.style.left=e.clientX+'px'; r.style.top=e.clientY+'px';
+    document.body.appendChild(r); setTimeout(()=>r.remove(),1500);
+  });
+  document.querySelectorAll('a,button,.snippet-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
 }
 
-function setFilter(f, btn){
-  activeFilter = f;
-  document.querySelectorAll('.ftag').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderArticles();
-}
+/* ── MATRIX CANVAS ── */
+(function(){
+  const c=document.getElementById('mc'),ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const cols=Math.floor(window.innerWidth/16)||50;
+  const drops=Array(cols).fill(1);
+  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>/{}[]()';
+  function draw(){
+    ctx.fillStyle='rgba(5,5,9,.05)';ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='#00ff88';ctx.font='14px monospace';
+    drops.forEach((y,i)=>{
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);
+      if(y*16>c.height&&Math.random()>.975)drops[i]=0;
+      drops[i]++;
+    });
+  }
+  setInterval(draw,60);
+})();
 
-function filterArticles(){
-  searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-  renderArticles();
-}
+/* ── SEARCH ── */
+const searchInput = document.getElementById('searchInput');
+const grid = document.getElementById('snippetsGrid');
+const noResults = document.getElementById('noResults');
+const countDisplay = document.getElementById('countDisplay');
+const searchQuery = document.getElementById('searchQuery');
+const cards = document.querySelectorAll('.snippet-card');
 
-renderArticles();
+searchInput.addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  let visible = 0;
+  cards.forEach(card => {
+    const kw = (card.dataset.keywords || '') + ' ' + (card.querySelector('.card-name')?.textContent||'') + ' ' + (card.querySelector('.card-desc')?.textContent||'');
+    const match = !q || kw.toLowerCase().includes(q);
+    card.style.display = match ? '' : 'none';
+    if(match) visible++;
+  });
+  countDisplay.textContent = visible;
+  if(visible === 0 && q){
+    noResults.style.display = 'block';
+    searchQuery.textContent = this.value.trim();
+  } else {
+    noResults.style.display = 'none';
+  }
+});
+
+/* ── SEARCH FROM URL PARAM ── */
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if(q){
+    searchInput.value = q;
+    searchInput.dispatchEvent(new Event('input'));
+  }
+});
+
+/* ── FADE IN CARDS ── */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.style.animation='fup .5s both'; }
+  });
+},{threshold:0.1});
+cards.forEach(c=>observer.observe(c));
 </script>
 </body>
 </html>
