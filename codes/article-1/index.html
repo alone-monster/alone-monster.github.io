@@ -1,1 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Neo Login UI — Alone Monster Coding Hub</title>
+<meta name="description" content="Neo Login UI — A modern and fully responsive Login & Registration UI using HTML, CSS, and JavaScript with animated transitions and social media login."/>
+<meta property="og:title" content="Neo Login UI — Alone Monster Snippet Hub"/>
+<meta property="og:description" content="Modern animated Login & Registration UI — free HTML/CSS/JS snippet by Alone Monster Coding Hub."/>
+<meta property="og:url" content="https://alone-monster.github.io/codes/article-1"/>
+<meta property="og:type" content="article"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#050509;--bg2:#0c0c14;--bgc:#10101c;--bgs:#08080f;
+  --green:#00ff88;--cyan:#00d4ff;
+  --text:#e8e8f0;--muted:#6b6b8a;
+  --border:rgba(0,255,136,.15);
+  --gg:0 0 20px rgba(0,255,136,.45);
+  --gc:0 0 20px rgba(0,212,255,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;width:100%;max-width:100vw;
+  padding-bottom:40px;
+}
+@media(hover:hover){body{cursor:none;}}
 
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--green);border-radius:50%;pointer-events:none;z-index:8998;transform:translate(-50%,-50%);transition:transform .08s;mix-blend-mode:screen;}
+#cursor.big{transform:translate(-50%,-50%) scale(2.6);}
+.ripple{position:fixed;width:60px;height:60px;border-radius:50%;border:2px solid var(--green);pointer-events:none;z-index:8999;transform:translate(-50%,-50%) scale(0);opacity:1;animation:rout 1.5s ease-out forwards;}
+@keyframes rout{0%{transform:translate(-50%,-50%) scale(0);opacity:.85;}100%{transform:translate(-50%,-50%) scale(4.8);opacity:0;}}
+
+/* MATRIX */
+#mc{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.04;pointer-events:none;}
+
+/* GRID BG */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,255,136,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.022) 1px,transparent 1px);background-size:50px 50px;}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:150;
+  background:rgba(5,5,9,.97);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:60px;width:100%;
+}
+.tb-logo{font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;color:var(--green);text-shadow:var(--gg);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.tb-logo i{font-size:.9rem;}
+.tb-right{display:flex;gap:8px;align-items:center;}
+.tb-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.8px;border:none;cursor:pointer;border-radius:5px;height:36px;padding:0 16px;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+.tb-btn.bo{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.tb-btn.bo:hover{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06);}
+.tb-btn.bp{background:var(--green);color:#000;}
+.tb-btn.bp:hover{box-shadow:var(--gg);transform:translateY(-1px);}
+
+/* SNIPPET HUB BANNER BUTTON */
+.hub-banner{display:flex;justify-content:center;align-items:center;padding:22px 20px 8px;position:relative;z-index:1;}
+.hub-btn{
+  font-family:'Orbitron',monospace;font-weight:700;font-size:.82rem;letter-spacing:2px;
+  color:#000;background:linear-gradient(90deg,var(--green),var(--cyan),var(--green));
+  background-size:200% auto;border:none;cursor:pointer;border-radius:8px;
+  height:44px;padding:0 28px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 0 24px rgba(0,255,136,.4),0 0 50px rgba(0,212,255,.15);
+  animation:hubShimmer 2.8s linear infinite, hubPulse 2s ease-in-out infinite;
+  transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;
+}
+.hub-btn::before{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:rgba(255,255,255,.25);transform:skewX(-20deg);animation:hubShine 2.8s ease-in-out infinite;}
+@keyframes hubShimmer{0%{background-position:0% center;}100%{background-position:200% center;}}
+@keyframes hubPulse{0%,100%{box-shadow:0 0 24px rgba(0,255,136,.4),0 0 50px rgba(0,212,255,.15);}50%{box-shadow:0 0 36px rgba(0,212,255,.6),0 0 70px rgba(0,255,136,.2);}}
+@keyframes hubShine{0%{left:-60%;}60%,100%{left:130%;}}
+.hub-btn:hover{transform:translateY(-2px) scale(1.03);}
+
+/* SEARCH */
+.search-wrap{padding:14px 52px 0;position:relative;z-index:1;}
+.search-box{position:relative;max-width:620px;}
+.search-box input{width:100%;background:var(--bgc);border:1px solid var(--border);border-radius:10px;height:46px;padding:0 50px 0 20px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text);outline:none;transition:all .2s;}
+.search-box input::placeholder{color:var(--muted);}
+.search-box input:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(0,255,136,.12);}
+.search-box .s-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem;pointer-events:none;transition:color .2s;}
+.search-box input:focus + .s-icon{color:var(--green);}
+.search-hint{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:6px;letter-spacing:.5px;}
+
+/* BREADCRUMB */
+.breadcrumb{padding:20px 52px 0;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);position:relative;z-index:1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s;}
+.breadcrumb a:hover{color:var(--green);}
+.breadcrumb .sep{color:rgba(0,255,136,.3);}
+.breadcrumb .current{color:var(--green);}
+
+/* ARTICLE LAYOUT */
+.article-wrap{padding:24px 52px 60px;position:relative;z-index:1;max-width:900px;}
+
+.article-tag-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.art-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--green);letter-spacing:2px;text-transform:uppercase;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);padding:4px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;}
+.art-num{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:1px;border:1px solid var(--border);padding:4px 10px;border-radius:20px;}
+
+.article-title{
+  font-family:'Orbitron',monospace;font-size:clamp(1.6rem,3.5vw,2.6rem);
+  font-weight:900;line-height:1.1;margin-bottom:22px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* PREVIEW IMAGE — 16:9 */
+.preview-img-wrap{
+  width:100%;aspect-ratio:16/9;overflow:hidden;
+  background:#0a0a12;border-radius:14px;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(0,0,0,.5),0 0 30px rgba(0,255,136,.06);
+  margin-bottom:24px;position:relative;
+}
+.preview-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;}
+.preview-img-wrap .img-glow{position:absolute;inset:0;border-radius:14px;box-shadow:inset 0 0 60px rgba(0,0,0,.4);pointer-events:none;}
+
+/* ACTION BUTTONS */
+.action-btns{display:flex;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+.action-btn{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.92rem;
+  letter-spacing:.8px;border:none;cursor:pointer;border-radius:8px;
+  height:46px;padding:0 26px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all .22s;flex-shrink:0;
+}
+.action-btn.primary{
+  background:var(--green);color:#000;
+  box-shadow:0 0 18px rgba(0,255,136,.25);
+}
+.action-btn.primary:hover{box-shadow:var(--gg),0 8px 30px rgba(0,255,136,.3);transform:translateY(-2px);}
+.action-btn.secondary{
+  background:transparent;border:1px solid var(--cyan);color:var(--cyan);
+}
+.action-btn.secondary:hover{background:rgba(0,212,255,.1);box-shadow:var(--gc);transform:translateY(-2px);}
+.action-btn.disabled-btn{
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  cursor:not-allowed;opacity:.6;
+}
+
+/* FULL DESCRIPTION */
+.detail-section{margin-bottom:30px;}
+.detail-label{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.detail-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.detail-text{
+  background:var(--bgc);border:1px solid var(--border);border-radius:12px;
+  padding:26px 28px;font-size:.97rem;color:var(--muted);line-height:1.8;
+}
+.detail-text a{color:var(--cyan);text-decoration:none;}
+.detail-text a:hover{color:var(--green);text-decoration:underline;}
+.detail-text strong{color:var(--text);}
+
+/* TECH TAGS */
+.tech-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.tech-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:5px 14px;border:1px solid rgba(0,212,255,.25);color:var(--cyan);border-radius:4px;background:rgba(0,212,255,.05);}
+
+/* AUTHOR CARD */
+.author-card{
+  background:var(--bgc);border:1px solid var(--border);
+  border-radius:14px;padding:28px;
+  display:flex;gap:22px;align-items:flex-start;
+  position:relative;overflow:hidden;
+}
+.author-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+}
+.author-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border:2px solid rgba(0,255,136,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;flex-shrink:0;
+  box-shadow:0 0 20px rgba(0,255,136,.2);
+}
+.author-info{flex:1;}
+.author-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.author-name{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.author-handle{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green);margin-bottom:12px;}
+.author-bio{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.author-btn{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;
+  letter-spacing:.8px;border:none;cursor:pointer;border-radius:6px;
+  height:38px;padding:0 20px;
+  background:transparent;border:1px solid rgba(0,255,136,.35);color:var(--green);
+  text-decoration:none;display:inline-flex;align-items:center;gap:7px;
+  transition:all .2s;
+}
+.author-btn:hover{background:rgba(0,255,136,.1);box-shadow:0 0 16px rgba(0,255,136,.2);transform:translateY(-1px);}
+
+/* BOTTOM DOCK */
+.dock-nav{
+  position:fixed;bottom:25px;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;align-items:center;gap:6px;
+  padding:10px 16px;background:rgba(8,8,15,.95);
+  border:1px solid rgba(0,255,136,.32);border-radius:80px;
+  box-shadow:0 12px 60px rgba(0,0,0,.75),0 0 0 1px rgba(0,255,136,.1),inset 0 1px 0 rgba(0,255,136,.15);
+  backdrop-filter:blur(24px);max-width:calc(100vw - 24px);width:max-content;
+}
+.dock-nav::before{content:'';position:absolute;top:-1px;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--cyan),var(--green),transparent);border-radius:2px;filter:blur(.4px);}
+.dock-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 14px;border-radius:50px;cursor:pointer;text-decoration:none;border:1px solid transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.61rem;letter-spacing:.5px;transition:all .25s cubic-bezier(.4,0,.2,1);min-width:0;white-space:nowrap;background:transparent;flex-shrink:1;}
+.dock-item i{font-size:1.25rem;transition:all .25s;line-height:1;}
+.dock-item span{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.7;transition:opacity .2s;line-height:1;font-weight:500;}
+.dock-item:hover,.dock-item.dock-active{color:var(--green);background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.35);box-shadow:0 0 24px rgba(0,255,136,.25),inset 0 0 16px rgba(0,255,136,.07);}
+.dock-item:hover i,.dock-item.dock-active i{filter:drop-shadow(0 0 8px var(--green));}
+.dock-item:hover span,.dock-item.dock-active span{opacity:1;color:var(--green);}
+.dock-item.dock-active::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);}
+.dock-sep{width:1px;height:36px;background:rgba(0,255,136,.15);margin:0 2px;flex-shrink:0;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+@keyframes fup{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fup .6s both;}
+
+footer{border-top:1px solid var(--border);padding:24px 52px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--muted);position:relative;z-index:1;}
+.ficons{display:flex;gap:13px;}
+.ficons a{color:var(--muted);text-decoration:none;font-size:.88rem;transition:color .15s;}
+.ficons a:hover{color:var(--green);}
+
+@media(max-width:768px){
+  .topbar{padding:0 14px;}
+  .search-wrap{padding:14px 18px 0;}
+  .breadcrumb{padding:16px 18px 0;}
+  .article-wrap{padding:20px 18px 50px;}
+  .action-btns{gap:10px;}
+  .action-btn{height:42px;padding:0 18px;font-size:.84rem;}
+  .author-card{flex-direction:column;gap:16px;}
+  footer{flex-direction:column;gap:11px;text-align:center;padding:20px 18px;}
+  .dock-nav{bottom:20px;padding:8px 10px;gap:2px;max-width:calc(100vw - 20px);}
+  .dock-item{padding:9px 10px;min-width:0;flex:1;max-width:70px;}
+  .dock-item i{font-size:1.2rem;}
+  .dock-item span{font-size:.52rem;display:block;letter-spacing:.3px;}
+}
+@media(max-width:400px){
+  .dock-nav{padding:7px 8px;gap:1px;}
+  .dock-item{padding:8px 7px;max-width:58px;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="mc"></canvas>
+<div class="grid-bg"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alone-monster.github.io/" class="tb-logo">
+    <i class="fas fa-terminal"></i> Alone Monster
+  </a>
+  <div class="tb-right">
+    <a href="https://alone-monster.github.io/codes/" class="tb-btn bo"><i class="fas fa-arrow-left"></i> Codes</a>
+    <a href="https://github.com/alone-monster" target="_blank" rel="noopener" class="tb-btn bp"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+</header>
+
+<!-- SNIPPET HUB BUTTON -->
+<div class="hub-banner fade-up">
+  <a href="https://github.com/alone-monster/Snippet-Hub" target="_blank" rel="noopener" class="hub-btn">
+    <i class="fas fa-code-branch"></i>
+    Snippet Hub
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<!-- SEARCH (searches codes page) -->
+<div class="search-wrap fade-up">
+  <form action="https://alone-monster.github.io/codes/" method="get" onsubmit="redirectSearch(event)">
+    <div class="search-box">
+      <input type="text" id="searchInput" name="q" placeholder="Search all snippets..." autocomplete="off" spellcheck="false"/>
+      <i class="fas fa-search s-icon"></i>
+    </div>
+  </form>
+  <p class="search-hint">↩ Search results will open from the Codes page</p>
+</div>
+
+<!-- BREADCRUMB -->
+<nav class="breadcrumb fade-up">
+  <a href="https://alone-monster.github.io/">Home</a>
+  <span class="sep">/</span>
+  <a href="https://alone-monster.github.io/codes/">Codes</a>
+  <span class="sep">/</span>
+  <span class="current">Neo Login UI</span>
+</nav>
+
+<!-- ARTICLE CONTENT -->
+<!-- ════════════════════════════════════════════════════════
+     ARTICLE 1 — Neo Login UI
+     ════════════════════════════════════════════════════════ -->
+<main class="article-wrap fade-up">
+
+  <!-- Tags row -->
+  <div class="article-tag-row">
+    <span class="art-num"># Article 01</span>
+    <span class="art-tag"><i class="fas fa-code"></i> HTML / CSS / JS</span>
+    <span class="art-tag"><i class="fas fa-mobile-alt"></i> Responsive</span>
+  </div>
+
+  <!-- Title -->
+  <h1 class="article-title">Neo Login UI</h1>
+
+  <!-- Preview Image 16:9 -->
+  <div class="preview-img-wrap">
+    <img src="../images/article-1-preview.png" alt="Neo Login UI — Login & Registration Form Preview" onerror="this.src='https://via.placeholder.com/900x506/10101c/00ff88?text=Neo+Login+UI+Preview'"/>
+    <div class="img-glow"></div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-btns">
+    <a href="https://github.com/alone-monster/Snippet-Hub/tree/main/Article-1(Animated-Login)" target="_blank" rel="noopener" class="action-btn primary">
+      <i class="fas fa-download"></i> Get Code
+    </a>
+    <!-- Watch Preview — add link when ready -->
+    <a href="" class="action-btn secondary" id="previewBtn">
+      <i class="fas fa-play-circle"></i> Watch Preview
+    </a>
+  </div>
+
+  <!-- Full Details -->
+  <div class="detail-section">
+    <p class="detail-label">// Full Details</p>
+    <div class="detail-text">
+      <p>Neo Login UI is a modern and fully responsive Login &amp; Registration interface developed using HTML, CSS, and JavaScript, featuring smooth animated transitions, elegant glass-style design, social media authentication buttons, clean form layouts, and mobile-friendly responsiveness for a seamless user experience across all devices.</p>
+      <br/>
+      <p>This frontend authentication project is perfect for modern websites, web applications, and developer portfolios, showcasing professional UI/UX design skills with stylish visuals and interactive functionality.</p>
+      <br/>
+      <p>Developed and showcased by <a href="https://alone-monster.github.io/" target="_blank" rel="noopener"><strong>Alone Monster Coding Hub</strong></a>.</p>
+      <div class="tech-tags">
+        <span class="tech-tag">HTML5</span>
+        <span class="tech-tag">CSS3</span>
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">Responsive</span>
+        <span class="tech-tag">Animated UI</span>
+        <span class="tech-tag">Auth Form</span>
+        <span class="tech-tag">Social Login</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Author / Creator -->
+  <div class="detail-section">
+    <p class="detail-label">// Created By</p>
+    <div class="author-card">
+      <div class="author-avatar">👾</div>
+      <div class="author-info">
+        <p class="author-label">Developer</p>
+        <p class="author-name">Chirag</p>
+        <p class="author-handle">@alone-monster</p>
+        <p class="author-bio">Creator of Alone Monster Coding Hub — a free learning platform offering HTML/CSS, JavaScript, and Python courses, live coding tools, and open-source UI snippets for developers worldwide.</p>
+        <a href="https://github.com/alone-monster" target="_blank" rel="noopener" class="author-btn">
+          <i class="fab fa-github"></i> View GitHub Profile
+        </a>
+      </div>
+    </div>
+  </div>
+
+</main>
+<!-- ════════════════════════════════════════════════════════
+     END ARTICLE 1
+     ════════════════════════════════════════════════════════ -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     ARTICLE DETAIL PAGE TEMPLATE
+     Copy everything inside article-wrap (from the Tags row
+     to the end of Created By section) for each new article.
+     Change these values:
+       - art-num:        # Article 0N
+       - article-title:  SNIPPET NAME
+       - img src:        ../../codes/images/article-N-preview.png
+       - Get Code href:  GitHub link for the new snippet
+       - Full Details:   New description text
+       - tech-tags:      Relevant technologies
+     ════════════════════════════════════════════════════════ -->
+
+
+<footer>
+  <span>© 2025 <span style="color:var(--green)">Alone Monster Coding Hub</span> — Built by Chirag</span>
+  <div class="ficons">
+    <a href="https://github.com/alone-monster" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://youtube.com/@alonemonstercoding" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://t.me/alonemonster20" target="_blank" rel="noopener" title="Telegram"><i class="fab fa-telegram"></i></a>
+  </div>
+</footer>
+
+
+<script>
+/* ── CUSTOM CURSOR ── */
+const cur = document.getElementById('cursor');
+if(window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove', e => { cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px'; });
+  document.addEventListener('click', e => {
+    const r = document.createElement('div'); r.className='ripple';
+    r.style.left=e.clientX+'px'; r.style.top=e.clientY+'px';
+    document.body.appendChild(r); setTimeout(()=>r.remove(),1500);
+  });
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+}
+
+/* ── MATRIX CANVAS ── */
+(function(){
+  const c=document.getElementById('mc'),ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const cols=Math.floor(window.innerWidth/16)||50;
+  const drops=Array(cols).fill(1);
+  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>/{}[]()';
+  function draw(){
+    ctx.fillStyle='rgba(5,5,9,.05)';ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='#00ff88';ctx.font='14px monospace';
+    drops.forEach((y,i)=>{
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);
+      if(y*16>c.height&&Math.random()>.975)drops[i]=0;
+      drops[i]++;
+    });
+  }
+  setInterval(draw,60);
+})();
+
+/* ── SEARCH REDIRECT TO CODES PAGE ── */
+function redirectSearch(e){
+  e.preventDefault();
+  const q = document.getElementById('searchInput').value.trim();
+  if(q){
+    window.location.href = 'https://alone-monster.github.io/codes/?q=' + encodeURIComponent(q);
+  }
+}
+
+/* ── SEARCH FROM URL PARAM (when coming back from codes) ── */
+window.addEventListener('DOMContentLoaded', () => {
+  /* Handle Watch Preview disabled state */
+  const previewBtn = document.getElementById('previewBtn');
+  if(previewBtn && !previewBtn.href.replace(location.origin,'').trim().replace('/codes/article-1','')) {
+    previewBtn.classList.add('disabled-btn');
+    previewBtn.classList.remove('secondary');
+    previewBtn.addEventListener('click', e => e.preventDefault());
+    previewBtn.title = 'Preview coming soon';
+  }
+});
+</script>
+</body>
+</html>
